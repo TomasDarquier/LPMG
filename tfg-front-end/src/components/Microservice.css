@@ -1,0 +1,18 @@
+/* src/components/Microservice.css */
+.microservice {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: grab;
+}
+
+.microservice img {
+  width: 100px; /* Ajusta el tamaño según sea necesario */
+  height: 50px; /* Ajusta el tamaño según sea necesario */
+  margin-right: 10px;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+

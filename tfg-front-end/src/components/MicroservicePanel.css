@@ -1,0 +1,7 @@
+/* src/components/MicroservicePanel.css */
+.microservice-panel {
+  flex: 1;
+  padding: 10px;
+  border-left: 1px solid #ccc;
+}
+

@@ -1,0 +1,21 @@
+/* src/components/Canvas.css */
+.canvas {
+  flex-grow: 1;
+  border: 2px dashed #ccc;
+  background-color: #e0e0e0;
+  position: relative;
+  min-height: 500px;
+}
+
+.draggable-item {
+  position: absolute;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.canvas.over {
+  background-color: #d0ffd0;
+}
+
