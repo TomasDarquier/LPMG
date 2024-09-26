@@ -1,4 +1,4 @@
-package com.tdarquier.user_service;
+package com.tdarquier.userservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
