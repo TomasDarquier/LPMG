@@ -3,9 +3,9 @@ services:
     image: postgres:13
     container_name: postgres_container
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: userservice
+      POSTGRES_USER: tfgusername
+      POSTGRES_PASSWORD: tfgpassword
+      POSTGRES_DB: usersdb
     volumes:
       - ./util/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
