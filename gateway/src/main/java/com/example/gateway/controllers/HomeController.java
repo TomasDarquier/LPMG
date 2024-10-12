@@ -1,5 +1,8 @@
 package com.example.gateway.controllers;
 
+import com.example.gateway.clients.UserClient;
+import com.example.gateway.dtos.UserDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,13 +15,44 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import static com.example.gateway.dtos.OauthProvider.GOOGLE;
+import static com.example.gateway.dtos.OauthProvider.USER_AND_PASSWORD;
+
 @RestController
 public class HomeController {
 
+    @Autowired
+    public HomeController(UserClient userClient) {
+        this.userClient = userClient;
+    }
+
+    private final UserClient userClient;
+
+    @GetMapping("/access-control")
+    public ModelAndView accessControl(@AuthenticationPrincipal OidcUser user) {
+        String subject = user.getSubject();
+
+        UserDto newUser = new UserDto(
+                        subject.startsWith("google-oauth2") ? GOOGLE : USER_AND_PASSWORD,
+                        (subject.substring(subject.indexOf("|") + 1)),
+                        user.getEmail(),
+                        user.getName()
+        );
+
+        //TODO agarrar excepciones de cuando se repite el mail y hay error
+        //
+        //
+        userClient.registerUser(newUser);
+
+        return new ModelAndView("redirect:/");
+    }
+
     @GetMapping("/")
     public ModelAndView home(@AuthenticationPrincipal OidcUser user) {
+        //cuando este el front reemplazar esto por una llamada la front
         return new ModelAndView("home", Collections.singletonMap("claims", user.getClaims()));
     }
+
     @GetMapping("/admin")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String admin(@AuthenticationPrincipal OidcUser user) {
@@ -28,4 +62,6 @@ public class HomeController {
 
         return "Hello, Admin!<br/><br/>User: " + user.getFullName() + "!<br/><br/>Authorities: " + authorities;
     }
+
+
 }

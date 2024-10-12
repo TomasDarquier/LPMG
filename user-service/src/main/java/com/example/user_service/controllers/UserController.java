@@ -1,27 +1,33 @@
 package com.example.user_service.controllers;
 
+import com.example.user_service.dtos.UserDto;
 import com.example.user_service.entities.User;
 import com.example.user_service.repositories.UserRepository;
+import com.example.user_service.services.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    UserRepository userRepository;
-
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> getUser() {
-        return ResponseEntity.ok((List<User>) userRepository.findAll());
+    @PostMapping("/validate")
+    public void registerUser(@RequestBody UserDto user) {
+        userService.register(user);
     }
 }

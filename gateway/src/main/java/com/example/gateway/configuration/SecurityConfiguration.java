@@ -24,6 +24,8 @@ public class SecurityConfiguration {
     @Value("${okta.oauth2.audience}")
     private String audience;
 
+    CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler();
+
     private final ClientRegistrationRepository clientRegistrationRepository;
 
     public SecurityConfiguration(ClientRegistrationRepository clientRegistrationRepository) {
@@ -49,6 +51,7 @@ public class SecurityConfiguration {
                                         authorizationRequestResolver(this.clientRegistrationRepository)
                                 )
                         )
+                        .successHandler(customAuthenticationSuccessHandler)
                 )
                 .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
                 .logout(logout -> logout.logoutSuccessHandler(logoutSuccessHandler()));
