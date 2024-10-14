@@ -1,8 +1,8 @@
 package com.example.gateway.controllers;
 
-import com.example.gateway.clients.UserClient;
+import com.example.gateway.clients.UserActivitiesClient;
 import com.example.gateway.dtos.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,34 +15,30 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import static com.example.gateway.dtos.OauthProvider.GOOGLE;
-import static com.example.gateway.dtos.OauthProvider.USER_AND_PASSWORD;
+import static com.example.gateway.dtos.OauthProvider.*;
 
 @RestController
-public class HomeController {
+@RequiredArgsConstructor
+public class UserBehaviorController {
 
-    @Autowired
-    public HomeController(UserClient userClient) {
-        this.userClient = userClient;
-    }
-
-    private final UserClient userClient;
+    private final UserActivitiesClient userActivitiesClient;
 
     @GetMapping("/access-control")
     public ModelAndView accessControl(@AuthenticationPrincipal OidcUser user) {
+
         String subject = user.getSubject();
 
         UserDto newUser = new UserDto(
                         subject.startsWith("google-oauth2") ? GOOGLE : USER_AND_PASSWORD,
                         (subject.substring(subject.indexOf("|") + 1)),
                         user.getEmail(),
-                        user.getName()
+                        user.getFullName()
         );
 
-        //TODO agarrar excepciones de cuando se repite el mail y hay error
+        //TODO arreglar excepciones de cuando se repite el mail y hay error
         //
         //
-        userClient.registerUser(newUser);
+        userActivitiesClient.loginActions(newUser);
 
         return new ModelAndView("redirect:/");
     }

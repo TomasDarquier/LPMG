@@ -1,6 +1,8 @@
 package com.example.user_service.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
@@ -25,6 +27,7 @@ public class User {
     @Column(name = "oauth_id")
     private String oauthId;
 
+    @Email
     private String email;
 
     private String name;

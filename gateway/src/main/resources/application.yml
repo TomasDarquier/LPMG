@@ -15,6 +15,7 @@ spring:
             predicates:
               # proxy paths in user service
               - Path=/users/**
+              - Path=/activities/**
     openfeign:
       oauth2:
         enabled: true
