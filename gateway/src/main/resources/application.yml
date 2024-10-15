@@ -16,6 +16,10 @@ spring:
               # proxy paths in user service
               - Path=/users/**
               - Path=/activities/**
+          - id: request-service
+            uri: lb://request-service
+            predicates:
+              - Path=/generation/**
     openfeign:
       oauth2:
         enabled: true

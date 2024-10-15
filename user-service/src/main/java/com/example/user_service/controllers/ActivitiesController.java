@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -31,8 +28,8 @@ public class ActivitiesController {
         this.userActivityService = userActivityService;
     }
 
-    @PostMapping("/login-actions")
-    public ResponseEntity<Void> loginActions(@Valid @RequestBody UserDto user) {
+    @PostMapping("/access")
+    public ResponseEntity<Void> accessActivities(@Valid @RequestBody UserDto user) {
         Optional<User> dbUser = userService.findByEmail(user.email());
         if(dbUser.isEmpty()) {
             User registeredUser = userService.register(user);
@@ -41,5 +38,15 @@ public class ActivitiesController {
         }
         userActivityService.registerLoginActivity(dbUser.get());
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/{id}/generate")
+    public ResponseEntity<Void> CodeGenerationActivity(@PathVariable Long id) {
+        Optional<User> dbUser = userService.findById(id);
+        if(dbUser.isPresent()) {
+            userActivityService.registerCodeGenerationActivity(dbUser.get());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

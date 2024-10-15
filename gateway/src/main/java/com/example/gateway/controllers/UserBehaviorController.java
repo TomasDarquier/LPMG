@@ -38,7 +38,7 @@ public class UserBehaviorController {
         //TODO arreglar excepciones de cuando se repite el mail y hay error
         //
         //
-        userActivitiesClient.loginActions(newUser);
+        userActivitiesClient.accessActivities(newUser);
 
         return new ModelAndView("redirect:/");
     }

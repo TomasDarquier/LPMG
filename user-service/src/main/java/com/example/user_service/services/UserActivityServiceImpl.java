@@ -45,7 +45,14 @@ public class UserActivityServiceImpl implements UserActivityService {
 
     @Override
     public void registerCodeGenerationActivity(User user) {
+        UserActivity userActivity = UserActivity.builder()
+                .activityType(Activity.CODE_GENERATION)
+                .createdAt((new Date()))
+                .user(user)
+                .ipAddress("1111.1111.1111.1111")
+                .build();
 
+        userActivityRepository.save(userActivity);
     }
 
     @Override

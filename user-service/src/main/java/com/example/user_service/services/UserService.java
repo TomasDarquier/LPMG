@@ -11,4 +11,5 @@ public interface UserService {
     Optional<User> findById(Long id);
     Boolean existsByEmail(String email);
     Optional<User> findByEmail(String email);
+    Optional<String> getNameById(Long id);
 }

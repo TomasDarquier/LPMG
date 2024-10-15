@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Component
 public interface UserActivitiesClient {
 
-    @PostMapping("/activities/login-actions")
-    void loginActions(UserDto user);
+    @PostMapping("/activities/access")
+    void accessActivities(UserDto user);
 }
