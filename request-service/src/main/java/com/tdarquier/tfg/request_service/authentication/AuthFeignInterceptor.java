@@ -15,9 +15,7 @@ public class AuthFeignInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        System.out.println("antes del if");
         if (requestAttributes != null) {
-            System.out.println("en el if");
             final HttpServletRequest httpServletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
             template.header(HttpHeaders.AUTHORIZATION, httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
         }
