@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: tfgpassword
       POSTGRES_DB: usersdb
     volumes:
-      - ./util/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     networks:
@@ -17,11 +17,11 @@ services:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
     environment:
-      ZOOKEEPER_SERVER_ID: 1 #esta propiedad es solo para desarrollo, hay que hacer cambios para deploy
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "22181:2181"
+      - "22182:2182"
     networks:
       - microservices-network
 
@@ -30,15 +30,27 @@ services:
     container_name: kafka
     ports:
       - "9092:9092"
+      - "9093:9093"
     depends_on:
       - zookeeper
     environment:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 #replicas
+      KAFKA_HEAP_OPTS: -Xmx1G -Xms1G
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 #ubicacion del broker
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,SSL://localhost:9093 #ubicacion del broker
+      KAFKA_SSL_CLIENT_AUTH: 'required'
+      KAFKA_SSL_KEYSTORE_FILENAME: '/certs/kafka.testbroker.keystore.jks'
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: pass
+      KAFKA_SSL_KEY_CREDENTIALS: pass
+      KAFKA_SSL_TRUSTSTORE_FILENAME: '/certs/kafka.testbroker.truststore.jks'
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: pass
+    volumes:
+      - ./kafka/certs/test/kafka.testbroker.keystore.jks:/etc/kafka/secrets/certs/kafka.testbroker.keystore.jks
+      - ./kafka/certs/test/kafka.testbroker.truststore.jks:/etc/kafka/secrets/certs/kafka.testbroker.truststore.jks
+      - ./kafka/credentials/test/pass:/etc/kafka/secrets/pass
     networks:
       - microservices-network
 
