@@ -2,22 +2,25 @@ package com.tdarquier.tfg.generation_service.authentication;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
+// esta clase agrega el JWT enviado en el header de kafka al request
+// que se esta haciendo via feign. De esta manera se hace un request seguro
 @Component
 public class AuthFeignInterceptor implements RequestInterceptor {
 
+    private final RequestContext requestContext;
+
+    public AuthFeignInterceptor(RequestContext requestContext) {
+        this.requestContext = requestContext;
+    }
+
     @Override
     public void apply(RequestTemplate template) {
-        final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            final HttpServletRequest httpServletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
-            template.header(HttpHeaders.AUTHORIZATION, httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
+        String jwt = requestContext.getJwt();
+        if(jwt != null) {
+            template.header(HttpHeaders.AUTHORIZATION, jwt);
         }
     }
 }

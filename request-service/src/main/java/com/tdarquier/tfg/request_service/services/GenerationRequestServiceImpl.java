@@ -26,11 +26,11 @@ public class GenerationRequestServiceImpl implements GenerationRequestService {
 
 
     @Override
-    public boolean sendGenerationRequest(GenerationRequest generationRequest) {
+    public boolean sendGenerationRequest(GenerationRequest generationRequest, String jwt) {
         Long id = generationRequest.userId();
         if(userClient.existsById(id)) {
             userActivitiesClient.CodeGenerationActivity(id);
-            sgrProducer.sendGenerationRequest(generationRequest);
+            sgrProducer.sendGenerationRequest(generationRequest, jwt);
             return true;
         }
         return false;

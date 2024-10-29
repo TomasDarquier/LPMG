@@ -1,5 +1,6 @@
 package com.tdarquier.tfg.request_service.kafka;
 
+import com.tdarquier.tfg.request_service.authentication.AuthFeignInterceptor;
 import com.tdarquier.tfg.request_service.messages.GenerationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -15,10 +16,11 @@ public class SGRProducer {
 
     private final KafkaTemplate<String, GenerationRequest> kafkaTemplate;
 
-    public void sendGenerationRequest(GenerationRequest generationRequest){
+    public void sendGenerationRequest(GenerationRequest generationRequest, String jwt){
         Message<GenerationRequest> message = MessageBuilder
                 .withPayload(generationRequest)
                 .setHeader(KafkaHeaders.TOPIC, "services-generation-request-topic")
+                .setHeader("Authorization", jwt)
                 .build();
 
         kafkaTemplate.send(message);
