@@ -10,6 +10,7 @@
         <module name="request-service" />
         <module name="generation-service" />
         <module name="user-service" />
+        <module name="init-service" />
         <module name="gateway" />
         <module name="discovery-service" />
       </profile>
@@ -20,6 +21,7 @@
       <module name="discovery-service" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="generation-service" options="-parameters" />
+      <module name="init-service" options="-parameters" />
       <module name="request-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
