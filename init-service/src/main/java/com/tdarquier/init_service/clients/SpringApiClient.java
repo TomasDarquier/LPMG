@@ -11,8 +11,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Component
 public class SpringApiClient {
@@ -20,17 +21,18 @@ public class SpringApiClient {
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public String generatePom(ProjectRequest projectRequest) {
-        // Construir la URL para obtener solo el archivo pom.xml
         String url = "https://start.spring.io/starter.zip" +
-                "?type=maven-build" +  // Solo archivo pom.xml
+                "?type=maven-project" +  // Solicita el proyecto completo
                 "&language=java" +
                 "&bootVersion=3.3.5" +
-                "&groupId=" + projectRequest.groupId() +
-                "&artifactId=" + projectRequest.artifactId() +
-                "&name=" + projectRequest.artifactId() +
+                "&groupId=" + projectRequest.getGroupId() +
+                "&artifactId=" + projectRequest.getArtifactId() +
+                "&name=" + projectRequest.getName() +
                 "&description=Generated+POM" +
-                "&packageName=" + projectRequest.groupId() + "." + projectRequest.artifactId() +
-                "&dependencies=" + projectRequest.dependencies();
+                "&packageName=" + projectRequest.getGroupId() + "." + projectRequest.getArtifactId() +
+                "&dependencies=" + projectRequest.getDependencies();
+
+        System.out.println(url + "\n");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -39,10 +41,19 @@ public class SpringApiClient {
         try {
             HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
             if (response.statusCode() == 200) {
-                // Convertir el InputStream a String
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.body()))) {
-                    return reader.lines().collect(Collectors.joining("\n"));
+                // Leer el archivo zip y extraer el archivo pom.xml
+                try (ZipInputStream zipStream = new ZipInputStream(response.body())) {
+                    ZipEntry entry;
+                    while ((entry = zipStream.getNextEntry()) != null) {
+                        if ("pom.xml".equals(entry.getName())) {
+                            // Convertir el contenido del pom.xml a String
+                            return new BufferedReader(new InputStreamReader(zipStream))
+                                    .lines()
+                                    .collect(Collectors.joining("\n"));
+                        }
+                    }
                 }
+                throw new RuntimeException("POM file not found in the response.");
             } else {
                 throw new RuntimeException("Failed to generate POM: HTTP " + response.statusCode());
             }

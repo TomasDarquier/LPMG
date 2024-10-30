@@ -59,6 +59,7 @@ public class RdfServiceImpl implements RdfService {
                         .addProperty(model.createProperty(BASE_URI, "springBootVersion"), service.get("sbVersion").asText())
                         .addProperty(model.createProperty(BASE_URI, "template"), service.get("template").asText())
                         .addProperty(model.createProperty(BASE_URI, "artifactId"), service.get("artifactId").asText())
+                        .addProperty(model.createProperty(BASE_URI, "groupId"), service.get("groupId").asText())
                         .addProperty(model.createProperty(BASE_URI, "baseDir"), service.get("baseDir").asText())
                         .addProperty(model.createProperty(BASE_URI, "pathPrefix"), service.get("pathPrefix").asText());
 

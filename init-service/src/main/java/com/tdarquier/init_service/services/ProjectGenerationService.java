@@ -2,39 +2,55 @@ package com.tdarquier.init_service.services;
 
 import com.tdarquier.init_service.clients.SpringApiClient;
 import com.tdarquier.init_service.entities.ProjectRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
 // TODO
-// extraer data de RDF en metodo createProjectRequest
-// crear lista de dependencias en base a config file
-// retornar los poms desde el controller
+//
+// Agregar dependecias basicas segun el tipo de servicio
 // hacer un checkeo de returns de los cotrollers, usar ResopnseEntity<>
 
 @Service
 public class ProjectGenerationService {
 
     private final SpringApiClient springApiClient;
+    private final RdfParserService rdfParserService;
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-    public ProjectGenerationService(SpringApiClient springApiClient) {
+    // A reemplazar en un futuro por NRDB
+    @Value("${CART_SERVICE_DEPENDENCIES}")
+    private String cartServiceDependencies;
+    @Value("${USER_SERVICE_DEPENDENCIES}")
+    private String userServiceDependencies;
+    @Value("${NOTIFICATION_SERVICE_DEPENDENCIES}")
+    private String notificationServiceDependencies;
+    @Value("${ORDERS_SERVICE_DEPENDENCIES}")
+    private String orderServiceDependencies;
+    @Value("${SHIPPING_SERVICE_DEPENDENCIES}")
+    private String shippingServiceDependencies;
+    @Value("${PRODUCTS_SERVICE_DEPENDENCIES}")
+    private String productServiceDependencies;
+
+
+    public ProjectGenerationService(SpringApiClient springApiClient, RdfParserService rdfParserService) {
         this.springApiClient = springApiClient;
+        this.rdfParserService = rdfParserService;
     }
 
     public List<String> generateProject(String rdf) {
-        // TODO extraer contenido del rdf
-        List<String> services = new ArrayList<>();
+        List<ProjectRequest> services = rdfParserService.parseProjectRequest(rdf);
+        services.forEach(service -> service.setDependencies(
+                setBasicDependencies(service.getDependencies(), service.getArtifactId())
+        ));
+
         List<Callable<String>> tasks = new ArrayList<>();
 
-        for(String service: services){
-            ProjectRequest request = createProjectRequest(service, rdf);
-            tasks.add(() -> springApiClient.generatePom(request));
+        for(ProjectRequest service: services){
+            tasks.add(() -> springApiClient.generatePom(service));
         }
 
         // Ejecutar las tareas en paralelo y recopilar los resultados
@@ -57,9 +73,28 @@ public class ProjectGenerationService {
         return poms;
     }
 
-    private ProjectRequest createProjectRequest(String service, String rdf) {
-        //TODO
-
-        return null;
+    private String setBasicDependencies(String dependencies, String artifactId) {
+        if(artifactId.startsWith("user-service")){
+            return dependencies + userServiceDependencies;
+        }
+        if(artifactId.startsWith("notification-service")){
+            return dependencies + notificationServiceDependencies;
+        }
+        if(artifactId.startsWith("cart-service")){
+            return dependencies + cartServiceDependencies;
+        }
+        if(artifactId.startsWith("order-service")){
+            return dependencies + orderServiceDependencies;
+        }
+        if(artifactId.startsWith("shipping-service")){
+            return dependencies + shippingServiceDependencies;
+        }
+        if(artifactId.startsWith("product-service")){
+            return dependencies + productServiceDependencies;
+        }
+        return dependencies.endsWith(",")?
+                dependencies.substring(0, dependencies.length() - 1) :
+                dependencies;
     }
+
 }

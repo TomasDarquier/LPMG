@@ -49,10 +49,13 @@ public class SGRConsumer {
 
         try {
             //transformar JSON a rdf
-            String projectRDF = String.valueOf(rdfService.toRdf(record.value()));
+//            String projectRDF = String.valueOf(rdfService.toRdf(record.value()));
+            String projectRDF = rdfService.toRdf(record.value()).join();
+
 
             //Enviar RDF a  init-service
             List<String> poms = initClient.getPoms(projectRDF);
+            poms.forEach(System.out::println);
 
             // -- Enviar notificacion
             //Enviar poms a code-service

@@ -24,6 +24,7 @@ public class InitController {
 
     @GetMapping("/poms")
     public List<String> getPoms(@RequestParam String rdf){
+        System.out.println(rdf);
         return projectGenerationService.generateProject(rdf);
     }
 }
