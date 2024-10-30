@@ -2,7 +2,9 @@ package com.tdarquier.tfg.generation_service.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tdarquier.tfg.generation_service.authentication.RequestContext;
+import com.tdarquier.tfg.generation_service.clients.CodeClient;
 import com.tdarquier.tfg.generation_service.clients.InitClient;
+import com.tdarquier.tfg.generation_service.dtos.CodeGenerationDTO;
 import com.tdarquier.tfg.generation_service.kafka.generation.GenerationRequest;
 import com.tdarquier.tfg.generation_service.services.RdfService;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +27,14 @@ public class SGRConsumer {
     private final RequestContext requestContext;
     RdfService rdfService;
     InitClient initClient;
+    CodeClient codeClient;
 
     @Autowired
-    public SGRConsumer(RdfService rdfService, InitClient initClient, RequestContext requestContext) {
+    public SGRConsumer(RdfService rdfService, InitClient initClient, RequestContext requestContext, CodeClient codeClient) {
         this.rdfService = rdfService;
         this.initClient = initClient;
         this.requestContext = requestContext;
+        this.codeClient = codeClient;
     }
 
     @KafkaListener(topics = "services-generation-request-topic")
@@ -48,21 +52,22 @@ public class SGRConsumer {
         requestContext.initialize(jwt);
 
         try {
-            //transformar JSON a rdf
-//            String projectRDF = String.valueOf(rdfService.toRdf(record.value()));
             String projectRDF = rdfService.toRdf(record.value()).join();
-
 
             //Enviar RDF a  init-service
             List<String> poms = initClient.getPoms(projectRDF);
             poms.forEach(System.out::println);
+            // TODO -- Enviar notificacion
 
-            // -- Enviar notificacion
+
             //Enviar poms a code-service
-            // codeClient.generateCode(projectRDF, projectPoms);
-            // -- Enviar notificacion
+            CodeGenerationDTO dto = new CodeGenerationDTO(projectRDF,poms);
+             codeClient.generateCode(dto);
+            //TODO -- Enviar notificacion
+
             //Recibir confirmacion de finalizacion
-            // -- Enviar notificacion
+            //-- Enviar notificacion
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }finally {

@@ -24,6 +24,10 @@ spring:
             uri: lb://init-service
             predicates:
               - Path=/init/**
+          - id: code-service
+            uri: lb://code-service
+            predicates:
+              - Path=/code/**
     openfeign:
       oauth2:
         enabled: true
