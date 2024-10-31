@@ -62,7 +62,7 @@ public class SGRConsumer {
 
             //Enviar poms a code-service
             CodeGenerationDTO dto = new CodeGenerationDTO(projectRDF,poms);
-             codeClient.generateCode(dto);
+             codeClient.generateCode(dto, String.valueOf(record.value().userId()));
             //TODO -- Enviar notificacion
 
             //Recibir confirmacion de finalizacion

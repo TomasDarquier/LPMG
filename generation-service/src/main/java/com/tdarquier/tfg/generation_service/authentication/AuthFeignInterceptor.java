@@ -21,6 +21,7 @@ public class AuthFeignInterceptor implements RequestInterceptor {
         String jwt = requestContext.getJwt();
         if(jwt != null) {
             template.header(HttpHeaders.AUTHORIZATION, jwt);
+            System.out.println("Authorization Header: " + "Bearer " + jwt);
         }
     }
 }

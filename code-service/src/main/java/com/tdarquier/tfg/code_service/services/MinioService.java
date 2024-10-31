@@ -13,7 +13,6 @@ import java.security.NoSuchAlgorithmException;
 @Service
 public class MinioService {
 
-    final
     MinioClient minioClient;
 
     public MinioService(MinioClient minioClient) {

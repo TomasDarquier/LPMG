@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DinamicCodeGenerationService {
 
-    public void generateProjectCode(CodeGenerationDTO dto) {
+    public void generateProjectCode(CodeGenerationDTO dto, int i) {
     }
 
 }

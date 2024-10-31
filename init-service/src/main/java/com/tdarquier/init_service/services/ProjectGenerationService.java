@@ -2,6 +2,7 @@ package com.tdarquier.init_service.services;
 
 import com.tdarquier.init_service.clients.SpringApiClient;
 import com.tdarquier.init_service.entities.ProjectRequest;
+import com.tdarquier.init_service.enums.Template;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,15 +43,15 @@ public class ProjectGenerationService {
     }
 
     public List<String> generateProject(String rdf) {
-        List<ProjectRequest> services = rdfParserService.parseProjectRequest(rdf);
-        services.forEach(service -> service.setDependencies(
-                setBasicDependencies(service.getDependencies(), service.getArtifactId())
+        List<ProjectRequest> components = rdfParserService.parseProjectRequest(rdf);
+        components.forEach(component -> component.setDependencies(
+                setBasicDependencies(component.getDependencies(), component.getTemplate())
         ));
 
         List<Callable<String>> tasks = new ArrayList<>();
 
-        for(ProjectRequest service: services){
-            tasks.add(() -> springApiClient.generatePom(service));
+        for(ProjectRequest component: components){
+            tasks.add(() -> springApiClient.generatePom(component));
         }
 
         // Ejecutar las tareas en paralelo y recopilar los resultados
@@ -73,23 +74,26 @@ public class ProjectGenerationService {
         return poms;
     }
 
-    private String setBasicDependencies(String dependencies, String artifactId) {
-        if(artifactId.startsWith("user-service")){
+    private String setBasicDependencies(String dependencies, Template template) {
+        if(template.toString().equalsIgnoreCase("USER_SERVICE_V1")){
             return dependencies + userServiceDependencies;
         }
-        if(artifactId.startsWith("notification-service")){
+
+        if(template.toString().equalsIgnoreCase("NOTIFICATION_SERVICE_V1")){
             return dependencies + notificationServiceDependencies;
         }
-        if(artifactId.startsWith("cart-service")){
+
+        if(template.toString().equalsIgnoreCase("CART_SERVICE_V1")){
             return dependencies + cartServiceDependencies;
         }
-        if(artifactId.startsWith("order-service")){
+
+        if(template.toString().equalsIgnoreCase("ORDER_SERVICE_V1")){
             return dependencies + orderServiceDependencies;
         }
-        if(artifactId.startsWith("shipping-service")){
+        if(template.toString().equalsIgnoreCase("SHIPPING_SERVICE_V1")){
             return dependencies + shippingServiceDependencies;
         }
-        if(artifactId.startsWith("product-service")){
+        if(template.toString().equalsIgnoreCase("PRODUCTS_SERVICE_V1")){
             return dependencies + productServiceDependencies;
         }
         return dependencies.endsWith(",")?

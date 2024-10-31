@@ -1,6 +1,7 @@
 package com.tdarquier.init_service.services;
 
 import com.tdarquier.init_service.entities.ProjectRequest;
+import com.tdarquier.init_service.enums.Template;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -30,7 +31,8 @@ public class RdfParserService {
                     encodeForUrl(serviceName),
                     encodeForUrl(serviceData.get("groupId")),
                     encodeForUrl(serviceData.get("artifactId")),
-                    getServiceDependencies(serviceName, model)
+                    getServiceDependencies(serviceName, model),
+                    getTemplateType(serviceName, model)
                     ));
         });
 
@@ -45,6 +47,29 @@ public class RdfParserService {
         }
         return requests;
 
+    }
+
+    private Template getTemplateType(String serviceName, Model model) {
+        String queryStr = "SELECT ?template WHERE { "
+                + "?service <" + BASE_URI + "hasService> ?serviceDesc . "
+                + "?serviceDesc <" + BASE_URI + "serviceName> \"" + serviceName + "\" . "
+                + "?serviceDesc <" + BASE_URI + "template> ?template . "
+                + "} LIMIT 1";
+
+        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
+            ResultSet results = qExec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                String templateValue = solution.getLiteral("template").getString();
+
+                for (Template template : Template.values()) {
+                    if (template.name().equalsIgnoreCase(templateValue)) {
+                        return template;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private String getServiceDependencies(String serviceName, Model model) {
@@ -70,7 +95,8 @@ public class RdfParserService {
                 "discovery-server",
                 "com.discovery.server",
                 "discovery-server",
-                builder.toString());
+                builder.toString(),
+                Template.DISCOVERY_SERVICE_V1);
     }
 
     private ProjectRequest createGateway(Model model) {
@@ -85,7 +111,8 @@ public class RdfParserService {
                 "gateway",
                 "com.api.gateway",
                 "api-gateway",
-                builder.toString());
+                builder.toString(),
+                Template.GATEWAY_SERVICE_V1);
     }
 
     private ProjectRequest createConfigServer(Model model) {
@@ -97,7 +124,8 @@ public class RdfParserService {
                 "config-server",
                 "com.config.server",
                 "config-server",
-                builder.toString());
+                builder.toString(),
+                Template.CONFIGURATION_SERVICE_V1);
     }
 
     public String encodeForUrl(String string){
