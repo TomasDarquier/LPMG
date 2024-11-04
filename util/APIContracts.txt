@@ -1,0 +1,142 @@
+1. User Service
+Endpoints Predeterminados
+
+    GET /users/{userId}
+        Descripción: Obtiene la información detallada del usuario.
+        Respuesta: Información del usuario (nombre, email, preferencias).
+
+    POST /users
+        Descripción: Registra un nuevo usuario.
+        Cuerpo: Datos del usuario (nombre, email, contraseña).
+
+    PUT /users/{userId}
+        Descripción: Actualiza la información de un usuario existente.
+        Cuerpo: Información actualizada del usuario.
+
+    DELETE /users/{userId}
+        Descripción: Elimina un usuario de la plataforma.
+
+Endpoints de Integración
+
+    GET /users/{userId}/orders
+        Descripción: Recupera el historial de órdenes de un usuario.
+
+    POST /users/{userId}/notifications
+        Descripción: Configura las preferencias de notificación del usuario.
+        Cuerpo: Preferencias de notificación.
+
+    GET /users/{userId}/shipping-addresses
+        Descripción: Recupera las direcciones de envío del usuario.
+
+    POST /users/{userId}/shipping-addresses
+        Descripción: Añade una nueva dirección de envío para el usuario.
+        Cuerpo: Datos de la dirección de envío.
+
+2. Orders
+Endpoints Predeterminados
+
+    POST /orders
+        Descripción: Crea una nueva orden de compra.
+        Cuerpo: Lista de productos y detalles del usuario.
+
+    GET /orders/{orderId}
+        Descripción: Obtiene los detalles de una orden específica.
+
+    PUT /orders/{orderId}/status
+        Descripción: Actualiza el estado de una orden.
+        Cuerpo: Estado de la orden.
+
+Endpoints de Integración
+
+    GET /orders/user/{userId}
+        Descripción: Obtiene todas las órdenes asociadas a un usuario.
+
+    POST /orders/validate-products
+        Descripción: Valida disponibilidad y precios de los productos en una orden.
+        Cuerpo: Lista de productos y cantidades.
+
+    POST /orders/{orderId}/shipping
+        Descripción: Inicia el proceso de envío de una orden.
+        Cuerpo: Dirección y detalles de entrega.
+
+    POST /orders/{orderId}/notify
+        Descripción: Notifica al usuario sobre el estado de su orden.
+        Cuerpo: Estado de la orden.
+
+3. Shipping
+Endpoints Predeterminados
+
+    POST /shipping
+        Descripción: Crea un envío para una orden.
+        Cuerpo: Dirección y productos.
+
+    GET /shipping/{trackingId}
+        Descripción: Obtiene el estado de un envío específico.
+
+    PUT /shipping/{trackingId}/status
+        Descripción: Actualiza el estado de un envío.
+        Cuerpo: Estado del envío.
+
+Endpoints de Integración
+
+    POST /shipping/order/{orderId}
+        Descripción: Crea un envío asociado a una orden específica.
+        Cuerpo: Detalles de productos y dirección.
+
+    GET /shipping/user/{userId}/addresses
+        Descripción: Recupera las direcciones de envío del usuario.
+
+    POST /shipping/{trackingId}/notify
+        Descripción: Notifica al usuario sobre el estado de su envío.
+        Cuerpo: Estado del envío.
+
+4. Products
+Endpoints Predeterminados
+
+    GET /products
+        Descripción: Obtiene la lista de productos disponibles.
+
+    GET /products/{productId}
+        Descripción: Recupera los detalles de un producto específico.
+
+    PUT /products/{productId}/stock
+        Descripción: Actualiza la cantidad de stock disponible.
+        Cuerpo: Cantidad de stock.
+
+Endpoints de Integración
+
+    POST /products/validate
+        Descripción: Valida la disponibilidad de productos para una orden.
+        Cuerpo: Lista de productos y cantidades.
+
+    POST /products/{productId}/notify-stock
+        Descripción: Notifica al usuario sobre cambios en el stock de un producto.
+        Cuerpo: Estado del stock.
+
+    GET /products/recommendations/{userId}
+        Descripción: Genera recomendaciones de productos basadas en el historial del usuario.
+
+5. Notificaciones
+Endpoints Predeterminados
+
+    POST /notifications
+        Descripción: Envía una notificación (email, SMS o push).
+        Cuerpo: Detalles de la notificación.
+
+Endpoints de Integración
+
+    POST /notifications/user/{userId}/account-events
+        Descripción: Envía notificaciones sobre eventos de cuenta del usuario.
+        Cuerpo: Tipo de evento.
+
+    POST /notifications/order/{orderId}
+        Descripción: Notifica sobre el estado de una orden.
+        Cuerpo: Estado de la orden.
+
+    POST /notifications/shipping/{trackingId}
+        Descripción: Informa al usuario sobre el estado de su envío.
+        Cuerpo: Estado del envío.
+
+    POST /notifications/product/{productId}/stock-alert
+        Descripción: Envía una alerta sobre el stock de un producto.
+        Cuerpo: Estado del stock y detalles del producto.

@@ -20,11 +20,12 @@ public class InitController {
     @Autowired
     public InitController(ProjectGenerationService projectGenerationService) {
         this.projectGenerationService = projectGenerationService;
-    }
+   }
 
     @GetMapping("/poms")
     public List<String> getPoms(@RequestParam String rdf){
         System.out.println(rdf);
         return projectGenerationService.generateProject(rdf);
     }
+
 }

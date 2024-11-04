@@ -49,4 +49,5 @@ public class ActivitiesController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
 }
