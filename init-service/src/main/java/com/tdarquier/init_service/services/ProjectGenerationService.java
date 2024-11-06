@@ -44,6 +44,7 @@ public class ProjectGenerationService {
 
     public List<String> generateProject(String rdf) {
         List<ProjectRequest> components = rdfParserService.parseProjectRequest(rdf);
+        //agregar dependencias presentes en initializr
         components.forEach(component -> component.setDependencies(
                 setBasicDependencies(component.getDependencies(), component.getTemplate())
         ));
@@ -78,15 +79,12 @@ public class ProjectGenerationService {
         if(template.toString().equalsIgnoreCase("USER_SERVICE_V1")){
             return dependencies + userServiceDependencies;
         }
-
         if(template.toString().equalsIgnoreCase("NOTIFICATION_SERVICE_V1")){
             return dependencies + notificationServiceDependencies;
         }
-
         if(template.toString().equalsIgnoreCase("CART_SERVICE_V1")){
             return dependencies + cartServiceDependencies;
         }
-
         if(template.toString().equalsIgnoreCase("ORDER_SERVICE_V1")){
             return dependencies + orderServiceDependencies;
         }

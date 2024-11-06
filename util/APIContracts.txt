@@ -140,3 +140,4 @@ Endpoints de Integración
     POST /notifications/product/{productId}/stock-alert
         Descripción: Envía una alerta sobre el stock de un producto.
         Cuerpo: Estado del stock y detalles del producto.
+

@@ -12,4 +12,6 @@ public class InitServiceApplication {
 		SpringApplication.run(InitServiceApplication.class, args);
 	}
 
+	// TODO agregar dependencias NO presentes en initializr (si o si agregadas manualmente)
+	// TODO agregar dependencias segun BD (metodo a implementar)
 }

@@ -83,7 +83,13 @@ public class RdfParserService {
         if(isConfigServerEnabled(model)){
             builder.append("cloud-config-client,");
         }
+        builder.append(getPersistence(serviceName,model));
         return builder.toString();
+    }
+
+    //TODO Implement method
+    private String getPersistence(String serviceName, Model model) {
+        return null;
     }
 
     private ProjectRequest createDiscoveryServer(Model model) {

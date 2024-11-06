@@ -1,10 +1,10 @@
-package com.tdarquier.test.user_service;
+package com.tdarquier.test.user_management_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserServiceApplicationTests {
+class UserManagementServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

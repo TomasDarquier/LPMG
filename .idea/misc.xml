@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/generation-service/pom.xml" />
         <option value="$PROJECT_DIR$/init-service/pom.xml" />
         <option value="$PROJECT_DIR$/code-service/pom.xml" />
+        <option value="$PROJECT_DIR$/blueprints/user-management-service/pom.xml" />
       </list>
     </option>
   </component>

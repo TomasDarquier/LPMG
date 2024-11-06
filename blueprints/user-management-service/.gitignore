@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#uncoment for the template
+#.env

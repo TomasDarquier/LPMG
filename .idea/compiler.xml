@@ -10,6 +10,7 @@
         <module name="code-service" />
         <module name="generation-service" />
         <module name="init-service" />
+        <module name="user-management-service" />
         <module name="request-service" />
         <module name="user-service" />
         <module name="gateway" />
@@ -25,6 +26,7 @@
       <module name="generation-service" options="-parameters" />
       <module name="init-service" options="-parameters" />
       <module name="request-service" options="-parameters" />
+      <module name="user-management-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

@@ -47,9 +47,12 @@ public class SpringApiClient {
                     while ((entry = zipStream.getNextEntry()) != null) {
                         if ("pom.xml".equals(entry.getName())) {
                             // Convertir el contenido del pom.xml a String
-                            return new BufferedReader(new InputStreamReader(zipStream))
+                            String initializrPom = new BufferedReader(new InputStreamReader(zipStream))
                                     .lines()
                                     .collect(Collectors.joining("\n"));
+
+                            String completePom = addNonInitializrDependencies(initializrPom);
+                            return completePom;
                         }
                     }
                 }
@@ -60,5 +63,9 @@ public class SpringApiClient {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String addNonInitializrDependencies(String initializrPom) {
+        return null;
     }
 }
