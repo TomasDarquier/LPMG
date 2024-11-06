@@ -3,23 +3,24 @@ package com.tdarquier.init_service.services;
 import com.tdarquier.init_service.clients.SpringApiClient;
 import com.tdarquier.init_service.entities.ProjectRequest;
 import com.tdarquier.init_service.enums.Template;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-// TODO
-//
-// Agregar dependecias basicas segun el tipo de servicio
-// hacer un checkeo de returns de los cotrollers, usar ResopnseEntity<>
 
 @Service
 public class ProjectGenerationService {
 
     private final SpringApiClient springApiClient;
     private final RdfParserService rdfParserService;
+    private final NonInitializrDependenciesService nonInitializrDependenciesService;
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     // A reemplazar en un futuro por NRDB
@@ -37,9 +38,10 @@ public class ProjectGenerationService {
     private String productServiceDependencies;
 
 
-    public ProjectGenerationService(SpringApiClient springApiClient, RdfParserService rdfParserService) {
+    public ProjectGenerationService(SpringApiClient springApiClient, RdfParserService rdfParserService, NonInitializrDependenciesService nonInitializrDependenciesService) {
         this.springApiClient = springApiClient;
         this.rdfParserService = rdfParserService;
+        this.nonInitializrDependenciesService = nonInitializrDependenciesService;
     }
 
     public List<String> generateProject(String rdf) {
@@ -72,7 +74,17 @@ public class ProjectGenerationService {
             throw new RuntimeException("Error ejecutando tareas en paralelo", e);
         }
 
-        return poms;
+        // Insertar dependencias no presentes en initializr API
+        List<String> completePoms = new ArrayList<>();
+        poms.forEach(pom -> {
+            Model model = ModelFactory.createDefaultModel();
+            model.read(new java.io.StringReader(rdf), null, "RDF/XML");
+            Template template = rdfParserService.getTemplateType(getNameByPom(pom), model);
+            List<String> extraDependencies = nonInitializrDependenciesService.getDependenciesByTemplate(template);
+            completePoms.add(nonInitializrDependenciesService.getCompletePom(pom,extraDependencies));
+        });
+
+        return completePoms;
     }
 
     private String setBasicDependencies(String dependencies, Template template) {
@@ -98,5 +110,18 @@ public class ProjectGenerationService {
                 dependencies.substring(0, dependencies.length() - 1) :
                 dependencies;
     }
+
+    private String getNameByPom(String pom) {
+        String regex = "<name>(.*?)</name>";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(pom);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
 
 }

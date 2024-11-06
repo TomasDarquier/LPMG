@@ -47,12 +47,12 @@ public class SpringApiClient {
                     while ((entry = zipStream.getNextEntry()) != null) {
                         if ("pom.xml".equals(entry.getName())) {
                             // Convertir el contenido del pom.xml a String
-                            String initializrPom = new BufferedReader(new InputStreamReader(zipStream))
+                            return new BufferedReader(new InputStreamReader(zipStream))
                                     .lines()
                                     .collect(Collectors.joining("\n"));
 
-                            String completePom = addNonInitializrDependencies(initializrPom);
-                            return completePom;
+//                            String completePom = addNonInitializrDependencies(initializrPom);
+//                            return completePom;
                         }
                     }
                 }

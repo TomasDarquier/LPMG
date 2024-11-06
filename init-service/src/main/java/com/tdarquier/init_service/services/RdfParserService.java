@@ -1,6 +1,7 @@
 package com.tdarquier.init_service.services;
 
 import com.tdarquier.init_service.entities.ProjectRequest;
+import com.tdarquier.init_service.enums.Persistence;
 import com.tdarquier.init_service.enums.Template;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -49,7 +50,7 @@ public class RdfParserService {
 
     }
 
-    private Template getTemplateType(String serviceName, Model model) {
+    public Template getTemplateType(String serviceName, Model model) {
         String queryStr = "SELECT ?template WHERE { "
                 + "?service <" + BASE_URI + "hasService> ?serviceDesc . "
                 + "?serviceDesc <" + BASE_URI + "serviceName> \"" + serviceName + "\" . "
@@ -83,12 +84,49 @@ public class RdfParserService {
         if(isConfigServerEnabled(model)){
             builder.append("cloud-config-client,");
         }
-        builder.append(getPersistence(serviceName,model));
+        //TODO agregar persistencia
+        builder.append(getPersistenceDependency(serviceName,model));
         return builder.toString();
     }
 
-    //TODO Implement method
-    private String getPersistence(String serviceName, Model model) {
+    //TODO check nomenclature
+    private String getPersistenceDependency(String serviceName, Model model) {
+        Persistence persistenceTemplate = getPersistence(serviceName,model);
+        if(persistenceTemplate == null){
+            return "";
+        }
+        if(persistenceTemplate.equals(Persistence.POSTGRESQL)){
+            return "postgresql,";
+        }
+        if(persistenceTemplate.equals(Persistence.MYSQL)){
+            return "mysql,";
+        }
+        if(persistenceTemplate.equals(Persistence.REDIS)){
+            return "data-redis,";
+        }
+        if(persistenceTemplate.equals(Persistence.KAFKA)){
+            return "kafka,";
+        }
+        return null;
+    }
+
+    private Persistence getPersistence(String serviceName, Model model) {
+        String queryStr = "SELECT ?persistence WHERE { "
+                + "?service <" + BASE_URI + "serviceName> \"" + serviceName + "\" . "
+                + "?service <" + BASE_URI + "persistenceType> ?persistence ."
+                + "} LIMIT 1";
+
+        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
+            ResultSet results = qExec.execSelect();
+            if (results.hasNext()) {
+                String persistence = results.next().get("persistence").toString();
+                for (Persistence type: Persistence.values()) {
+                    if (type.name().equalsIgnoreCase(persistence)) {
+                        return type;
+                    }
+                }
+            }
+        }
         return null;
     }
 
@@ -221,5 +259,4 @@ public Map<String, String> getArtifactAndGroupIds(String serviceName, Model mode
         }
         return "none";  // Valor predeterminado si no se encuentra un tipo de seguridad
     }
-
 }
