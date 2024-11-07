@@ -13,6 +13,7 @@
         <module name="user-management-service" />
         <module name="request-service" />
         <module name="user-service" />
+        <module name="order-service" />
         <module name="gateway" />
         <module name="discovery-service" />
       </profile>
@@ -25,6 +26,7 @@
       <module name="gateway" options="-parameters" />
       <module name="generation-service" options="-parameters" />
       <module name="init-service" options="-parameters" />
+      <module name="order-service" options="-parameters" />
       <module name="request-service" options="-parameters" />
       <module name="user-management-service" options="-parameters" />
       <module name="user-service" options="-parameters" />

@@ -69,7 +69,6 @@ public class RdfService {
         return ids;
     }
 
-
     // verifica si un servicio específico es parte de una conexión
     public boolean isPartOfConnection(String serviceName, Model model) {
         String queryOne = "ASK WHERE { ?connection <" + BASE_URI + "serviceOne> \"" + serviceName + "\" . }";
