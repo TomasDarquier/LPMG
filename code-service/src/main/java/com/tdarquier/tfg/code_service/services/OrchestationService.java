@@ -1,13 +1,14 @@
 package com.tdarquier.tfg.code_service.services;
 
+import com.tdarquier.tfg.code_service.entities.ComponentData;
+import com.tdarquier.tfg.code_service.entities.Connection;
+import com.tdarquier.tfg.code_service.enums.Template;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +20,12 @@ public class OrchestationService {
 
     MinioService minioService;
     RdfService rdfService;
-    DinamicCodeGenerationService codeGenerationService;
+    DynamicCodeGenerationService codeGenerationService;
     ProjectStructureService projectStructureService;
 
     private static final String PROJECTS_BUCKET = "projects";
 
-    public OrchestationService(MinioService minioService, RdfService rdfService, DinamicCodeGenerationService codeGenerationService, ProjectStructureService projecStructureService) {
+    public OrchestationService(MinioService minioService, RdfService rdfService, DynamicCodeGenerationService codeGenerationService, ProjectStructureService projecStructureService) {
         this.minioService = minioService;
         this.rdfService = rdfService;
         this.codeGenerationService = codeGenerationService;
@@ -35,6 +36,7 @@ public class OrchestationService {
 
         Model model = ModelFactory.createDefaultModel();
         model.read(new java.io.StringReader(rdfModel), null, "RDF/XML");
+        boolean isConfigServerEnabled = rdfService.isConfigServerEnabled(model);
 
         // creacion del bucket que contendra toda la arquitectura
         LocalDateTime now = LocalDateTime.now();
@@ -79,8 +81,60 @@ public class OrchestationService {
             projectStructureService.createMavenFiles(servicePaths.get("service"), projectBucket);
             projectStructureService.createPom(servicePaths.get("service"), pom, projectBucket);
 
+            // se genera el codigo
+            ComponentData componentData;
+            if(isUtilService(name)){
+                componentData = new ComponentData(
+                        getUtilServiceTemplate(name),
+                        null,
+                        null,
+                        null,
+                        null,
+                        isConfigServerEnabled,
+                        null
+                );
+            }else{
+                List<Connection> connections = rdfService.isPartOfConnection(name,model) ?
+                        rdfService.getConnections(name,model):
+                        null;
+                componentData = new ComponentData(
+                        rdfService.getTemplateType(name,model),
+                        connections,
+                        servicePaths,
+                        Integer.parseInt(rdfService.getServicePort(model,name)),
+                        rdfService.getApiPathPrefix(name,model),
+                        isConfigServerEnabled,
+                        rdfService.getPersistenceType(model, name)
+                );
+            }
+
+            System.out.println("Component data: \n\n" + componentData);
+            codeGenerationService.generateServiceCode(componentData, projectBucket);
         });
 
+        if(isConfigServerEnabled){
+            codeGenerationService.moveConfigsToConfigServer(projectBucket);
+        }
+
+    }
+
+    private Template getUtilServiceTemplate(String name) {
+        if(name.equalsIgnoreCase("config-server")){
+            return Template.CONFIGURATION_SERVICE_V1;
+        }
+        if(name.equalsIgnoreCase("gateway")){
+            return Template.GATEWAY_SERVICE_V1;
+        }
+        if(name.equalsIgnoreCase("discovery-server")){
+            return Template.DISCOVERY_SERVICE_V1;
+        }
+        return null;
+    }
+
+    private boolean isUtilService(String name) {
+        return name.equalsIgnoreCase("config-server")||
+                        name.equalsIgnoreCase("gateway")||
+                        name.equalsIgnoreCase("discovery-server");
     }
 
     private String getNameByPom(String pom) {

@@ -61,7 +61,8 @@ public class RdfServiceImpl implements RdfService {
                         .addProperty(model.createProperty(BASE_URI, "artifactId"), service.get("artifactId").asText())
                         .addProperty(model.createProperty(BASE_URI, "groupId"), service.get("groupId").asText())
                         .addProperty(model.createProperty(BASE_URI, "baseDir"), service.get("baseDir").asText())
-                        .addProperty(model.createProperty(BASE_URI, "pathPrefix"), service.get("pathPrefix").asText());
+                        .addProperty(model.createProperty(BASE_URI, "pathPrefix"), service.get("pathPrefix").asText())
+                        .addProperty(model.createProperty(BASE_URI, "port"), service.get("port").asText());
 
                 projectResource.addProperty(model.createProperty(BASE_URI, "hasService"), serviceResource);
             }
