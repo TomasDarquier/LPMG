@@ -88,7 +88,7 @@ public class OrchestationService {
                         getUtilServiceTemplate(name),
                         name,
                         null,
-                        null,
+                        servicePaths,
                         null,
                         null,
                         isConfigServerEnabled,
@@ -113,11 +113,6 @@ public class OrchestationService {
             System.out.println("Component data: \n\n" + componentData);
             codeGenerationService.generateServiceCode(componentData, projectBucket);
         });
-
-        if(isConfigServerEnabled){
-            codeGenerationService.moveConfigsToConfigServer(projectBucket);
-        }
-
     }
 
     private Template getUtilServiceTemplate(String name) {

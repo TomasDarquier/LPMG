@@ -1,8 +1,7 @@
-spring.application.name=${name}
 server.port=${port}
 
 #db settings
-spring.datasource.url=jdbc:postgresql://localhost:5432/users
+spring.datasource.url=jdbc:postgresql://localhost:5432/orders
 spring.datasource.username=changeUsername
 spring.datasource.password=changePassword
 spring.jpa.hibernate.ddl-auto=update

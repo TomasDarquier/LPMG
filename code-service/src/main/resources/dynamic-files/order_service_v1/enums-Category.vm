@@ -1,0 +1,8 @@
+package ${package}.enums;
+
+public enum Category {
+    BREAKFAST,
+    LAUNCH,
+    DINNER,
+    TAKEAWAY
+}

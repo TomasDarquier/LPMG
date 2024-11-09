@@ -29,13 +29,9 @@ public class DynamicCodeGenerationService {
     public void generateServiceCode(ComponentData componentData,String bucket){
         List<MinioFile> files = generateJavaCode(componentData, bucket);
 
-        if(componentData.getIsConfigServerEnabled() && isConfigService(componentData)){
-            //TODO
-            files.add(generateDelegatedConfigurations(componentData, bucket));
-        }else {
-            files.add(generateLocalConfigurations(componentData, bucket));
-        }
+        files.addAll(generateProperties(componentData, bucket));
 
+        // si no es un util service genera dockerfile
         if(!isUtilService(componentData.getTemplate())){
             files.add(generateDockerFile(componentData,bucket));
         }
@@ -57,8 +53,8 @@ public class DynamicCodeGenerationService {
     }
 
     private MinioFile generateDockerFile(ComponentData componentData, String bucket) {
-        String templateFolder = componentData.getTemplate().toString().toLowerCase();
-        String fileContent = generateFile(templateFolder + "/" + "docker-compose.vm", componentData);
+        String templateFolder = componentData.getTemplate().toString().toLowerCase() + "_docker/";
+        String fileContent = generateFile(templateFolder + "docker-compose.vm", componentData);
         return new MinioFile(
                 componentData.getPaths().get("service") + "docker-compose.yml",
                 bucket,
@@ -86,7 +82,13 @@ public class DynamicCodeGenerationService {
             String fileContent = generateFile(templateFolder + "/" + file, componentData);
             //ej de nombre de template service-UserServiceImp.vm (-) representa /
             String formatedPath = file.replaceAll("-","/"); // service/UserServiceImp.vm
-            String fileNameInJavaType = formatedPath.substring(0, formatedPath.indexOf('.')) + ".java"; // service/UserService.java
+            String fileNameInJavaType;
+            // si es la App class, se formatea para que tanto el file como la class se llame como se nombro al servicio
+            if(file.equals("ApplicationClass.vm")){
+                fileNameInJavaType = createApplicationName(componentData.getName()) + ".java";
+            }else {
+                fileNameInJavaType = formatedPath.substring(0, formatedPath.indexOf('.')) + ".java"; // service/UserService.java
+            }
             generatedFiles.add(new MinioFile(
                     componentData.getPaths().get("code") + fileNameInJavaType,
                     bucket,
@@ -107,13 +109,16 @@ public class DynamicCodeGenerationService {
     private String generateFile(String templatePath, ComponentData componentData) {
         String fullPath = "/dynamic-files/" + templatePath;
         VelocityContext context= new VelocityContext();
-        context.put("name", componentData.getName());
+        context.put("name",componentData.getName().replace(" ", "-"));
         context.put("connections", componentData.getConnections());
         context.put("package",componentData.getPaths().get("package"));
         context.put("apiPath",componentData.getApiPath());
         context.put("port", componentData.getPort());
-        context.put("persistence",componentData.getPersistenceType().toString());
-        System.out.println("\n\n\n\n PERSISTENCE TYPE \n" + componentData.getPersistenceType().toString());
+        context.put("isConfSvEnabled",componentData.getIsConfigServerEnabled());
+        context.put("applicationClassName",createApplicationName(componentData.getName()));
+        if(!isUtilService(componentData.getTemplate())){
+            context.put("persistence",componentData.getPersistenceType().toString());
+        }
 
         var template = velocityEngine.getTemplate(fullPath);
 
@@ -123,24 +128,47 @@ public class DynamicCodeGenerationService {
         return writer.toString();
     }
 
-    private MinioFile generateLocalConfigurations(ComponentData componentData, String bucket) {
-// Genera el application.properties totalmente normal
-        String templateFolder = componentData.getTemplate().toString().toLowerCase();
-        String fileContent = generateFile(templateFolder + "/" + "application-properties.vm", componentData);
-        return new MinioFile(
+    private String createApplicationName(String appName) {
+        String formatedAppName = appName.replace(" ", "-");
+        String[] words = formatedAppName.split("-");
+
+        StringBuilder result = new StringBuilder(capitalFirstChar(words[0]));
+
+        for (int i = 1; i < words.length; i++) {
+            result.append(capitalFirstChar(words[i]));
+        }
+
+        return result.toString();
+    }
+
+    private static String capitalFirstChar(String word) {
+        if (word == null || word.isEmpty()) {
+            return word;
+        }
+        return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+    }
+
+    private List<MinioFile> generateProperties(ComponentData componentData, String bucket) {
+        List<MinioFile> configFiles = new ArrayList<>();
+        String templateFolder = componentData.getTemplate().toString().toLowerCase() + "_properties";
+
+        if(componentData.getIsConfigServerEnabled() && !isConfigService(componentData)){
+            String externalPropPath = "config-server/src/main/resources/configurations/"
+                    + componentData.getName().replace(" ","-")
+                    + ".properties";
+            configFiles.add(new MinioFile(
+                    externalPropPath,
+                    bucket,
+                    generateFile(templateFolder + "/application-properties-for-conf-sv.vm", componentData)
+            ));
+        }
+        configFiles.add(new MinioFile(
                 componentData.getPaths().get("resources") + "application.properties",
                 bucket,
-                fileContent
-        );
-    }
+                generateFile(templateFolder + "/application-properties.vm", componentData)
+        ));
 
-    private MinioFile generateDelegatedConfigurations(ComponentData componentData, String bucket) {
-// Genera los configFiles en la base del bucket para que despues sean recolectados
-        return null;
-    }
-
-    public void moveConfigsToConfigServer(String projectBucket) {
-// Recolecta los archivos del bucket hacia el config server
+        return configFiles;
     }
 
     //codigo duplicado, deberia crear un recurso global

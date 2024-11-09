@@ -13,20 +13,6 @@ import java.util.*;
 @Service
 public class RdfService {
 
-    //Necesito saber
-    //
-    // Que TIPO de servicio es
-    //
-    //Tiene relacion?
-    // cual?(de que tipo es la relacion)
-    //
-    //Data (artifact,etc)
-    //
-    //Puerto (application.properties)
-    //
-    //Persistencia (application.properties)
-    //
-    //Persistencia (Docker compose)
     private static final String BASE_URI = "http://tomasdarquier.com/tfg/";
 
     public Template getTemplateType(String serviceName, Model model) {

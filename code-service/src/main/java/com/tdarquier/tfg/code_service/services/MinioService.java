@@ -38,7 +38,7 @@ public class MinioService {
     }
 
     public void saveObject(MinioFile minioFile) {
-        if(minioFile == null){
+        if(minioFile == null || minioFile.file() == null || minioFile.file().isBlank()|| minioFile.file().isEmpty()) {
             return;
         }
         //transformacion del string del archivo a un stream de bytes

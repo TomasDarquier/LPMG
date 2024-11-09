@@ -1,0 +1,9 @@
+spring.application.name=${name}
+#if($isConfSvEnabled)
+spring.config.import=optional:configserver:http://localhost:8888
+#else
+spring.application.name=discovery-service
+server.port=8761
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+#end
