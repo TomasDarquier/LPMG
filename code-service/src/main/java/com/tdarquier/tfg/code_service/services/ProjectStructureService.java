@@ -1,7 +1,6 @@
 package com.tdarquier.tfg.code_service.services;
 
 import com.tdarquier.tfg.code_service.entities.MinioFile;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -51,11 +50,13 @@ public class ProjectStructureService {
         String codePath = servicePath + "src/main/java/" + formattedGroup + "/" + formattedArtifact + "/";
         String resourcesPath = servicePath + "src/main/resources/";
         String testPath = servicePath + "src/test/java/" + formattedGroup + "/" + formattedArtifact + "/";
+        String groupIdFormattedToPackage = groupId.replaceAll(" ", "-") + "." + formattedArtifact;
 
         paths.put("service", servicePath);
         paths.put("code", codePath);
         paths.put("resources", resourcesPath);
         paths.put("test", testPath);
+        paths.put("package", groupIdFormattedToPackage);
 
         try{
             minioService.saveObject(new MinioFile(servicePath,projectBucket ,""));

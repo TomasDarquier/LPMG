@@ -17,6 +17,7 @@ import java.util.Map;
 public class ComponentData {
 
         private Template template;
+        private String name;
         private List<Connection> connections;
         private Map<String, String> paths;
         private Integer port;

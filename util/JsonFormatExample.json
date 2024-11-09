@@ -13,7 +13,8 @@
       "artifactId": "user-service",
       "baseDir": "${artifactId}",
       "pathPrefix": "/users/api/v1",
-      "persistence": "POSTGRESQL"
+      "persistence": "POSTGRESQL",
+      "port":"8080"
     },
     {
       "template": "CART_SERVICE_V1",
@@ -24,7 +25,8 @@
       "groupId": "com.tdarquier.messi",
       "baseDir": "${artifactId}",
       "pathPrefix": "/cart/api/v1",
-      "persistence": "REDIS"
+      "persistence": "REDIS",
+      "port":"8081"
     }
   ],
   "connections": [
@@ -44,3 +46,4 @@
     "type": "JWT"
   }
 }
+

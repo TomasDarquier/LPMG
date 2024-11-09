@@ -86,6 +86,7 @@ public class OrchestationService {
             if(isUtilService(name)){
                 componentData = new ComponentData(
                         getUtilServiceTemplate(name),
+                        name,
                         null,
                         null,
                         null,
@@ -99,6 +100,7 @@ public class OrchestationService {
                         null;
                 componentData = new ComponentData(
                         rdfService.getTemplateType(name,model),
+                        name,
                         connections,
                         servicePaths,
                         Integer.parseInt(rdfService.getServicePort(model,name)),

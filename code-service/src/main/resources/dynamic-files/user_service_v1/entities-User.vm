@@ -1,0 +1,81 @@
+package ${package}.entities;
+
+import ${package}.enums.Gender;
+import ${package}.enums.Status;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+
+import java.util.Date;
+import java.util.Objects;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @NotBlank
+    String username;
+
+    @NotBlank
+    String email;
+
+    @Column(name = "password")
+    String passwordHash;
+
+    @NotBlank
+    @Column(name = "first_name")
+    String firstName;
+
+    @NotBlank
+    @Column(name = "last_name")
+    String lastName;
+
+    @NotNull
+    @Column(name = "date_of_birth")
+    Date dateOfBirth;
+
+    @NotNull
+    Gender gender;
+
+    @Column(name = "profile_picture_url")
+    String profilePictureUrl;
+
+    @Column(name = "phone_number")
+    String phoneNumber;
+
+    String bio;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    Date updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    Status status;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+        Objects.equals(username, user.username) &&
+        Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email);
+    }
+}

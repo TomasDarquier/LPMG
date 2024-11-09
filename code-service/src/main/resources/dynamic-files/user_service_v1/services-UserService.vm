@@ -1,0 +1,11 @@
+package ${package}.services;
+
+import ${package}.entities.User;
+
+public interface UserService{
+
+    User getUserById(Long id);
+    User createUser(User user);
+    User updateUser(User userModified);
+    void deleteUser(User user);
+}

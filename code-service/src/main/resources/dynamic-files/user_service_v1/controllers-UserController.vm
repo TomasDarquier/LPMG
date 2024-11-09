@@ -1,0 +1,42 @@
+package ${package}.controllers;
+
+import org.springframework.web.bind.annotation.*;
+
+import ${package}.entities.User;
+import ${package}.services.UserService;
+
+@RestController
+@RequestMapping("/${apiPath}")
+public class UserController {
+
+    final
+    UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/{userId}")
+    public User getUserById(@PathVariable String userId){
+
+        return userService.getUserById(Long.valueOf(userId));
+    }
+
+    @PostMapping("")
+    public User createUser(@RequestBody User user){
+
+        return userService.createUser(user);
+    }
+
+    @PutMapping("")
+    public User updateUser(@RequestBody User modifiedUser){
+
+        return userService.updateUser(modifiedUser);
+    }
+
+    @DeleteMapping("")
+    public void deleteUser(@RequestBody User user){
+
+        userService.deleteUser(user);
+    }
+}

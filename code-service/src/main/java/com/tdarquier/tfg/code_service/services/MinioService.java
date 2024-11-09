@@ -38,6 +38,9 @@ public class MinioService {
     }
 
     public void saveObject(MinioFile minioFile) {
+        if(minioFile == null){
+            return;
+        }
         //transformacion del string del archivo a un stream de bytes
         try (InputStream fileInputStream = new ByteArrayInputStream(minioFile.file().getBytes(StandardCharsets.UTF_8))) {
             // Subir el archivo al bucket
@@ -51,7 +54,7 @@ public class MinioService {
             );
             System.out.println("El archivo se subió exitosamente a MinIO.");
         } catch (Exception e) {
-            System.err.println("Error al subir el archivo: " + e.getMessage());
+            System.err.println("Error al subir el archivo: " + minioFile.name() + "\n\n" + e.getMessage());
         }
     }
 
