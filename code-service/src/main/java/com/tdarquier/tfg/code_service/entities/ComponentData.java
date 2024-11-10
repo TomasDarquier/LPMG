@@ -23,6 +23,7 @@ public class ComponentData {
         private Integer port;
         private String apiPath;
         private Boolean isConfigServerEnabled;
+        private Boolean isGatewayEnabled;
         private PersistenceType persistenceType;
 
 }

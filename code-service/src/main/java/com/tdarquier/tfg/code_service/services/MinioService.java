@@ -59,30 +59,30 @@ public class MinioService {
     }
 
     // No deberia necesitar acceder a un archivo
-//    public byte[] getObject(MinioFile minioFile){
-//        try (InputStream stream = minioClient.getObject(GetObjectArgs
-//                .builder()
-//                .bucket(minioFile.path())
-//                .object(minioFile.name())
-//                .build())) {
-//
-//            // Leer el stream y guardar el contenido en memoria
-//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//
-//            while ((bytesRead = stream.read(buffer)) != -1) {
-//                byteArrayOutputStream.write(buffer, 0, bytesRead);
-//            }
-//
-//            // Obtener los datos en un arreglo de bytes
-//            byte[] fileBytes = byteArrayOutputStream.toByteArray();
-//
-//            return fileBytes;
-//
-//            } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public byte[] getObject(MinioFile minioFile){
+        try (InputStream stream = minioClient.getObject(GetObjectArgs
+                .builder()
+                .bucket(minioFile.path())
+                .object(minioFile.name())
+                .build())) {
+
+            // Leer el stream y guardar el contenido en memoria
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = stream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);
+            }
+
+            // Obtener los datos en un arreglo de bytes
+            byte[] fileBytes = byteArrayOutputStream.toByteArray();
+
+            return fileBytes;
+
+            } catch (Exception e) {
+            return null;
+        }
+    }
 
 }

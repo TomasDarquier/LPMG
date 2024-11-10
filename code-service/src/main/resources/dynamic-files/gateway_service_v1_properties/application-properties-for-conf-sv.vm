@@ -1,3 +1,11 @@
-server.port=8222
-spring.cloud.gateway.discovery.locator.enabled=true
-spring.cloud.gateway.routes=
+server:
+  port: 8222
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - spring.config.import: classpath:/configurations/routes.yml

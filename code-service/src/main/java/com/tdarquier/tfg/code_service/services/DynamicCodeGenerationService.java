@@ -8,22 +8,27 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 public class DynamicCodeGenerationService {
 
     private final VelocityEngine velocityEngine;
     private final MinioService minioService;
+    private final RdfService rdfService;
 
-    public DynamicCodeGenerationService(MinioService minioService) {
+    public DynamicCodeGenerationService(MinioService minioService, RdfService rdfService) {
         velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("resource.loader", "classpath");
         velocityEngine.setProperty("classpath.resource.loader.class",
                 "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         this.minioService = minioService;
+        this.rdfService = rdfService;
     }
 
     public void generateServiceCode(ComponentData componentData,String bucket){
@@ -155,7 +160,8 @@ public class DynamicCodeGenerationService {
         if(componentData.getIsConfigServerEnabled() && !isConfigService(componentData)){
             String externalPropPath = "config-server/src/main/resources/configurations/"
                     + componentData.getName().replace(" ","-")
-                    + ".properties";
+                    // las propiedades del gateway estan en .yml, el resto en .properties
+                    + (isGatewayService(componentData.getTemplate()) ? ".yml" : ".properties");
             configFiles.add(new MinioFile(
                     externalPropPath,
                     bucket,
@@ -163,12 +169,41 @@ public class DynamicCodeGenerationService {
             ));
         }
         configFiles.add(new MinioFile(
-                componentData.getPaths().get("resources") + "application.properties",
+                componentData.getPaths().get("resources")
+                        + (isGatewayService(componentData.getTemplate())
+                        ? "application.yml"
+                        : "application.properties"),
                 bucket,
                 generateFile(templateFolder + "/application-properties.vm", componentData)
         ));
+        // solo los servicios no util tienen endpoints para agregar al gateway
+        if(componentData.getIsGatewayEnabled() && !isUtilService(componentData.getTemplate())){
+            String externalRoutesPath = "config-server/src/main/resources/configurations/routes.yml";
+            String serviceRoute = generateFile("gatewayRouteTemplate.vm", componentData);
+            // TODO obtener como String el archivo
+            byte[] file = minioService.getObject(new MinioFile(externalRoutesPath,bucket,null));
+            String pathsFile;
+
+            // si existe leerlo y append el generateFile
+            if(file != null){
+                pathsFile = new String(file,UTF_8).concat("\n" + serviceRoute);
+            }else {
+                pathsFile = "gateway:\n  routes:\n" + serviceRoute;
+            }
+
+            configFiles.add(new MinioFile(
+                    externalRoutesPath,
+                    bucket,
+                    pathsFile
+            ));
+
+        }
 
         return configFiles;
+    }
+
+    private boolean isGatewayService(Template template) {
+        return template.toString().toLowerCase().startsWith("gateway_service");
     }
 
     //codigo duplicado, deberia crear un recurso global

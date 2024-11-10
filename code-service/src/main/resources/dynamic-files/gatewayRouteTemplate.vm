@@ -1,0 +1,4 @@
+    - id: ${name}
+        uri: lb://${name}
+        predicates:
+          - Path=${apiPath}

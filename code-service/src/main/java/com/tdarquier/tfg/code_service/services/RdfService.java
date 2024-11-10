@@ -127,6 +127,13 @@ public class RdfService {
         return null;
     }
 
+    public boolean isGatewayEnabled(Model model) {
+        String queryStr = "ASK WHERE { "
+                + "?project <" + BASE_URI + "hasInfrastructure> ?infrastructure . "
+                + "?infrastructure <" + BASE_URI + "gatewayEnabled> \"true\" . }";
+
+        return QueryExecutionFactory.create(QueryFactory.create(queryStr), model).execAsk();
+    }
 
     public PersistenceType getPersistenceType(Model model, String serviceName) {
         String queryStr = "SELECT ?persistence WHERE { "

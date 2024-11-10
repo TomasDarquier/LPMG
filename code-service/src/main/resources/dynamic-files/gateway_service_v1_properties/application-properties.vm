@@ -1,8 +1,17 @@
-spring.application.name=${name}
+spring:
+  application:
+    name: ${name}
 #if($isConfSvEnabled)
-spring.config.import=optional:configserver:http://localhost:8888
+  config:
+    import: optional:configserver:http://localhost:8888
 #else
-server.port=8222
-spring.cloud.gateway.discovery.locator.enabled=true
-spring.cloud.gateway.routes=
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - spring.config.import: classpath:/configurations/routes.yml
+server:
+  port: 8222
 #end

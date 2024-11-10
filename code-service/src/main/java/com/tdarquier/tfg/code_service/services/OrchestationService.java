@@ -37,6 +37,7 @@ public class OrchestationService {
         Model model = ModelFactory.createDefaultModel();
         model.read(new java.io.StringReader(rdfModel), null, "RDF/XML");
         boolean isConfigServerEnabled = rdfService.isConfigServerEnabled(model);
+        boolean isGatewayEnabled = rdfService.isGatewayEnabled(model);
 
         // creacion del bucket que contendra toda la arquitectura
         LocalDateTime now = LocalDateTime.now();
@@ -92,6 +93,7 @@ public class OrchestationService {
                         null,
                         null,
                         isConfigServerEnabled,
+                        isGatewayEnabled,
                         null
                 );
             }else{
@@ -106,6 +108,7 @@ public class OrchestationService {
                         Integer.parseInt(rdfService.getServicePort(model,name)),
                         rdfService.getApiPathPrefix(name,model),
                         isConfigServerEnabled,
+                        isGatewayEnabled,
                         rdfService.getPersistenceType(model, name)
                 );
             }
