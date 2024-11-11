@@ -1,0 +1,40 @@
+#set ($postgresql = "POSTGRESQL")
+services:
+  db:
+#if($persistence == $postgresql)
+    image: postgres:13
+    container_name: product_service_${persistence}
+    environment:
+      POSTGRES_USER: changeUsername
+      POSTGRES_PASSWORD: changePassword
+      POSTGRES_DB: products
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - tfg-default-network
+#end
+
+## TODO implement
+#if($persistence.method.equals("MYSQL"))
+    image: ${persistence}
+    container_name: product_service_${persistence}
+    environment:
+      POSTGRES_USER: changeUsername
+      POSTGRES_PASSWORD: changePassword
+      POSTGRES_DB: products
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - tfg-default-network
+#end
+
+networks:
+  tfg-default-network:
+    driver: bridge
+
+volumes:
+  db_data:

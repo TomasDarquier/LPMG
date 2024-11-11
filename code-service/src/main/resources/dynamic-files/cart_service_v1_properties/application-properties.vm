@@ -1,0 +1,9 @@
+spring.application.name=${name}
+#if($isConfSvEnabled)
+spring.config.import=optional:configserver:http://localhost:8888
+#else
+server.port=${port}
+
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+#end

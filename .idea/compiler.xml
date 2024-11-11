@@ -10,9 +10,11 @@
         <module name="code-service" />
         <module name="config-server" />
         <module name="generation-service" />
+        <module name="cart-service" />
         <module name="init-service" />
         <module name="user-management-service" />
         <module name="request-service" />
+        <module name="product-service" />
         <module name="user-service" />
         <module name="order-service" />
         <module name="gateway" />
@@ -22,6 +24,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cart-service" options="-parameters" />
       <module name="code-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
@@ -29,6 +32,7 @@
       <module name="generation-service" options="-parameters" />
       <module name="init-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
+      <module name="product-service" options="-parameters" />
       <module name="request-service" options="-parameters" />
       <module name="user-management-service" options="-parameters" />
       <module name="user-service" options="-parameters" />

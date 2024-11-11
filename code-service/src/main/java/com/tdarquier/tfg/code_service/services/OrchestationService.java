@@ -113,7 +113,6 @@ public class OrchestationService {
                 );
             }
 
-            System.out.println("Component data: \n\n" + componentData);
             codeGenerationService.generateServiceCode(componentData, projectBucket);
         });
     }

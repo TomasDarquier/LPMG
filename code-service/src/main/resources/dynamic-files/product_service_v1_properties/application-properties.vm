@@ -1,5 +1,8 @@
-spring.application.name=product-service
-server.port=8080
+spring.application.name=${name}
+#if($isConfSvEnabled)
+spring.config.import=optional:configserver:http://localhost:8888
+#else
+server.port=${port}
 
 #db settings
 spring.datasource.url=jdbc:postgresql://localhost:5432/products
@@ -7,3 +10,4 @@ spring.datasource.username=changeUsername
 spring.datasource.password=changePassword
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#end
