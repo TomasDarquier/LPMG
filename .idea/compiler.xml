@@ -7,20 +7,25 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="code-service" />
-        <module name="config-server" />
         <module name="generation-service" />
         <module name="cart-service" />
         <module name="init-service" />
-        <module name="user-management-service" />
-        <module name="request-service" />
         <module name="product-service" />
         <module name="user-service" />
+        <module name="discovery-service" />
+        <module name="code-service" />
+        <module name="config-server" />
+        <module name="user-management-service" />
+        <module name="download-service" />
+        <module name="request-service" />
         <module name="order-service" />
         <module name="gateway" />
-        <module name="discovery-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="forntend-service" target="17" />
+      <module name="frontend-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -28,6 +33,9 @@
       <module name="code-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
+      <module name="download-service" options="-parameters" />
+      <module name="forntend-service" options="-parameters" />
+      <module name="frontend-service" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="generation-service" options="-parameters" />
       <module name="init-service" options="-parameters" />

@@ -102,7 +102,7 @@ public class RdfParserService {
             return "mysql,";
         }
         if(persistenceTemplate.equals(Persistence.REDIS)){
-            return "data-redis,";
+            return "data-redis,cache,";
         }
         if(persistenceTemplate.equals(Persistence.KAFKA)){
             return "kafka,";

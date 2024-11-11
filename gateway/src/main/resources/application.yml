@@ -13,7 +13,6 @@ spring:
           - id: user-service
             uri: lb://user-service
             predicates:
-              # proxy paths in user service
               - Path=/users/**
               - Path=/activities/**
           - id: request-service
@@ -28,6 +27,10 @@ spring:
             uri: lb://code-service
             predicates:
               - Path=/code/**
+          - id: download-service
+            uri: lb://download-service
+            predicates:
+              - Path=/download/**
     openfeign:
       oauth2:
         enabled: true

@@ -1,5 +1,6 @@
 package com.example.user_service.controllers;
 
+import com.example.user_service.entities.User;
 import com.example.user_service.services.UserActivityService;
 import com.example.user_service.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,14 @@ public class UserController {
         return userService.findById(id).isPresent() ?
                 ResponseEntity.ok(true) :
                 ResponseEntity.ok(false);
+    }
+
+    @GetMapping("/getId/{email}")
+    public ResponseEntity<Long> getIdByEmail(@PathVariable String email) {
+        Optional<User> user = userService.findByEmail(email);
+        return user.isPresent()?
+                ResponseEntity.ok(user.get().getId()):
+                ResponseEntity.notFound().build();
     }
 
 }

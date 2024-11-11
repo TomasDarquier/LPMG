@@ -16,7 +16,16 @@
         <option value="$PROJECT_DIR$/blueprints/config-server/pom.xml" />
         <option value="$PROJECT_DIR$/blueprints/cart-service/pom.xml" />
         <option value="$PROJECT_DIR$/blueprints/product-service/pom.xml" />
+        <option value="$PROJECT_DIR$/forntend-service/pom.xml" />
+        <option value="$PROJECT_DIR$/frontend-service/pom.xml" />
+        <option value="$PROJECT_DIR$/download-service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/forntend-service/pom.xml" />
+        <option value="$PROJECT_DIR$/frontend-service/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">

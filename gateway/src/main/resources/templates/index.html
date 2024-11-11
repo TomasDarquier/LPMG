@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TFG App</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="#" class="home-icon">🏠</a>
+        <button>Documentación</button>
+        <button>Guía de Uso</button>
+        <button>Perfil</button>
+        <button class="logout">Cerrar Sesión</button>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="component" draggable="true" data-type="usuarios">
+            <div class="icon">👤</div>
+            <span>Usuarios</span>
+        </div>
+        <div class="component" draggable="true" data-type="carrito">
+            <div class="icon">🛒</div>
+            <span>Carrito</span>
+        </div>
+        <div class="component" draggable="true" data-type="notificaciones">
+            <div class="icon">🔔</div>
+            <span>Notificaciones</span>
+        </div>
+        <div class="component" draggable="true" data-type="catalogo">
+            <div class="icon">📚</div>
+            <span>Catálogo</span>
+        </div>
+        <div class="component" draggable="true" data-type="envios">
+            <div class="icon">🚢</div>
+            <span>Envíos</span>
+        </div>
+        <div class="component" draggable="true" data-type="ordenes">
+            <div class="icon">📋</div>
+            <span>Órdenes</span>
+        </div>
+    </div>
+
+    <div id="canvas"></div>
+
+    <button id="generateCode" class="generate-button">Generar Código</button>
+</div>
+
+<script th:src="@{/js/canvas.js}"></script>
+<script th:src="@{/js/dragDrop.js}"></script>
+</body>
+</html>

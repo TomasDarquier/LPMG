@@ -1,6 +1,6 @@
 package com.example.gateway.controllers;
 
-import com.example.gateway.clients.UserActivitiesClient;
+import com.example.gateway.clients.UserClient;
 import com.example.gateway.dtos.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,11 +18,12 @@ import java.util.stream.Collectors;
 
 import static com.example.gateway.dtos.OauthProvider.*;
 
+@RequestMapping("/behavior")
 @RestController
 @RequiredArgsConstructor
 public class UserBehaviorController {
 
-    private final UserActivitiesClient userActivitiesClient;
+    private final UserClient userClient;
 
     @GetMapping("/access-control")
     public ModelAndView accessControl(@AuthenticationPrincipal OidcUser user) {
@@ -38,7 +40,7 @@ public class UserBehaviorController {
         //TODO arreglar excepciones de cuando se repite el mail y hay error
         //
         //
-        userActivitiesClient.accessActivities(newUser);
+        userClient.accessActivities(newUser);
 
         return new ModelAndView("redirect:/");
     }
