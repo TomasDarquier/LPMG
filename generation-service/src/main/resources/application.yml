@@ -1,9 +1,11 @@
 spring:
   application:
     name: generation-service
+#  config:
+#    import: optional:configserver:http://localhost:8888
   config:
     import: file:./src/main/resources/testsecrets.properties
-  #    import: file:./src/main/resources/secrets.properties
+#    import: file:./src/main/resources/secrets.properties
   kafka:
     security:
       protocol: "SSL"

@@ -7,6 +7,7 @@
     <file url="file://$PROJECT_DIR$/blueprints/product-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/blueprints/user-management-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/code-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/discovery-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/download-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/forntend-service/src/main/java" charset="UTF-8" />
