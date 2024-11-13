@@ -52,7 +52,7 @@ nav button {
 }
 
 .component {
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 0.5rem;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -60,7 +60,12 @@ nav button {
     cursor: move;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+
+.component .icon {
+    font-size: 1.5rem;
 }
 
 .component:hover {
@@ -77,28 +82,44 @@ nav button {
 
 .canvas-component {
     position: absolute;
-    padding: 1rem;
+    padding: 1.5rem;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
     cursor: move;
-    min-width: 150px;
-    display: flex;
-    align-items: center;
+    min-width: 200px;
+    display: grid;
+    grid-template-areas:
+        "icon name"
+        "actions actions";
+    grid-template-columns: auto 1fr;
     gap: 0.5rem;
+    z-index: 1;
+}
+
+.canvas-component .icon {
+    grid-area: icon;
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.canvas-component span {
+    grid-area: name;
+    font-size: 1.1rem;
+    align-self: center;
 }
 
 .canvas-component .actions {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
+    grid-area: actions;
     display: flex;
+    justify-content: flex-end;
     gap: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 .canvas-component .delete-btn,
-.canvas-component .connect-btn {
+.canvas-component .connect-btn,
+.canvas-component .config-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -107,9 +128,9 @@ nav button {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 1rem;
+    width: 28px;
+    height: 28px;
+    font-size: 1.2rem;
 }
 
 .canvas-component .delete-btn {
@@ -122,6 +143,11 @@ nav button {
     color: #1976d2;
 }
 
+.canvas-component .config-btn {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
 .canvas-component .delete-btn:hover {
     background-color: #dc3545;
     color: white;
@@ -132,8 +158,13 @@ nav button {
     color: white;
 }
 
+.canvas-component .config-btn:hover {
+    background-color: #2e7d32;
+    color: white;
+}
+
 .canvas-component.connecting {
-    outline: 2px solid #1976d2;
+    outline: 2px solid #2d2e37;
 }
 
 .generate-button {
@@ -155,9 +186,9 @@ nav button {
 .connection-line {
     position: absolute;
     height: 2px;
-    background-color: #1976d2;
+    background-color: #2d2e37;
     pointer-events: auto;
-    z-index: 1;
+    z-index: 0;
     transform-origin: left center;
     cursor: pointer;
 }
@@ -165,4 +196,120 @@ nav button {
 .connection-line:hover {
     height: 4px;
     background-color: #dc3545;
+}
+
+.config-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 400px;
+}
+
+.config-modal h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.config-modal .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.config-modal label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.config-modal select,
+.config-modal input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.config-modal .buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.config-modal button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+}
+.global-config-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    z-index: 100;
+}
+
+.global-config-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.config-modal .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.config-modal .accept-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.notification {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(60, 64, 67, 0.9);
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+.notification.success {
+    background-color: #4CAF50; /* Verde para éxito */
+}
+
+.notification.error {
+    background-color: #F44336; /* Rojo para error */
 }

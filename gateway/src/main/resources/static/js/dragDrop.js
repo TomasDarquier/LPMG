@@ -2,15 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const components = document.querySelectorAll('.component');
     const canvasElement = document.getElementById('canvas');
 
-    const componentIcons = {
-        usuarios: '👤',
-        carrito: '🛒',
-        notificaciones: '🔔',
-        catalogo: '📚',
-        envios: '🚢',
-        ordenes: '📋'
-    };
-
     components.forEach(component => {
         component.addEventListener('dragstart', handleDragStart);
     });
@@ -34,10 +25,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = e.clientY - rect.top;
 
         canvas.addComponent({
+            type,
             name: type.charAt(0).toUpperCase() + type.slice(1),
-            icon: componentIcons[type],
+            icon: getComponentIcon(type),
             x,
             y
         });
+    }
+
+    function getComponentIcon(type) {
+        const icons = {
+            usuarios: '👤',
+            carrito: '🛒',
+            notificaciones: '🔔',
+            catalogo: '📚',
+            envios: '🚢',
+            ordenes: '📋'
+        };
+        return icons[type] || '📦';
     }
 });

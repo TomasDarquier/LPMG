@@ -2,19 +2,69 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>TFG App</title>
+    <title>Documentación - Diseñador de Microservicios</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/documentation.css}">
 </head>
 <body>
 <header>
     <nav>
-        <a href="#" class="home-icon">🏠</a>
-        <button>Documentación</button>
+        <a href="/" class="home-icon">🏠</a>
+        <button class="active">Documentación</button>
         <button>Guía de Uso</button>
         <button>Perfil</button>
         <button class="logout">Cerrar Sesión</button>
     </nav>
 </header>
 
+<div class="doc-container">
+    <aside class="doc-sidebar">
+        <div class="components-nav">
+            <h2>Componentes</h2>
+            <ul>
+                <li class="expandable">
+                    <span>Usuarios</span>
+                    <ul>
+                        <li>Composición</li>
+                        <li>Persistencia</li>
+                        <li>Compatibilidad</li>
+                    </ul>
+                </li>
+                <li class="expandable">
+                    <span>Carrito</span>
+                    <ul>
+                        <li>Composición</li>
+                        <li>Persistencia</li>
+                        <li>Compatibilidad</li>
+                    </ul>
+                </li>
+                <!-- Repeat for other components -->
+            </ul>
+        </div>
+    </aside>
+
+    <main class="doc-content">
+        <div class="doc-header">
+            <h1>Documentación</h1>
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar en la documentación...">
+            </div>
+        </div>
+
+        <article class="doc-article">
+            <h2>Componente de Usuarios</h2>
+            <section>
+                <h3>Persistencia</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eget vulputate lectus. Mauris nibh mauris, rhoncus eu odio eu, pulvinar hendrerit ex.</p>
+                <div class="tech-icon">
+                    <img src="/images/postgresql-icon.png" alt="PostgreSQL">
+                </div>
+            </section>
+            <!-- More sections -->
+        </article>
+    </main>
+</div>
+
+<script th:src="@{/js/documentation.js}"></script>
 </body>
 </html>

@@ -2,10 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>TFG App</title>
+    <title>Diseñador de Microservicios</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/toggles.css}">
 </head>
-<body>
+<body th:attr="data-model-id=${modelId},
+_csrftoken=${_csrf.token}">
 <header>
     <nav>
         <a href="#" class="home-icon">🏠</a>
@@ -46,10 +48,12 @@
 
     <div id="canvas"></div>
 
-    <button id="generateCode" class="generate-button">Generar Código</button>
+    <button id="generateCode" class="generate-button" type="submit">Generar Código</button>
 </div>
 
+<script th:src="@{/js/toggles.js}"></script>
 <script th:src="@{/js/canvas.js}"></script>
 <script th:src="@{/js/dragDrop.js}"></script>
+
 </body>
 </html>

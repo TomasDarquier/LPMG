@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Component
 public interface RequestServiceClient {
     @PostMapping("/generation/request/{id}")
-    Boolean requestCodeGeneration(@RequestParam String json, @PathVariable Long id, HttpServletRequest request);
+    Boolean requestCodeGeneration(@RequestParam String json, @PathVariable Long id );
 }
