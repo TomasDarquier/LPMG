@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Guía de Uso - TFG Darquier Tomás</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/guide.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/" class="home-icon">🏠</a>
+        <button onclick="window.location.href='/documentation'">Documentación</button>
+        <button class="active">Guía de Uso</button>
+        <button onclick="window.location.href='/profile'">Perfil</button>
+        <button class="logout">Cerrar Sesión</button>
+    </nav>
+</header>
+
+<div class="guide-container">
+    <h1>Guía de Uso</h1>
+
+    <section class="guide-section">
+        <h2>La Plataforma</h2>
+        <p>
+            Bienvenido a nuestro Diseñador de Microservicios, una herramienta innovadora que te permite crear y gestionar arquitecturas de microservicios de manera visual e intuitiva. Esta plataforma está diseñada para simplificar el proceso de diseño y desarrollo de sistemas distribuidos, permitiéndote concentrarte en la lógica de negocio mientras nosotros nos encargamos de la infraestructura.
+        </p>
+        <p>
+            Con nuestra interfaz drag-and-drop, puedes construir arquitecturas complejas arrastrando y conectando componentes predefinidos, cada uno representando un servicio específico con su propia funcionalidad y características únicas.
+        </p>
+    </section>
+
+    <section class="guide-section">
+        <h2>¿Cómo Funciona?</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Selección de Componentes</h3>
+                <p>Arrastra los componentes necesarios desde la barra lateral izquierda hacia el área de diseño. Cada componente representa un microservicio específico con funcionalidad predefinida.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Configuración</h3>
+                <p>Personaliza cada componente según tus necesidades ajustando sus parámetros de configuración. Puedes definir aspectos como la persistencia, seguridad y comunicación entre servicios.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Conexiones</h3>
+                <p>Establece las relaciones entre los diferentes microservicios conectándolos en el canvas. Las conexiones representan los canales de comunicación y dependencias entre servicios.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Generación</h3>
+                <p>Una vez finalizado el diseño, genera el código base de tu arquitectura con un solo clic. La plataforma creará todos los archivos necesarios siguiendo las mejores prácticas de desarrollo.</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <h2>Confirmar Cierre de Sesión</h2>
+        <p>¿Está seguro que desea cerrar la sesión?</p>
+        <div class="modal-buttons">
+            <form method="post" th:action="@{/logout}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button id="confirmLogout" type="submit">Confirmar</button>
+            </form>
+            <button id="cancelLogout">Cancelar</button>
+        </div>
+    </div>
+</div>
+<!--&lt;!&ndash; Modal de confirmación de cierre de sesión &ndash;&gt;-->
+<!--<div id="logoutModal" class="modal">-->
+<!--    <div class="modal-content">-->
+<!--        <h2>Confirmar Cierre de Sesión</h2>-->
+<!--        <p>¿Está seguro que desea cerrar la sesión?</p>-->
+<!--        <div class="modal-buttons">-->
+<!--            <button id="confirmLogout">Confirmar</button>-->
+<!--            <button id="cancelLogout">Cancelar</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<script th:src="@{/js/logout.js}"></script>
+</body>
+</html>

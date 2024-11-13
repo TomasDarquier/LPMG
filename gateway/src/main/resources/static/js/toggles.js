@@ -46,10 +46,8 @@ class Toggles {
         const newState = !this.toggles[toggleId];
 
         if (toggleId === 'discoveryServer' && !newState) {
-            // If Discovery Server is being turned off, also turn off Config Server
             this.toggles.configServer = false;
         } else if (toggleId === 'configServer' && newState && !this.toggles.discoveryServer) {
-            // Can't enable Config Server if Discovery Server is off
             return;
         }
 
@@ -76,5 +74,4 @@ class Toggles {
     }
 }
 
-// Initialize toggles and make it globally available
 window.togglesInstance = new Toggles();

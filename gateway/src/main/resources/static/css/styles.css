@@ -63,6 +63,18 @@ nav button {
     gap: 1rem;
     font-size: 1.1rem;
 }
+.disabled-component {
+    padding: 1.5rem;
+    margin-bottom: 0.5rem;
+    background-color: #868686;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: move;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
 
 .component .icon {
     font-size: 1.5rem;
@@ -169,8 +181,8 @@ nav button {
 
 .generate-button {
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 2rem;
+    right: 2rem;
     padding: 0.75rem 1.5rem;
     background-color: #28a745;
     color: white;
@@ -313,3 +325,13 @@ nav button {
 .notification.error {
     background-color: #F44336; /* Rojo para error */
 }
+.centered-container {
+    text-align: center;  /* Centra el contenido horizontalmente */
+}
+.home-icon {
+    font-size: 30px;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+

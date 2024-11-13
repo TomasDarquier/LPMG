@@ -18,7 +18,7 @@ class Canvas {
             usuarios: 'USER_SERVICE_V1',
             carrito: 'CART_SERVICE_V1',
             notificaciones: 'NOTIFICATION_SERVICE_V1',
-            catalogo: 'CATALOG_SERVICE_V1',
+            productos: 'PRODUCT_SERVICE_V1',
             envios: 'SHIPPING_SERVICE_V1',
             ordenes: 'ORDER_SERVICE_V1'
         };

@@ -2,19 +2,76 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>TFG App</title>
+    <title>Perfil - TFG Darquier Tomás</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
+<body th:attr="_csrgtoken=${_csrf.token}">
 <header>
     <nav>
-        <a href="#" class="home-icon">🏠</a>
-        <button>Documentación</button>
-        <button>Guía de Uso</button>
-        <button>Perfil</button>
+        <a href="/" class="home-icon">🏠</a>
+        <button onclick="window.location.href='/documentation'">Documentación</button>
+        <button onclick="window.location.href='/guide'">Guía de Uso</button>
+        <button class="active">Perfil</button>
         <button class="logout">Cerrar Sesión</button>
     </nav>
 </header>
 
+<div class="profile-container">
+    <h1 th:text="${username}">NombreDeUsuario</h1>
+    <h2>Arquitecturas Recientes</h2>
+    <h4 style="text-align: center;" th:if="${downloadRows.size() >= 5}">(Max. 5)</h4>
+
+    <div th:if="${downloadRows.isEmpty()}">
+        <p style="text-align: center; font-weight: bold;">Ops... No hay arquitecturas generadas por tu usuario</p>
+        <p style="text-align: center; font-weight: bold;">
+            Dirígete al canvas haciendo click <a th:href="@{/}" style="font-weight: bold;">aquí</a>
+        </p>
+    </div>
+
+    <div th:if="${!downloadRows.isEmpty()}" class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Peso</th>
+                <th>Descarga</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="downloadRow : ${downloadRows}">
+                <td th:text="${downloadRow.date()}"></td>
+                <td th:text="${downloadRow.size()}"></td>
+                <td>
+                    <form method="get" th:action="@{${downloadRow.downloadUrl()}}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button id="downloadZip" type="submit" class="download-icon">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <h2>Confirmar Cierre de Sesión</h2>
+        <p>¿Está seguro que desea cerrar la sesión?</p>
+        <div class="modal-buttons">
+            <form method="post" th:action="@{/logout}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button id="confirmLogout" type="submit">Confirmar</button>
+            </form>
+
+            <button id="cancelLogout">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/logout.js}"></script>
 </body>
 </html>

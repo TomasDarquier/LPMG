@@ -1,17 +1,29 @@
 package com.example.gateway.controllers;
 
+import com.example.gateway.clients.DownloadServiceClient;
 import com.example.gateway.clients.RequestServiceClient;
 import com.example.gateway.clients.UserClient;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import com.example.gateway.dtos.DownloadRowDto;
+import com.example.gateway.dtos.ZipFileResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,9 +35,13 @@ public class ViewController {
     final
     UserClient userClient;
 
-    public ViewController(RequestServiceClient requestServiceClient, UserClient userClient) {
+    final
+    DownloadServiceClient downloadServiceClient;
+
+    public ViewController(RequestServiceClient requestServiceClient, UserClient userClient, DownloadServiceClient downloadServiceClient) {
         this.requestServiceClient = requestServiceClient;
         this.userClient = userClient;
+        this.downloadServiceClient = downloadServiceClient;
     }
 
     @GetMapping("")
@@ -42,8 +58,17 @@ public class ViewController {
     }
 
     @GetMapping("/profile")
-    public String profile(@AuthenticationPrincipal OidcUser user) {
-        return null;
+    public ModelAndView profile(@AuthenticationPrincipal OidcUser user) {
+        ModelAndView modelAndView = new ModelAndView("profile");
+        modelAndView.addObject("username", user.getGivenName());
+
+        Long userId = userClient.getIdByEmail(user.getEmail());
+        List<DownloadRowDto> downloadRows = downloadServiceClient.getDownloads(String.valueOf(userId));
+        downloadRows.sort(Comparator.comparing(DownloadRowDto::date).reversed());
+
+        modelAndView.addObject("downloadRows", downloadRows.subList(0,5));
+
+        return modelAndView;
     }
 
     @GetMapping("/documentation")
@@ -52,7 +77,19 @@ public class ViewController {
     }
 
     @GetMapping("/guide")
-    public String guide(@AuthenticationPrincipal OidcUser user) {
-        return null;
+    public ModelAndView guide(@AuthenticationPrincipal OidcUser user) {
+        return new ModelAndView("guide");
+    }
+
+    @GetMapping("/zip/{bucket}")
+    public ResponseEntity<byte[]> downloadZip(@PathVariable String bucket) {
+        ZipFileResponse zipFile = downloadServiceClient.getDownload(bucket);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + zipFile.getFileName());
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/zip");
+        headers.setContentLength(zipFile.getFileSize());
+
+        return new ResponseEntity<>(zipFile.getFileData(), headers, HttpStatus.OK);
     }
 }

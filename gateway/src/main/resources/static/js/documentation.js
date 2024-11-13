@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Manejo de expandibles en la navegación
     const expandables = document.querySelectorAll('.expandable');
 
     expandables.forEach(expandable => {
@@ -16,7 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sections.forEach(section => {
             const text = section.textContent.toLowerCase();
-            section.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            const shouldShow = text.includes(searchTerm);
+            section.style.display = shouldShow ? 'block' : 'none';
+
+            // Si hay término de búsqueda y la sección es visible, expandir las subsecciones
+            if (searchTerm && shouldShow) {
+                const subsections = section.querySelectorAll('.subsection');
+                subsections.forEach(sub => sub.style.display = 'block');
+            }
         });
     });
 });

@@ -2,18 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Diseñador de Microservicios</title>
+    <title>Inicio - TFG Darquier Tomás</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/css/toggles.css}">
+    <link rel="stylesheet" th:href="@{/css/documentation.css}">
 </head>
 <body th:attr="data-model-id=${modelId},
 _csrftoken=${_csrf.token}">
 <header>
     <nav>
-        <a href="#" class="home-icon">🏠</a>
-        <button>Documentación</button>
-        <button>Guía de Uso</button>
-        <button>Perfil</button>
+        <a href="/" class="home-icon">🏠</a>
+        <button onclick="window.location.href='/documentation'">Documentación</button>
+        <button onclick="window.location.href='/guide'">Guía de Uso</button>
+        <button onclick="window.location.href='/profile'">Perfil</button>
         <button class="logout">Cerrar Sesión</button>
     </nav>
 </header>
@@ -28,21 +29,21 @@ _csrftoken=${_csrf.token}">
             <div class="icon">🛒</div>
             <span>Carrito</span>
         </div>
-        <div class="component" draggable="true" data-type="notificaciones">
-            <div class="icon">🔔</div>
-            <span>Notificaciones</span>
-        </div>
-        <div class="component" draggable="true" data-type="catalogo">
+        <div class="component" draggable="true" data-type="productos">
             <div class="icon">📚</div>
-            <span>Catálogo</span>
-        </div>
-        <div class="component" draggable="true" data-type="envios">
-            <div class="icon">🚢</div>
-            <span>Envíos</span>
+            <span>Productos</span>
         </div>
         <div class="component" draggable="true" data-type="ordenes">
             <div class="icon">📋</div>
             <span>Órdenes</span>
+        </div>
+        <div class="disabled-component" draggable="true" data-type="notificaciones">
+            <div class="icon">🔔</div>
+            <span>Notificaciones</span>
+        </div>
+        <div class="disabled-component" draggable="true" data-type="envios">
+            <div class="icon">🚢</div>
+            <span>Envíos</span>
         </div>
     </div>
 
@@ -50,10 +51,23 @@ _csrftoken=${_csrf.token}">
 
     <button id="generateCode" class="generate-button" type="submit">Generar Código</button>
 </div>
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <h2>Confirmar Cierre de Sesión</h2>
+        <p>¿Está seguro que desea cerrar la sesión?</p>
+        <div class="modal-buttons">
+            <form method="post" th:action="@{/logout}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button id="confirmLogout" type="submit">Confirmar</button>
+            </form>
+            <button id="cancelLogout">Cancelar</button>
+        </div>
+    </div>
+</div>
 
+<script th:src="@{/js/logout.js}"></script>
 <script th:src="@{/js/toggles.js}"></script>
 <script th:src="@{/js/canvas.js}"></script>
 <script th:src="@{/js/dragDrop.js}"></script>
-
 </body>
 </html>

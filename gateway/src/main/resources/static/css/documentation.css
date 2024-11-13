@@ -4,6 +4,7 @@
     gap: 2rem;
     padding: 2rem;
     height: calc(100vh - 70px);
+    overflow: hidden;
 }
 
 .doc-sidebar {
@@ -11,6 +12,8 @@
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    height: calc(100vh - 120px);
 }
 
 .components-nav h2 {
@@ -34,6 +37,7 @@
     align-items: center;
     padding: 0.5rem;
     border-radius: 4px;
+    font-weight: 500;
 }
 
 .expandable > span:hover {
@@ -44,6 +48,7 @@
     content: '▶';
     margin-right: 0.5rem;
     font-size: 0.8rem;
+    transition: transform 0.3s ease;
 }
 
 .expandable.expanded > span::before {
@@ -60,11 +65,30 @@
     display: block;
 }
 
+.expandable ul li a {
+    color: #666;
+    text-decoration: none;
+    padding: 0.3rem 0.5rem;
+    display: block;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.expandable ul li a:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
 .doc-content {
     background: white;
     border-radius: 8px;
-    padding: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    height: calc(100vh - 120px);
+    scroll-padding-top: 100px; /* Ajuste para el scroll */
 }
 
 .doc-header {
@@ -72,6 +96,12 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    background: white;
+    padding: 1rem 0;
+    z-index: 10;
+    border-bottom: 1px solid #eee;
 }
 
 .search-bar input {
@@ -79,10 +109,14 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     width: 300px;
+    font-size: 0.9rem;
 }
 
-.doc-article {
-    max-width: 800px;
+.doc-article section {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    scroll-margin-top: 100px; /* Ajuste para el scroll */
 }
 
 .doc-article h2 {
@@ -91,8 +125,15 @@
     color: #333;
 }
 
-.doc-article section {
+.subsection {
     margin-bottom: 2rem;
+    scroll-margin-top: 100px; /* Ajuste para el scroll */
+}
+
+.subsection h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #444;
 }
 
 .tech-icon {
@@ -103,62 +144,67 @@
 }
 
 .tech-icon img {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
 }
 
-/* Notifications and Loading styles */
-.notification {
+/* Modal de cierre de sesión */
+.modal {
+    display: none;
     position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem 2rem;
-    border-radius: 4px;
-    color: white;
-    animation: slideIn 0.3s ease-out;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
 
-.notification.success {
-    background-color: #4caf50;
-}
-
-.notification.error {
-    background-color: #f44336;
-}
-
-.loading-indicator {
-    position: fixed;
+.modal-content {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90%;
+}
+
+.modal-content h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.modal-buttons {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: flex-end;
     gap: 1rem;
-    z-index: 1000;
+    margin-top: 2rem;
 }
 
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+.modal-buttons button {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+#confirmLogout {
+    background-color: #dc3545;
+    color: white;
 }
 
-@keyframes slideIn {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
+#cancelLogout {
+    background-color: #6c757d;
+    color: white;
+}
+
+.modal-buttons button:hover {
+    opacity: 0.9;
 }

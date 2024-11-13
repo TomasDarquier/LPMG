@@ -1,5 +1,6 @@
 package com.tdarquier.tfg.download_service.services;
 
+import com.tdarquier.tfg.download_service.dtos.ZipFileResponse;
 import io.minio.GetObjectArgs;
 import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
@@ -7,15 +8,11 @@ import io.minio.Result;
 import io.minio.errors.MinioException;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -49,52 +46,38 @@ public class MinioService {
         return matchingBuckets;
     }
 
-    public InputStreamResource getZip(String bucket) throws IOException, MinioException {
+    public ZipFileResponse getZip(String bucket) throws IOException, MinioException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (ZipOutputStream zos = new ZipOutputStream(baos)) {
 
             // Listar y descargar archivos recursivamente desde el bucket
             Iterable<Result<Item>> items = minioClient.listObjects(ListObjectsArgs.builder()
                     .bucket(bucket)
-                    .recursive(true) // Permite listar recursivamente
+                    .recursive(true)
                     .build());
-
-            boolean hasFiles = false; // Indicador para saber si realmente se añadieron archivos
 
             for (Result<Item> result : items) {
                 Item item = result.get();
                 String objectName = item.objectName();
 
-                // Ignorar directorios (objetos con nombre que termina en "/")
-                if (objectName.endsWith("/")) {
-                    System.out.println("Ignorando directorio: " + objectName);
-                    continue;
+                if (!objectName.endsWith("/")) { // Ignorar directorios
+                    byte[] objectData = downloadFileFromBucket(bucket, objectName);
+                    if (objectData.length > 0) {
+                        ZipEntry zipEntry = new ZipEntry(objectName);
+                        zos.putNextEntry(zipEntry);
+                        zos.write(objectData);
+                        zos.closeEntry();
+                    }
                 }
-
-                // Descargar archivo y verificar su contenido
-                byte[] objectData = downloadFileFromBucket(bucket, objectName);
-                if (objectData.length > 0) {
-                    hasFiles = true;
-                    // Agregar archivo al ZIP
-                    ZipEntry zipEntry = new ZipEntry(objectName);
-                    zos.putNextEntry(zipEntry);
-                    zos.write(objectData);
-                    zos.closeEntry();
-                    System.out.println("Añadido al ZIP: " + objectName);
-                } else {
-                    System.out.println("Archivo vacío o no encontrado: " + objectName);
-                }
-            }
-
-            if (!hasFiles) {
-                System.out.println("No se encontraron archivos para añadir al ZIP.");
             }
         } catch (Exception e) {
             System.err.println("Error al crear el ZIP: " + e.getMessage());
             e.printStackTrace();
         }
 
-        return new InputStreamResource(new ByteArrayInputStream(baos.toByteArray()));
+        // Crear el objeto ZipFileResponse con los datos del archivo ZIP
+        byte[] zipData = baos.toByteArray();
+        return new ZipFileResponse("bucket.zip", zipData.length, zipData);
     }
 
     private byte[] downloadFileFromBucket(String bucket, String objectName) throws IOException, MinioException {
@@ -127,6 +110,9 @@ public class MinioService {
             System.err.println("Error al calcular el tamaño del bucket: " + e.getMessage());
             e.printStackTrace();
         }
-        return totalSize + " bytes";
+        if(totalSize == 0){
+            return totalSize + " bytes";
+        }
+        return (totalSize/1024) + " kb";
     }
 }

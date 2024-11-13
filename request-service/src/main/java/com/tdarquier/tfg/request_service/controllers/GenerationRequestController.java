@@ -5,7 +5,6 @@ import com.tdarquier.tfg.request_service.messages.GenerationRequest;
 import com.tdarquier.tfg.request_service.services.GenerationRequestService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 

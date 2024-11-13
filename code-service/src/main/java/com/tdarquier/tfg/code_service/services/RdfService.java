@@ -170,7 +170,7 @@ public class RdfService {
                ));
         });
 
-        System.out.println("Conexiones pertenecientes a " + name + ": \n\n" );
+        System.out.println("Conexiones pertenecientes a " + name + ": \n\n" + connections);
         return connections;
     }
 

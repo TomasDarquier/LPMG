@@ -5,7 +5,6 @@ Plataforma Low-Code para microservicios: Permite crear y gestionar microservicio
 #### En curso
 * Disenar front-end
 #### Previo a entregaj
-* Agregar Config Server
 * Adaptar los servicios segun uniones (hasta donde se llegue)
 * Preparar sistema para la entrega:
   - Crear instructivo (si se puede script) para ejecucion 
@@ -16,6 +15,7 @@ Plataforma Low-Code para microservicios: Permite crear y gestionar microservicio
 * Agregar Shipping Service
 * Agregar Notification Service
 * Agregar soporte JWT
+* Agregar REDIS
 * Mejorar y revisar codigo de:
   - Plantillas
   - Aplication
