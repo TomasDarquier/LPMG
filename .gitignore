@@ -1,5 +1,6 @@
 user-service/src/main/resources/application.yml
-.idea
 docker/kafka/certs/production/**
 docker/kafka/credentials/production/**
 *.secrets.properties
+.idea
+/.idea/

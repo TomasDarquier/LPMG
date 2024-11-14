@@ -20,6 +20,29 @@
 <div class="doc-container">
     <aside class="doc-sidebar">
         <div class="components-nav">
+            <style>
+                /* Elimina el estilo de los enlaces dentro de las listas */
+                ul li a {
+                    text-decoration: none; /* Elimina el subrayado */
+                    color: inherit;        /* Hereda el color del texto padre (como el color del li o del body) */
+                }
+            </style>
+            <h2>Infraestructura</h2>
+            <ul style="margin-top: 20px; margin-left: 10px;">
+                <li><a href="#gateway-composicion" >●  API Gateway</a></li>
+            </ul>
+            <ul style="margin-top: 20px; margin-left: 10px;">
+                <li><a href="#discovery-composicion">●  Discovery Server</a></li>
+            </ul>
+            <ul style="margin-top: 20px; margin-left: 10px;">
+                <li><a href="#configuration-composicion">●  Configuration Server</a></li>
+            </ul>
+            <ul style="margin-top: 20px; margin-left: 10px;">
+                <li><a href="#jwt-composicion">●  Json Web Token</a></li>
+            </ul>
+            <ul style="margin-top: 20px; margin-bottom: 30px; margin-left: 10px;">
+                <li><a href="#docker-composicion">●  Persistencia via Docker</a></li>
+            </ul>
             <h2>Componentes</h2>
             <ul>
                 <li class="expandable">
@@ -44,6 +67,14 @@
                         <li><a href="#ordenes-composicion">Composición</a></li>
                         <li><a href="#ordenes-persistencia">Persistencia</a></li>
                         <li><a href="#ordenes-compatibilidad">Compatibilidad</a></li>
+                    </ul>
+                </li>
+                <li class="expandable">
+                    <span>Productos</span>
+                    <ul>
+                        <li><a href="#productos-composicion">Composición</a></li>
+                        <li><a href="#productos-persistencia">Persistencia</a></li>
+                        <li><a href="#productos-compatibilidad">Compatibilidad</a></li>
                     </ul>
                 </li>
                 <li class="expandable">
@@ -74,25 +105,71 @@
         </div>
 
         <article class="doc-article">
-            <section id="usuarios">
-                <h2>Componente de Usuarios</h2>
-                <div id="usuarios-composicion" class="subsection">
-                    <h3>Composición</h3>
-                    <p>El componente de usuarios gestiona la autenticación y autorización de los usuarios en el sistema. Implementa JWT para la seguridad y manejo de sesiones. Incluye funcionalidades como registro, inicio de sesión, recuperación de contraseña y gestión de perfiles.</p>
+            <section id="gateway">
+                <h2>API Gateway</h2>
+                <div id="gateway-composicion" class="subsection">
+                    <p>La opcion disponible en el canvas permite implementar en la arquitectura un API Gateway mediante Spring Cloud Gateway. Se trata de un componente que actúa como punto de entrada único para las solicitudes externas, redirigiéndolas a los servicios adecuados. Este patrón centraliza funciones como la autenticación, el enrutamiento, la agregación de respuestas y el manejo de fallos. En lugar de que los clientes se comuniquen directamente con cada microservicio, todas las solicitudes pasan por el API Gateway, simplificando la gestión de tráfico y mejorando la seguridad. A su vez, todos los componentes dentro del canvas se adaptan a la presencia del Gateway e inscriben sus rutas en la configuracion del mismo.</p>
+                    <div class="tech-icon">
+                        <img src="/images/gateway-icon.png" alt="API Gateway">
+                    </div>
+                </div>
+            </section>
+            <section id="discovery">
+                <h2>Discovery Server</h2>
+                <div id="discovery-composicion" class="subsection">
+                    <p>Un Discovery Server en una arquitectura de microservicios con Spring es un componente que gestiona y facilita la localización dinámica de los servicios dentro de la infraestructura. Permite que los microservicios se registren y se descubran automáticamente sin necesidad de configuraciones manuales de direcciones IP o puertos. Al activar la opcion presente en el canvas, la arquitectura es nutrida por un Eureka Discovery Server, transformando a los servicios presentes en el canvas, por ende, en clientes Eureka con su correspondiente dependencia para permitir un registro y descubrimiento exitoso.</p>
+                    <div class="tech-icon">
+                        <img src="/images/discovery-icon.png" alt="Discovery Server">
+                    </div>
+                </div>
+            </section>
+            <section id="configuration">
+                <h2>Configuration Server</h2>
+                <div id="configuration-composicion" class="subsection">
+                    <p>Mediante la utilizacion de un Configuration Server, los componentes adquieren la posiblidad de obtener su configuración de forma externa, evitando la necesidad de manejarla localmente en cada servicio. Al activar la opcion correspondiente, la arquitectura incluira el componente mencionado, implementado mediante Spring Cloud Config. El Discovery Server y el Configuration Server trabajan juntos, es por esto que para activarlo es excluyente que el recien mencionado Discovery Server este activado tambien.</p>
+                    <div class="tech-icon">
+                        <img src="/images/config-icon.png" alt="Configuration Server">
+                    </div>
+                </div>
+            </section>
+            <section id="jwt">
+                <h2>Json Web Token</h2>
+                <div id="jwt-composicion" class="subsection">
+                    <p>JWT (JSON Web Token) se trata un mecanismo, basado en un 'token', para manejar autenticación y autorización en microservicios. El token, que contiene información sobre el usuario, se emite tras la autenticación y se incluye en cada solicitud. En Spring, y por consecuencia al activar la opcion correspondiente en el canvas, se usa con Spring Security para validar el token en el API Gateway y/o en los microservicios, garantizando acceso seguro sin necesidad de mantener sesiones.</p>
                     <div class="tech-icon">
                         <img src="/images/spring-security-icon.png" alt="Spring Security">
                     </div>
                 </div>
+            </section>
+            <section id="docker">
+                <h2>Persistencia via Docker</h2>
+                <div id="docker-composicion" class="subsection">
+                    <p>Cada compontente generado en el canvas, incluye segun la eleccion realizada al momento de la personalizacion, un archivo Docker, para desplegar una instancia funcional del metodo de persistencia seleccionado, con conexiones preestablecidas debido a las configuraciones presentes tanto en las propiedades del componente Spring, como en las propias del contenedor</p>
+                    <div class="tech-icon">
+                        <img src="/images/docker-icon.png" alt="Docker">
+                    </div>
+                </div>
+            </section>
+            <section id="usuarios">
+                <h2>Componente de Usuarios</h2>
+                <div id="usuarios-composicion" class="subsection">
+                    <h3>Composición</h3>
+                    <p>El componente de usuarios gestiona las distintas acciones realizables sobre de los usuarios en el sistema. En su version vanilla ofrece funcionalidades CRUD basicas con notoria capacidad de validacion de datos y resistencia a errores.</p>
+                </div>
                 <div id="usuarios-persistencia" class="subsection">
                     <h3>Persistencia</h3>
-                    <p>Los datos de usuarios se almacenan en una base de datos PostgreSQL. Se utiliza JPA/Hibernate para el mapeo objeto-relacional. La estructura incluye tablas para información básica, roles y permisos.</p>
+                    <p>Los datos de usuarios se almacenan en una base de datos relacional, ya sea PostgreSQL o MySQL. Se utiliza JPA/Hibernate para el mapeo objeto-relacional. La estructura incluye tablas para información básica, roles y permisos.</p>
                     <div class="tech-icon">
                         <img src="/images/postgresql-icon.png" alt="PostgreSQL">
+                        <img src="/images/mysql-icon.png" alt="MySQL">
                     </div>
                 </div>
                 <div id="usuarios-compatibilidad" class="subsection">
                     <h3>Compatibilidad</h3>
-                    <p>Este componente es compatible con todos los demás microservicios del sistema. Se integra especialmente con el sistema de notificaciones para alertas de seguridad y el componente de órdenes para la gestión de compras.</p>
+                    <p>Este componente es compatible con todos los demás microservicios del sistema. Se integra especialmente con el sistema de notificaciones para alertas personalizadas. Otra union destacable se produce con el componente de órdenes para la gestión de compras.</p>
+                    <div>
+                        <p style="font-size: 32px; margin-top: 20px;">🛒 📚 📋 🔔 🚢</p>
+                    </div>
                 </div>
             </section>
 
@@ -101,19 +178,22 @@
                 <div id="carrito-composicion" class="subsection">
                     <h3>Composición</h3>
                     <p>Gestiona el carrito de compras temporal de cada usuario. Implementa funcionalidades de agregar/eliminar productos, actualizar cantidades y calcular totales en tiempo real.</p>
-                    <div class="tech-icon">
-                        <img src="/images/redis-icon.png" alt="Redis">
-                    </div>
                 </div>
                 <div id="carrito-persistencia" class="subsection">
                 <div class="subsection">
                     <h3>Persistencia</h3>
                     <p>Utiliza Redis como almacenamiento en caché para mantener el estado del carrito. Los datos se persisten temporalmente y se sincronizan con el servicio de órdenes al finalizar la compra.</p>
+                    <div class="tech-icon">
+                        <img src="/images/redis-icon.png" alt="Redis">
+                    </div>
                 </div>
                 <div id="carrito-compatibilidad" class="subsection">
                 <div class="subsection">
                     <h3>Compatibilidad</h3>
-                    <p>Se integra con el catálogo de productos, el sistema de usuarios para la personalización, y el servicio de órdenes para el proceso de checkout.</p>
+                    <p>Se integra con el catálogo de productos, el sistema de usuarios, el servicio de órdenes para el proceso de checkout y de notificaciones, para notificar abandonos de carrito.</p>
+                    <div>
+                        <p style="font-size: 32px; margin-top: 20px;">👤 📚 📋 🔔</p>
+                    </div>
                 </div>
             </section>
 
@@ -122,20 +202,50 @@
                 <div id="ordenes-composicion" class="subsection">
                 <div class="subsection">
                     <h3>Composición</h3>
-                    <p>Maneja el ciclo de vida completo de las órdenes, desde su creación hasta su finalización. Incluye gestión de estados, validación de inventario y procesamiento de pagos.</p>
+                    <p>Maneja el ciclo de vida completo de las órdenes, desde su creación hasta su finalización, mediante una potente gestion de estados. Se trata de un componente clave en la mayoria de arquitecturas con fines de lucro.</p>
                 </div>
                 <div id="ordenes-persistencia" class="subsection">
                 <div class="subsection">
                     <h3>Persistencia</h3>
-                    <p>Implementa una base de datos MongoDB para almacenar el historial de órdenes y sus estados. Mantiene registros detallados de cada transacción y cambio de estado.</p>
+                    <p>Los datos de las ordenes se almacenan en una base de datos relacional, ya sea PostgreSQL o MySQL. Se utiliza JPA/Hibernate para el mapeo objeto-relacional. La estructura incluye tablas para almacenar el historial de ordenes y sus estados.</p>
                     <div class="tech-icon">
-                        <img src="/images/mongodb-icon.png" alt="MongoDB">
+                        <img src="/images/postgresql-icon.png" alt="PostgreSQL">
+                        <img src="/images/mysql-icon.png" alt="MySQL">
                     </div>
                 </div>
                 <div id="ordenes-compatibilidad" class="subsection">
                 <div class="subsection">
                     <h3>Compatibilidad</h3>
                     <p>Se comunica con los servicios de usuarios, envíos y notificaciones para coordinar el proceso completo de la orden.</p>
+                    <div>
+                        <p style="font-size: 32px; margin-top: 20px;">👤 🔔 🚢</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="productos">
+                <h2>Componente de Productos</h2>
+                <div id="productos-composicion" class="subsection">
+                <div class="subsection">
+                   <h3>Composición</h3>
+                   <p>Maneja la persistencia, actualizacion y operaciones CRUD de los productos y sus precios y caracteristicas. Se trata de un componente estrictamente necesario para la gran mayoria de procesos.</p>
+                </div>
+                <div id="productos-persistencia" class="subsection">
+                <div class="subsection">
+                     <h3>Persistencia</h3>
+                     <p>Los datos de los productos se almacenan en una base de datos relacional, ya sea PostgreSQL o MySQL. Se utiliza JPA/Hibernate para el mapeo objeto-relacional. La estructura incluye tablas para persistir las caracteristicas y estados de los productos.</p>
+                     <div class="tech-icon">
+                         <img src="/images/postgresql-icon.png" alt="PostgreSQL">
+                         <img src="/images/mysql-icon.png" alt="MySQL">
+                     </div>
+                </div>
+                <div id="productos-compatibilidad" class="subsection">
+                <div class="subsection">
+                     <h3>Compatibilidad</h3>
+                     <p>Se comunica con los servicios de usuarios, ordenes y notificaciones para nutrir de informacion y significado los procesos que de estos componentes emergen.</p>
+                     <div>
+                        <p style="font-size: 32px; margin-top: 20px;">👤 🛒 📋 🔔</p>
+                    </div>
                 </div>
             </section>
 
@@ -144,20 +254,25 @@
                 <div id="envios-composicion" class="subsection">
                 <div class="subsection">
                     <h3>Composición</h3>
-                    <p>Gestiona la logística de envíos, incluyendo cálculo de costos, seguimiento de paquetes y coordinación con servicios de mensajería externos.</p>
+                    <p>Gestiona la logística de envíos, fundamentando su funcionamiento en la administracion de estados de los mismos y las acciones consecuentes a realizar en conjunto con componentes externos.</p>
                 </div>
                 <div id="envios-persistencia" class="subsection">
                 <div class="subsection">
                     <h3>Persistencia</h3>
+                    <p>Los datos de los envios se almacenan en una base de datos relacional, ya sea PostgreSQL o MySQL. Se utiliza JPA/Hibernate para el mapeo objeto-relacional. La estructura incluye tablas para almacenar un registro histórico de todas las operaciones logísticas.</p>
                     <p>Utiliza MySQL para almacenar información de envíos, rutas y estados de entrega. Mantiene un registro histórico de todas las operaciones logísticas.</p>
                     <div class="tech-icon">
+                        <img src="/images/postgresql-icon.png" alt="PostgreSQL">
                         <img src="/images/mysql-icon.png" alt="MySQL">
                     </div>
                 </div>
                 <div id="envios-compatibilidad" class="subsection">
                 <div class="subsection">
                     <h3>Compatibilidad</h3>
-                    <p>Se integra con el sistema de órdenes y notificaciones para mantener actualizados a los usuarios sobre el estado de sus envíos.</p>
+                    <p>Se integra con el sistema de usuarios, órdenes y notificaciones para mantener actualizados a los usuarios sobre el estado de sus envíos.</p>
+                    <div>
+                        <p style="font-size: 32px; margin-top: 20px;">👤 📋 🔔 </p>
+                    </div>
                 </div>
             </section>
 
@@ -166,19 +281,23 @@
                 <div id="notificaciones-composicion" class="subsection">
                 <div class="subsection">
                     <h3>Composición</h3>
-                    <p>Sistema centralizado de notificaciones que soporta múltiples canales: email, SMS, y notificaciones push. Gestiona templates y preferencias de usuario.</p>
+                    <p>Sistema centralizado de notificaciones con soporte destacable en canales de email. Posee una estructura generica con alta adaptabilidad para multiples casos de uso</p>
                 </div>
                 <div id="notificaciones-persistencia" class="subsection">
                 <div class="subsection">
                     <h3>Persistencia</h3>
-                    <p>Implementa RabbitMQ para la gestión de colas de mensajes y MongoDB para almacenar históricos de notificaciones y templates.</p>
+                    <p>Implementa RabbitMQ o ApacheKafka para la gestión de colas de mensajes.</p>
                     <div class="tech-icon">
                         <img src="/images/rabbitmq-icon.png" alt="RabbitMQ">
+                        <img src="/images/kafka-icon.png" alt="ApacheKafka">
                     </div>
                 </div>
                 <div id="notificaciones-compatibilidad" class="subsection">
                     <h3>Compatibilidad</h3>
-                    <p>Compatible con todos los componentes del sistema, actuando como servicio central de comunicación con los usuarios.</p>
+                    <p>Compatible con todos los componentes del sistema, ya que se trata de una pieza clave de comunicacion para la correcta implementacion de cualquier logica de negocio.</p>
+                    <div>
+                        <p style="font-size: 32px; margin-top: 20px;">👤 🛒 📚 📋 🚢</p>
+                    </div>
                 </div>
             </section>
         </article>

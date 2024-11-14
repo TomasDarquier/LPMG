@@ -4,7 +4,7 @@ Plataforma Low-Code para microservicios: Permite crear y gestionar microservicio
 ## TODO
 #### En curso
 * Disenar front-end
-#### Previo a entregaj
+#### Previo a entregar
 * Adaptar los servicios segun uniones (hasta donde se llegue)
 * Preparar sistema para la entrega:
   - Crear instructivo (si se puede script) para ejecucion 
@@ -12,10 +12,12 @@ Plataforma Low-Code para microservicios: Permite crear y gestionar microservicio
   - Dar cooldown a Kafka para evitar un falso arranque
 
 #### Posterior a entrega
-* Agregar Shipping Service
+* Agregar las planillas restantes:
+  - Agregar Shipping Service
+  - Agregar Notification Service
 * Agregar Notification Service
-* Agregar soporte JWT
 * Agregar REDIS
+* Agregar soporte JWT
 * Mejorar y revisar codigo de:
   - Plantillas
   - Aplication

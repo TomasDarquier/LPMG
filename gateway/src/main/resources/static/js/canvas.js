@@ -73,65 +73,6 @@ class Canvas {
         const generateBtn = document.getElementById('generateCode');
         generateBtn.addEventListener('click', () => this.generateJson());
     }
-    getJson() {
-        const services = [];
-        let portCounter = 8080;
-
-        this.components.forEach((component, id) => {
-            const config = this.componentConfigs.get(id);
-            const type = component.elem.getAttribute('data-type');
-            const name = component.elem.querySelector('span').textContent;
-
-            services.push({
-                template: this.templateMap[type],
-                sbVersion: '3.3.4',
-                name: config.name || name.toLowerCase(),
-                description: `Servicio para administrar ${name.toLowerCase()}`,
-                groupId: this.globalConfig.groupId,
-                artifactId: config.artifactId || `${type}-service`,
-                baseDir: `${type}-service`,
-                pathPrefix: config.endpointPrefix,
-                persistence: config.persistence.toUpperCase(),
-                port: config.port || (portCounter++).toString()
-            });
-        });
-
-        const connections = [];
-        this.connections.forEach(connectionId => {
-            const connection = document.getElementById(connectionId);
-            const sourceId = connection.dataset.source;
-            const targetId = connection.dataset.target;
-            const sourceConfig = this.componentConfigs.get(sourceId);
-            const targetConfig = this.componentConfigs.get(targetId);
-
-            connections.push({
-                serviceOne: sourceConfig.name,
-                serviceTwo: targetConfig.name,
-                protocol: 'HTTP',
-                type: sourceConfig.communication
-            });
-        });
-
-        const toggleStates = window.togglesInstance.getTogglesState();
-        const json = {
-            projectName: this.globalConfig.projectName,
-            version: this.globalConfig.version,
-            project: this.globalConfig.project,
-            description: this.globalConfig.description,
-            services,
-            connections,
-            infrastructure: {
-                configServer: toggleStates.configServer,
-                'discovery-server': toggleStates.discoveryServer,
-                gateway: toggleStates.gateway
-            },
-            security: {
-                type: toggleStates.jwtSecurity ? 'JWT' : null
-            }
-        };
-
-        return json;  // Ahora retorna el JSON generado
-    }
 
     generateJson() {
         const services = [];
@@ -212,7 +153,7 @@ class Canvas {
             messageElem.className = 'notification';
 
             if (response.ok) {
-                messageElem.textContent = 'Código generado exitosamente.';
+                messageElem.textContent = 'Código generado exitosamente. Descargalo desde tu Perfil.';
                 messageElem.classList.add('success');
             } else {
                 throw new Error('Error al enviar la configuración');
@@ -299,6 +240,10 @@ class Canvas {
         overlay.className = 'modal-overlay';
         document.body.appendChild(overlay);
 
+        const showCache = config.name === 'carrito';
+        const showRelationalDb = config.name === 'usuarios' || config.name === 'productos' || config.name === 'ordenes';
+        const showNoRelationalDb = false;
+
         const modal = document.createElement('div');
         modal.className = 'config-modal';
         modal.innerHTML = `
@@ -318,10 +263,16 @@ class Canvas {
             <div class="form-group">
                 <label for="persistence">Persistencia</label>
                 <select id="persistence">
+                ${showRelationalDb ? `
                     <option value="PostgreSQL" ${config.persistence === 'PostgreSQL' ? 'selected' : ''}>PostgreSQL</option>
                     <option value="MySQL" ${config.persistence === 'MySQL' ? 'selected' : ''}>MySQL</option>
+            ` : ''}
+                ${showNoRelationalDb? `
                     <option value="MongoDB" ${config.persistence === 'MongoDB' ? 'selected' : ''}>MongoDB</option>
+            ` : ''}
+                ${showCache? `
                     <option value="Redis" ${config.persistence === 'Redis' ? 'selected' : ''}>Redis</option>
+            ` : ''}
                 </select>
             </div>
             <div class="form-group">
@@ -329,7 +280,6 @@ class Canvas {
                 <select id="communication">
                     <option value="REST" ${config.communication === 'REST' ? 'selected' : ''}>REST</option>
                     <option value="GraphQL" ${config.communication === 'GraphQL' ? 'selected' : ''}>GraphQL</option>
-                    <option value="gRPC" ${config.communication === 'gRPC' ? 'selected' : ''}>gRPC</option>
                 </select>
             </div>
             <div class="form-group">
