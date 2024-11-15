@@ -3,7 +3,8 @@ package com.tdarquier.tfg.generation_service.clients;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -11,6 +12,6 @@ import java.util.List;
 @Component
 public interface InitClient {
 
-    @GetMapping("/init/poms")
-    List<String> getPoms(@RequestParam String rdf);
+    @PostMapping("/init/poms")
+    List<String> getPoms(@RequestBody String rdf);
 }

@@ -10,6 +10,7 @@
         <module name="generation-service" />
         <module name="cart-service" />
         <module name="init-service" />
+        <module name="config-server (2) (com.tdarquier.tfg)" />
         <module name="config-server (1) (com.tdarquier.tfg)" />
         <module name="product-service" />
         <module name="user-service" />
@@ -21,6 +22,7 @@
         <module name="request-service" />
         <module name="order-service" />
         <module name="gateway" />
+        <module name="config-server (1) (com.tdarquier.test)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -33,7 +35,9 @@
       <module name="cart-service" options="-parameters" />
       <module name="code-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="config-server (1) (com.tdarquier.test)" options="-parameters" />
       <module name="config-server (1) (com.tdarquier.tfg)" options="-parameters" />
+      <module name="config-server (2) (com.tdarquier.tfg)" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
       <module name="download-service" options="-parameters" />
       <module name="forntend-service" options="-parameters" />

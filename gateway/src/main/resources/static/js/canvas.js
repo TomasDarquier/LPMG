@@ -22,11 +22,20 @@ class Canvas {
             envios: 'SHIPPING_SERVICE_V1',
             ordenes: 'ORDER_SERVICE_V1'
         };
+     this.compatibilityMap = {
+        usuarios: ['carrito', 'notificaciones', 'productos', 'ordenes', 'envios'],
+        carrito: ['usuarios', 'productos', 'notificaciones'],
+        ordenes: ['usuarios', 'notificaciones', 'envios'],
+        productos: ['usuarios', 'notificaciones', 'envios', 'ordenes'],
+        envios: ['usuarios', 'notificaciones', 'ordenes'],
+        notificaciones: ['usuarios', 'carrito', 'ordenes', 'productos', 'envios']
+    };
 
         this.initializeEventListeners();
         this.addGlobalConfigButton();
 
     }
+
     addGlobalConfigButton() {
         const configBtn = document.createElement('button');
         configBtn.className = 'global-config-btn';
@@ -38,31 +47,49 @@ class Canvas {
         const modal = document.createElement('div');
         modal.className = 'config-modal';
         modal.innerHTML = `
-            <h2>Global Configuration</h2>
-            <div class="form-group">
-                <label for="groupId">Group ID</label>
-                <input type="text" id="groupId" value="${this.globalConfig.groupId}">
-            </div>
-            <div class="buttons">
-                <button class="cancel-btn">Cancelar</button>
-                <button class="accept-btn">Aceptar</button>
-            </div>
-        `;
+        <h2>Global Configuration</h2>
+        <div class="form-group">
+            <label for="groupId">Group ID</label>
+            <input type="text" id="groupId" value="${this.globalConfig.groupId}">
+            <small id="error-message" class="error-message" style="color: red; display: none;">Formato inválido. Usa palabras entre puntos, sin espacios</small>
+        </div>
+        <div class="buttons">
+            <button class="cancel-btn">Cancelar</button>
+            <button class="accept-btn">Aceptar</button>
+        </div>
+    `;
 
         const overlay = document.createElement('div');
         overlay.className = 'modal-overlay';
         document.body.appendChild(overlay);
         document.body.appendChild(modal);
 
-        modal.querySelector('.cancel-btn').addEventListener('click', () => {
+        const groupIdInput = modal.querySelector('#groupId');
+        const errorMessage = modal.querySelector('#error-message');
+        const cancelButton = modal.querySelector('.cancel-btn');
+        const acceptButton = modal.querySelector('.accept-btn');
+
+        const groupIdRegex = /^([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+)$/;
+
+        cancelButton.addEventListener('click', () => {
             modal.remove();
             overlay.remove();
         });
 
-        modal.querySelector('.accept-btn').addEventListener('click', () => {
-            this.globalConfig.groupId = modal.querySelector('#groupId').value;
-            modal.remove();
-            overlay.remove();
+        acceptButton.addEventListener('click', () => {
+            const groupIdValue = groupIdInput.value.trim();
+
+            if (groupIdRegex.test(groupIdValue)) {
+                this.globalConfig.groupId = groupIdValue;
+                modal.remove();
+                overlay.remove();
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        groupIdInput.addEventListener('input', () => {
+            errorMessage.style.display = 'none';
         });
     }
 
@@ -148,7 +175,6 @@ class Canvas {
                 body: JSON.stringify(json)
             });
 
-            // Crear un mensaje en la página
             const messageElem = document.createElement('div');
             messageElem.className = 'notification';
 
@@ -163,22 +189,28 @@ class Canvas {
         } catch (error) {
             console.error('Error:', error);
 
-            // Crear un mensaje de error en la página
             const messageElem = document.createElement('div');
             messageElem.className = 'notification error';
             messageElem.textContent = 'Error al generar el código.';
             document.body.appendChild(messageElem);
         }
 
-        // Hacer que el mensaje desaparezca después de unos segundos
         setTimeout(() => {
             const notifications = document.querySelectorAll('.notification');
             notifications.forEach((notification) => {
                 notification.remove();
             });
-        }, 3000); // Cambia el tiempo en milisegundos si necesitas más o menos tiempo
+        }, 3000);
     }
     addComponent(component) {
+        const existingComponent = Array.from(this.components.values())
+            .find(comp => comp.elem.getAttribute('data-type') === component.type);
+
+        if (existingComponent) {
+            this.showNotification(`Ya existe un componente de tipo ${component.type}`, 'error');
+            return;
+        }
+
         const id = 'component-' + Date.now();
         const elem = document.createElement('div');
         elem.className = 'canvas-component';
@@ -200,7 +232,6 @@ class Canvas {
         this.canvas.appendChild(elem);
         this.components.set(id, { elem, connections: new Set() });
 
-        // Initialize default configuration for the component
         this.componentConfigs.set(id, {
             name: component.name.toLowerCase(),
             artifactId: `${component.type}-service`,
@@ -231,6 +262,12 @@ class Canvas {
             this.openConfigModal(id);
         });
     }
+    areComponentsCompatible(source, target) {
+        const sourceType = source.getAttribute('data-type');
+        const targetType = target.getAttribute('data-type');
+        return this.compatibilityMap[sourceType]?.includes(targetType);
+    }
+
     openConfigModal(componentId) {
         const config = this.componentConfigs.get(componentId);
         const component = this.components.get(componentId);
@@ -247,55 +284,73 @@ class Canvas {
         const modal = document.createElement('div');
         modal.className = 'config-modal';
         modal.innerHTML = `
-            <h2>${componentName}</h2>
-            <div class="form-group">
-                <label for="name">Nombre del Servicio</label>
-                <input type="text" id="name" value="${config.name}">
-            </div>
-            <div class="form-group">
-                <label for="artifactId">Artifact ID</label>
-                <input type="text" id="artifactId" value="${config.artifactId}">
-            </div>
-            <div class="form-group">
-                <label for="port">Puerto</label>
-                <input type="text" id="port" value="${config.port}">
-            </div>
-            <div class="form-group">
-                <label for="persistence">Persistencia</label>
-                <select id="persistence">
+        <h2>${componentName}</h2>
+        <div class="form-group">
+            <label for="name">Nombre del Servicio</label>
+            <input type="text" id="name" value="${config.name}">
+            <small class="error-message" id="name-error" style="color: red; display: none;">Solo caracteres alfanuméricos y guiones.</small>
+        </div>
+        <div class="form-group">
+            <label for="artifactId">Artifact ID</label>
+            <input type="text" id="artifactId" value="${config.artifactId}">
+            <small class="error-message" id="artifactId-error" style="color: red; display: none;">Solo caracteres alfanuméricos y guiones.</small>
+        </div>
+        <div class="form-group">
+            <label for="port">Puerto</label>
+            <input type="text" id="port" value="${config.port}">
+            <small class="error-message" id="port-error" style="color: red; display: none;">Debe ser un número entre 1 y 65535.</small>
+        </div>
+        <div class="form-group">
+            <label for="persistence">Persistencia</label>
+            <select id="persistence">
                 ${showRelationalDb ? `
                     <option value="PostgreSQL" ${config.persistence === 'PostgreSQL' ? 'selected' : ''}>PostgreSQL</option>
                     <option value="MySQL" ${config.persistence === 'MySQL' ? 'selected' : ''}>MySQL</option>
-            ` : ''}
-                ${showNoRelationalDb? `
+                ` : ''}
+                ${showNoRelationalDb ? `
                     <option value="MongoDB" ${config.persistence === 'MongoDB' ? 'selected' : ''}>MongoDB</option>
-            ` : ''}
-                ${showCache? `
+                ` : ''}
+                ${showCache ? `
                     <option value="Redis" ${config.persistence === 'Redis' ? 'selected' : ''}>Redis</option>
-            ` : ''}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="communication">Comunicación</label>
-                <select id="communication">
-                    <option value="REST" ${config.communication === 'REST' ? 'selected' : ''}>REST</option>
-                    <option value="GraphQL" ${config.communication === 'GraphQL' ? 'selected' : ''}>GraphQL</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="endpointPrefix">Endpoints Prefix</label>
-                <input type="text" id="endpointPrefix" value="${config.endpointPrefix}">
-            </div>
-            <div class="buttons">
-                <button class="cancel-btn">Cancelar</button>
-                <button class="accept-btn">Aceptar</button>
-            </div>
-        `;
+                ` : ''}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="communication">Comunicación</label>
+            <select id="communication">
+                <option value="REST" ${config.communication === 'REST' ? 'selected' : ''}>REST</option>
+                <option value="GraphQL" ${config.communication === 'GraphQL' ? 'selected' : ''}>GraphQL</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="endpointPrefix">Endpoints Prefix</label>
+            <input type="text" id="endpointPrefix" value="${config.endpointPrefix}">
+            <small class="error-message" id="endpointPrefix-error" style="color: red; display: none;">Debe iniciar con / y solo contener letras,<br>números y /. No terminar con /.</small>
+        </div>
+        <div class="buttons">
+            <button class="cancel-btn">Cancelar</button>
+            <button class="accept-btn">Aceptar</button>
+        </div>
+    `;
 
         document.body.appendChild(modal);
 
         const cancelBtn = modal.querySelector('.cancel-btn');
         const acceptBtn = modal.querySelector('.accept-btn');
+
+        // Validación
+        const validateInput = (input, regex, errorElement) => {
+            if (!regex.test(input.value.trim())) {
+                errorElement.style.display = 'block';
+                return false;
+            }
+            errorElement.style.display = 'none';
+            return true;
+        };
+
+        const alphanumericRegex = /^[a-zA-Z0-9-_]+$/;
+        const portRegex = /^([1-9][0-9]{0,4})$/;
+        const endpointRegex = /^\/[a-zA-Z0-9]+(\/[a-zA-Z0-9]+)*$/;
 
         cancelBtn.addEventListener('click', () => {
             modal.remove();
@@ -303,19 +358,40 @@ class Canvas {
         });
 
         acceptBtn.addEventListener('click', () => {
-            this.componentConfigs.set(componentId, {
-                name: modal.querySelector('#name').value,
-                artifactId: modal.querySelector('#artifactId').value,
-                port: modal.querySelector('#port').value,
-                persistence: modal.querySelector('#persistence').value,
-                communication: modal.querySelector('#communication').value,
-                endpointPrefix: modal.querySelector('#endpointPrefix').value
-            });
+            const nameInput = modal.querySelector('#name');
+            const artifactIdInput = modal.querySelector('#artifactId');
+            const portInput = modal.querySelector('#port');
+            const endpointPrefixInput = modal.querySelector('#endpointPrefix');
 
-            modal.remove();
-            overlay.remove();
+            const nameError = modal.querySelector('#name-error');
+            const artifactIdError = modal.querySelector('#artifactId-error');
+            const portError = modal.querySelector('#port-error');
+            const endpointPrefixError = modal.querySelector('#endpointPrefix-error');
+
+            const isNameValid = validateInput(nameInput, alphanumericRegex, nameError);
+            const isArtifactIdValid = validateInput(artifactIdInput, alphanumericRegex, artifactIdError);
+            const isPortValid = validateInput(portInput, portRegex, portError) && (parseInt(portInput.value) <= 65535);
+            const isEndpointPrefixValid = validateInput(endpointPrefixInput, endpointRegex, endpointPrefixError);
+
+            if (isNameValid && isArtifactIdValid && isPortValid && isEndpointPrefixValid) {
+                config.name = nameInput.value.trim();
+                config.artifactId = artifactIdInput.value.trim();
+                config.port = parseInt(portInput.value.trim());
+                config.endpointPrefix = endpointPrefixInput.value.trim();
+
+                modal.remove();
+                overlay.remove();
+            }
+        });
+
+        modal.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                const errorElement = modal.querySelector(`#${input.id}-error`);
+                errorElement.style.display = 'none';
+            });
         });
     }
+
     handleConnectClick(elem) {
         if (this.isConnecting) {
             if (this.sourceComponent !== elem && !this.areComponentsConnected(this.sourceComponent, elem)) {
@@ -367,14 +443,12 @@ class Canvas {
     removeComponent(id) {
         const component = this.components.get(id);
         if (component) {
-            // Remove all connections
             component.connections.forEach(connectionId => {
                 const line = document.getElementById(connectionId);
                 if (line) line.remove();
                 this.connections.delete(connectionId);
             });
 
-            // Remove references from other components
             this.components.forEach(comp => {
                 comp.connections.forEach(connectionId => {
                     if (document.getElementById(connectionId)?.dataset.source === id ||
@@ -384,10 +458,8 @@ class Canvas {
                 });
             });
 
-            // Remove component configuration
             this.componentConfigs.delete(id);
 
-            // Remove the component element
             component.elem.remove();
             this.components.delete(id);
         }
@@ -409,9 +481,15 @@ class Canvas {
                 return;
             }
 
-            isDragging = true;
+            const rect = elem.getBoundingClientRect();
+
+            xOffset = rect.left - elem.parentElement.offsetLeft;
+            yOffset = rect.top - elem.parentElement.offsetTop;
+
             initialX = e.clientX - xOffset;
             initialY = e.clientY - yOffset;
+
+            isDragging = true;
 
             if (e.target === elem) {
                 document.addEventListener('mousemove', drag);
@@ -479,8 +557,12 @@ class Canvas {
         const line = document.getElementById('temp-line');
         if (line) line.remove();
     }
-
     createConnection(start, end) {
+        if (!this.areComponentsCompatible(start, end)) {
+            this.showNotification(`${start.getAttribute('data-type')} no es compatible con ${end.getAttribute('data-type')}`, 'error');
+            return;
+        }
+
         const connectionId = `connection-${Date.now()}`;
         const line = document.createElement('div');
         line.id = connectionId;
@@ -488,7 +570,6 @@ class Canvas {
         line.dataset.source = start.id;
         line.dataset.target = end.id;
 
-        // Add click event to remove connection
         line.addEventListener('click', () => this.removeConnection(connectionId));
 
         this.canvas.appendChild(line);
@@ -500,6 +581,16 @@ class Canvas {
         this.connections.add(connectionId);
     }
 
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
     removeConnection(connectionId) {
         const line = document.getElementById(connectionId);
         if (!line) return;
