@@ -3,10 +3,8 @@ package com.tdarquier.tfg.code_service.entities;
 import com.tdarquier.tfg.code_service.enums.PersistenceType;
 import com.tdarquier.tfg.code_service.enums.Template;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Builder;
+import lombok.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +12,8 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class ComponentData {
 
         private Template template;

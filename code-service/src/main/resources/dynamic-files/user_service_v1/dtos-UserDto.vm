@@ -1,0 +1,9 @@
+#if($connections)
+package ${package}.dtos;
+
+public record UserDto(
+    Long id,
+    String username,
+    String GENDER
+){}
+#end

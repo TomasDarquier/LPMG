@@ -4,9 +4,12 @@ import org.springframework.web.bind.annotation.*;
 
 import ${package}.entities.User;
 import ${package}.services.UserService;
+#if($connections)
+import ${package}.dtos.UserDto;
+#end
 
 @RestController
-@RequestMapping("/${apiPath}")
+@RequestMapping("${apiPath}")
 public class UserController {
 
     final
@@ -15,6 +18,14 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
+#if($connections)
+    @GetMapping("/dto/{userId}")
+    public UserDto getUserDto(@PathVariable String userId){
+        User user = userService.getUserById(Long.valueOf(userId));
+        return new UserDto(user.getId(),user.getUsername(), user.getGender().toString());
+    }
+#end
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable String userId){

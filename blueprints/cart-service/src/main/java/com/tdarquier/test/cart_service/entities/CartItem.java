@@ -12,4 +12,5 @@ import java.io.Serializable;
 public class CartItem implements Serializable {
     private Long productId;
     private Integer quantity;
+    private Long userId;
 }

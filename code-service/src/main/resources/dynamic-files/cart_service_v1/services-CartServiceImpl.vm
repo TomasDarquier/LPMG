@@ -38,8 +38,19 @@ public class CartServiceImpl implements CartService {
             }
         }
 
-        if (!itemExists) {
+    if (!itemExists) {
+    #set($found = false)
+    #foreach($connection in $connections)
+        #if($connection.connectedTo.name().startsWith("USER_SERVICE"))
+            #set($found = true)
+            #break
+        #end
+    #end
+    #if($found)
+        items.add(new CartItem(productId, quantity, userId));
+    #else
         items.add(new CartItem(productId, quantity));
+    #end
         }
 
         redisTemplate.delete(key);

@@ -1,20 +1,51 @@
+#set($found = false)
+#set($connectionApiPath = "")
+#set($connectionPort = "")
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("PRODUCT_SERVICE"))
+        #set($found = true)
+        #set($connectionApiPath = $connection.apiPath)
+        #set($connectionPort = $connection.port)
+        #break
+    #end
+#end
 package ${package}.controllers;
 
 import ${package}.entities.CartItem;
 import ${package}.services.CartService;
 import org.springframework.web.bind.annotation.*;
-
+#if($found)
+import com.tdarquier.test.cart_service.clients.ProductClient;
+import java.util.concurrent.atomic.AtomicReference;
+#end
 import java.util.List;
 
 @RestController
-@RequestMapping("/${apiPath}")
+@RequestMapping("${apiPath}")
 public class CartController {
 
     private final CartService cartService;
-
-    public CartController(CartService cartService) {
+#if($found)
+    private final ProductClient productClient;
+#end
+    public CartController(CartService cartService #if($found), ProductClient productClient#end) {
         this.cartService = cartService;
+#if($found)
+        this.productClient = productClient;
+#end
     }
+
+#if($found)
+    @GetMapping("/{userId}/total")
+    public Double getTotal(@PathVariable Long userId) {
+        AtomicReference<Double> total = new AtomicReference<>(0.0);
+        cartService.getAllItems(userId).forEach( cartItem -> {
+            ProductDto dto = productClient.getProductDtoById(cartItem.getProductId());
+            total.set(total.get() + (dto.price() * cartItem.getQuantity()));
+        });
+        return total.get();
+    }
+#end
 
     @PostMapping("/{userId}/add")
     public void addItem(@PathVariable Long userId, @RequestParam Long productId, @RequestParam int quantity) {

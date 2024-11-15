@@ -34,7 +34,7 @@ public class ProjectGenerationService {
     private String orderServiceDependencies;
     @Value("${SHIPPING_SERVICE_DEPENDENCIES}")
     private String shippingServiceDependencies;
-    @Value("${PRODUCTS_SERVICE_DEPENDENCIES}")
+    @Value("${PRODUCT_SERVICE_DEPENDENCIES}")
     private String productServiceDependencies;
 
 
@@ -103,7 +103,7 @@ public class ProjectGenerationService {
         if(template.toString().equalsIgnoreCase("SHIPPING_SERVICE_V1")){
             return dependencies + shippingServiceDependencies;
         }
-        if(template.toString().equalsIgnoreCase("PRODUCTS_SERVICE_V1")){
+        if(template.toString().equalsIgnoreCase("PRODUCT_SERVICE_V1")){
             return dependencies + productServiceDependencies;
         }
         return dependencies.endsWith(",")?

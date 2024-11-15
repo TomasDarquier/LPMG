@@ -1,0 +1,17 @@
+#set($found = false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("CART_SERVICE"))
+        #set($found = true)
+        #break
+    #end
+#end
+#if($found)
+package ${package}.dtos;
+
+public record ProductDto(
+    Long id,
+    String name,
+    Double price
+) {
+}
+#end

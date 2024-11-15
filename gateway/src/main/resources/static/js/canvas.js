@@ -23,10 +23,10 @@ class Canvas {
             ordenes: 'ORDER_SERVICE_V1'
         };
      this.compatibilityMap = {
-        usuarios: ['carrito', 'notificaciones', 'productos', 'ordenes', 'envios'],
+        usuarios: ['carrito', 'notificaciones', 'ordenes', 'envios'],
         carrito: ['usuarios', 'productos', 'notificaciones'],
         ordenes: ['usuarios', 'notificaciones', 'envios'],
-        productos: ['usuarios', 'notificaciones', 'envios', 'ordenes'],
+        productos: ['notificaciones', 'envios', 'ordenes'],
         envios: ['usuarios', 'notificaciones', 'ordenes'],
         notificaciones: ['usuarios', 'carrito', 'ordenes', 'productos', 'envios']
     };

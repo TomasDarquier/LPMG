@@ -1,5 +1,6 @@
 package com.tdarquier.test.user_management_service.controllers;
 
+import com.tdarquier.test.user_management_service.dtos.UserDto;
 import org.springframework.web.bind.annotation.*;
 
 import com.tdarquier.test.user_management_service.entities.User;
@@ -18,6 +19,11 @@ public class UserController {
 
 // Endpoints Predeterminados
 //
+  @GetMapping("/dto/{userId}")
+  public UserDto getUserDto(@PathVariable String userId){
+    User user = userService.getUserById(Long.valueOf(userId));
+    return new UserDto(user.getId(),user.getUsername(), user.getGender().toString());
+  }
 
   @GetMapping("/{userId}")
   public User getUserById(@PathVariable String userId){

@@ -43,14 +43,16 @@ public class ProjectStructureService {
     public Map<String, String> createFolderStructure(String projectBucket, String groupId, String artifactId) {
         String formattedArtifact = artifactId.replaceAll(" ", "-");
         String formattedGroup = groupId.replaceAll(" ", "-").replaceAll("\\.", "/");
+        //para los imports y carpetas no debe haber guion medio
+        String artifactForFiles = formattedArtifact.replace("-", "_");
 
         Map<String, String> paths = new HashMap<>();
 
         String servicePath = formattedArtifact + "/";
-        String codePath = servicePath + "src/main/java/" + formattedGroup + "/" + formattedArtifact + "/";
+        String codePath = servicePath + "src/main/java/" + formattedGroup + "/" + artifactForFiles + "/";
         String resourcesPath = servicePath + "src/main/resources/";
-        String testPath = servicePath + "src/test/java/" + formattedGroup + "/" + formattedArtifact + "/";
-        String groupIdFormattedToPackage = groupId.replaceAll(" ", "-") + "." + formattedArtifact;
+        String testPath = servicePath + "src/test/java/" + formattedGroup + "/" + artifactForFiles + "/";
+        String groupIdFormattedToPackage = groupId.replaceAll(" ", "_") + "." + artifactForFiles;
 
         paths.put("service", servicePath);
         paths.put("code", codePath);

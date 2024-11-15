@@ -1,11 +1,13 @@
 package com.tdarquier.test.product_service.controllers;
 
+import com.tdarquier.test.product_service.dtos.ProductDto;
 import com.tdarquier.test.product_service.entities.Product;
 import com.tdarquier.test.product_service.services.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
@@ -21,6 +23,16 @@ public class ProductController {
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/dto/{id}")
+    public ResponseEntity<ProductDto> getProductDtoById(@PathVariable Long id) {
+        Optional<Product> product = productService.getProduct(id);
+        return product.map(value -> ResponseEntity.ok().body(new ProductDto(
+                value.getId(),
+                value.getName(),
+                value.getPrice()
+        ))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")

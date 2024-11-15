@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -66,7 +67,14 @@ public class ViewController {
         List<DownloadRowDto> downloadRows = downloadServiceClient.getDownloads(String.valueOf(userId));
         downloadRows.sort(Comparator.comparing(DownloadRowDto::date).reversed());
 
-        modelAndView.addObject("downloadRows", downloadRows.subList(0,5));
+        //envia las descargas al view, con tope de 5 rows
+        if(downloadRows.size() >= 5){
+            modelAndView.addObject("downloadRows", downloadRows.subList(0,5));
+        }else if(!downloadRows.isEmpty()){
+            modelAndView.addObject("downloadRows", downloadRows.subList(0,downloadRows.size()));
+        }else {
+            modelAndView.addObject("downloadRows", new ArrayList<DownloadRowDto>());
+        }
 
         return modelAndView;
     }

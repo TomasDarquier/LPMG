@@ -44,7 +44,7 @@ public class CartServiceImpl implements CartService {
 
         // Si el producto no existe en el carrito, crea un nuevo CartItem
         if (!itemExists) {
-            items.add(new CartItem(productId, quantity));
+            items.add(new CartItem(productId, quantity, userId));
         }
 
         // Limpia la lista en Redis y agrega la lista actualizada
