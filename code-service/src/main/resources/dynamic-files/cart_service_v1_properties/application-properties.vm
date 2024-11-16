@@ -5,5 +5,5 @@ spring.config.import=optional:configserver:http://localhost:8888
 server.port=${port}
 
 spring.data.redis.host=localhost
-spring.data.redis.port=6379
+spring.data.redis.port=${dbPort}
 #end

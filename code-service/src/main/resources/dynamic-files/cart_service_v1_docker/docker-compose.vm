@@ -8,7 +8,7 @@ services:
       retries: 5
     command: [ "redis-server" ]
     ports:
-      - "6379:6379"
+      - "${dbPort}:6379"
     networks:
       - tfg-default-network
 

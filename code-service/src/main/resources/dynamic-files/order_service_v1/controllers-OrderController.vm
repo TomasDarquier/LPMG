@@ -1,8 +1,25 @@
+#set($cartService = false)
+#set($productService = false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("CART_SERVICE"))
+        #set($cartService = true)
+    #end
+    #if($connection.connectedTo.name().startsWith("PRODUCT_SERVICE"))
+        #set($productService = true)
+    #end
+#end
 package ${package}.controllers;
 
 import ${package}.entities.Order;
 import ${package}.services.OrderService;
 import org.springframework.web.bind.annotation.*;
+#if($cartService && $productService)
+import ${package}.clients.ProductClient;
+import ${package}.dtos.ProductDto;
+import ${package}.entities.CartItem;
+import java.util.concurrent.atomic.AtomicReference;
+import ${package}.enums.Category;
+#end
 
 import java.util.List;
 
@@ -12,9 +29,33 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService #if($cartService && $productService),ProductClient productClient #end{
         this.orderService = orderService;
+#if($cartService && $productService)
+        this.productClient = productClient;
+#end
     }
+
+#if($cartService && $productService)
+    final ProductClient productClient;
+
+    @PostMapping("/from/cart")
+    public Order createOrderFromCartItems(@RequestBody List<CartItem> items, @RequestParam String orderName, @RequestParam String category){
+        AtomicReference<Float> total = new AtomicReference<>((float) 0);
+        items.forEach(item -> {
+            ProductDto product = productClient.getProductDtoById(item.getProductId());
+            total.set((float) (product.price() * item.getQuantity()));
+        });
+        Order order = new Order();
+        order.setOrderCategory(Category.valueOf(category));
+        order.setOrderPrice(total.get());
+        order.setOrderName(orderName);
+
+        return orderService.createOrder(order);
+    }
+
+#end
+
 
     @GetMapping("")
     public List<Order> getOrders() {

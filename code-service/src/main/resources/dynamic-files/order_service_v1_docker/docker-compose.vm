@@ -3,15 +3,13 @@ services:
   db:
 #if($persistence == $postgresql)
     image: postgres:13
-    container_name: order_service_${persistence}
+    container_name: order_service_${persistence}_${name}
     environment:
       POSTGRES_USER: changeUsername
       POSTGRES_PASSWORD: changePassword
       POSTGRES_DB: orders
-    volumes:
-      - db_data:/var/lib/postgresql/data
     ports:
-     - "5432:5432"
+     - "${dbPort}:5432"
     networks:
      - tfg-default-network
 #end
@@ -19,15 +17,13 @@ services:
 ## TODO implement
 #if($persistence.method.equals("MYSQL"))
     image: ${persistence}
-    container_name: order_service_${persistence}
+    container_name: order_service_${persistence}_${name}
     environment:
       POSTGRES_USER: changeUsername
       POSTGRES_PASSWORD: changePassword
       POSTGRES_DB: orders
-    volumes:
-      - db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${dbPort}:5432"
     networks:
       - tfg-default-network
 #end

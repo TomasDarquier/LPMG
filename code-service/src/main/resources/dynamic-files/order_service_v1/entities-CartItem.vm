@@ -1,0 +1,27 @@
+#set($cartService = false)
+#set($productService = false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("CART_SERVICE"))
+        #set($cartService = true)
+    #end
+    #if($connection.connectedTo.name().startsWith("PRODUCT_SERVICE"))
+        #set($productService = true)
+    #end
+#end
+#if($cartService)
+package ${package}.entities;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CartItem implements Serializable {
+    private Long productId;
+    private Integer quantity;
+    private Long userId;
+}
+#end

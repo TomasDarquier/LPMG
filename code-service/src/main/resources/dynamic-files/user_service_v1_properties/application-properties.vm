@@ -5,7 +5,7 @@ spring.config.import=optional:configserver:http://localhost:8888
 server.port=${port}
 
 #db settings
-spring.datasource.url=jdbc:postgresql://localhost:5432/users
+spring.datasource.url=jdbc:postgresql://localhost:${dbPort}/users
 spring.datasource.username=changeUsername
 spring.datasource.password=changePassword
 spring.jpa.hibernate.ddl-auto=update

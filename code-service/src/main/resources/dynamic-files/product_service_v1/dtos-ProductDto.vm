@@ -1,11 +1,14 @@
-#set($found = false)
+#set($cartService = false)
+#set($orderService= false)
 #foreach($connection in $connections)
     #if($connection.connectedTo.name().startsWith("CART_SERVICE"))
-        #set($found = true)
-        #break
+        #set($cartService = true)
+    #end
+    #if($connection.connectedTo.name().startsWith("ORDER_SERVICE"))
+        #set($orderService= true)
     #end
 #end
-#if($found)
+#if($cartService || $orderService)
 package ${package}.dtos;
 
 public record ProductDto(

@@ -29,4 +29,5 @@ public class Order {
 
     @Column(name = "order_amount")
     private float orderAmount;
+
 }

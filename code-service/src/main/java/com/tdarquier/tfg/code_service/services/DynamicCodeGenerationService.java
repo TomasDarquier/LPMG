@@ -119,6 +119,9 @@ public class DynamicCodeGenerationService {
         context.put("package",componentData.getPaths().get("package"));
         context.put("apiPath",componentData.getApiPath());
         context.put("port", componentData.getPort());
+        if(componentData.getPort() != null){
+            context.put("dbPort", componentData.getPort() + 321);
+        }
         context.put("isConfSvEnabled",componentData.getIsConfigServerEnabled());
         context.put("applicationClassName",createApplicationName(componentData.getName()));
         if(!isUtilService(componentData.getTemplate())){

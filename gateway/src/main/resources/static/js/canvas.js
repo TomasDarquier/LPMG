@@ -24,8 +24,8 @@ class Canvas {
         };
      this.compatibilityMap = {
         usuarios: ['carrito', 'notificaciones', 'ordenes', 'envios'],
-        carrito: ['usuarios', 'productos', 'notificaciones'],
-        ordenes: ['usuarios', 'notificaciones', 'envios'],
+        carrito: ['usuarios', 'productos', 'notificaciones', 'ordenes'],
+        ordenes: ['usuarios', 'notificaciones', 'envios', 'carrito'],
         productos: ['notificaciones', 'envios', 'ordenes'],
         envios: ['usuarios', 'notificaciones', 'ordenes'],
         notificaciones: ['usuarios', 'carrito', 'ordenes', 'productos', 'envios']
@@ -298,7 +298,7 @@ class Canvas {
         <div class="form-group">
             <label for="port">Puerto</label>
             <input type="text" id="port" value="${config.port}">
-            <small class="error-message" id="port-error" style="color: red; display: none;">Debe ser un número entre 1 y 65535.</small>
+            <small class="error-message" id="port-error" style="color: red; display: none;">Debe ser un número entre 1 y 60000.</small>
         </div>
         <div class="form-group">
             <label for="persistence">Persistencia</label>

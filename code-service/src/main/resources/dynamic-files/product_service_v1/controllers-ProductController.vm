@@ -1,8 +1,11 @@
-#set($found = false)
+#set($cartService = false)
+#set($orderService = false)
 #foreach($connection in $connections)
     #if($connection.connectedTo.name().startsWith("CART_SERVICE"))
-        #set($found = true)
-        #break
+        #set($cartService = true)
+    #end
+    #if($connection.connectedTo.name().startsWith("ORDER_SERVICE"))
+        #set($orderService= true)
     #end
 #end
 package ${package}.controllers;
@@ -13,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-#if($found)
+#if($cartService || $orderService)
 import java.util.Optional;
 import ${package}.dtos.ProductDto;
 #end
@@ -28,7 +31,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-#if($found)
+#if($cartService || $orderService)
     @GetMapping("/dto/{id}")
     public ResponseEntity<ProductDto> getProductDtoById(@PathVariable Long id) {
         Optional<Product> product = productService.getProduct(id);
