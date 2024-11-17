@@ -1,4 +1,88 @@
 services:
+
+    discovery-service:
+      image: tomasdarquier/tfg-discovery:1.0
+      depends_on:
+        - config-server
+      ports:
+        - "8761:8761"
+      networks:
+        - microservices-network
+
+    config-server:
+      image: tomasdarquier/tfg-configuration:1.0
+  #    ports:
+  #      - "8888:8888"
+      networks:
+        - microservices-network
+
+    gateway:
+      image: tomasdarquier/tfg-gateway:1.0
+      depends_on:
+        - discovery-service
+      ports:
+        - "8080:8080"
+      networks:
+        - microservices-network
+
+    user-service:
+      image: tomasdarquier/tfg-user:1.0
+      depends_on:
+        - discovery-service
+        - db
+      ports:
+        - "8090:8090"
+      networks:
+        - microservices-network
+
+    request-service:
+      image: tomasdarquier/tfg-request:1.0
+      depends_on:
+        - discovery-service
+        - kafka
+      ports:
+        - "8100:8100"
+      networks:
+        - microservices-network
+
+    init-service:
+      image: tomasdarquier/tfg-init:1.0
+      depends_on:
+        - discovery-service
+      ports:
+        - "8120:8120"
+      networks:
+        - microservices-network
+
+    generation-service:
+      image: tomasdarquier/tfg-generation:1.0
+      depends_on:
+        - discovery-service
+        - kafka
+      ports:
+        - "8110:8110"
+      networks:
+        - microservices-network
+
+    code-service:
+      image: tomasdarquier/tfg-code:1.0
+      depends_on:
+        - discovery-service
+      ports:
+        - "8130:8130"
+      networks:
+        - microservices-network
+
+    download-service:
+      image: tomasdarquier/tfg-download:1.0
+      depends_on:
+        - discovery-service
+        - minio
+      ports:
+        - "8140:8140"
+      networks:
+        - microservices-network
+
   db:
     image: postgres:13
     container_name: postgres
@@ -34,13 +118,13 @@ services:
     depends_on:
       - zookeeper
     environment:
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # replicas
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 #replicas
       KAFKA_HEAP_OPTS: -Xmx1G -Xms1G
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,SSL://localhost:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,SSL://localhost:9093 #ubicacion del broker
       KAFKA_SSL_CLIENT_AUTH: 'required'
       KAFKA_SSL_KEYSTORE_FILENAME: '/certs/kafka.testbroker.keystore.jks'
       KAFKA_SSL_KEYSTORE_CREDENTIALS: pass
@@ -53,6 +137,7 @@ services:
       - ./kafka/credentials/test/pass:/etc/kafka/secrets/pass
     networks:
       - microservices-network
+
   minio:
     image: bitnami/minio:latest
     ports:
@@ -62,8 +147,8 @@ services:
       MINIO_ROOT_USER: tfgusername
       MINIO_ROOT_PASSWORD: tfgpassword
       MINIO_DEFAULT_BUCKETS: projects
-#    volumes:
-#      - /minio:/bitnami/minio/data
+    #    volumes:
+    #      - /minio:/bitnami/minio/data
     networks:
       - microservices-network
 
