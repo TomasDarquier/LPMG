@@ -1,5 +1,14 @@
-# TFG
-Plataforma Low-Code para microservicios: Permite crear y gestionar microservicios con una interfaz Drag-and-Drop, generación automática de código con Apache Velocity y especificación semántica con RDF.
+<p align="center">
+    <img src="docs/banner.png" alt="Project logo"/>
+</p>
+LPMG es una plataforma para crear una base preconfigurada de servicios, sobre la cual construir tu aplicacion.
+
+Muchas veces, cuando intentamos hacer pequenos proyectos con microservicios, nos pasamos la mayoria del tiempo creando las mismas cosas, usuarios, notificaciones, configurando clientes, creando servicios Spring Cloud...
+
+## Como Funciona
+(gif utilizando la plataforma) 
+<p> Es sencillo, arrastra el componente que vas a necesitar, si necesitas que se complemente con otros, llevalos al canvas y contectalos, configura sus puertos, paths, persistencias y otros atributos... y listo, es hora de descargarlo y desarrollar logica de negocio, el resto ya esta hecho! <p>
+
 
 ## TODO
 #### En curso
