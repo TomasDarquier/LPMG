@@ -12,13 +12,10 @@ Muchas veces, cuando intentamos hacer pequenos proyectos con microservicios, nos
 
 ## TODO
 #### En curso
-* Preparar sistema para la entrega:
-  - Crear instructivo (si se puede script) para ejecucion
-  - Probar que todo este OK en la notebook
-  - Dar cooldown a Kafka para evitar un falso arranque
-#### Previo a entregar
 
-#### Posterior a entrega
+
+#### Tareas
+* Hacer el sistema entero desplegable mediante un docker-compose
 * Agregar las planillas restantes:
   - Agregar Shipping Service
   - Agregar Notification Service
