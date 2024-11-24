@@ -1,26 +1,20 @@
-config:
-  import: file:./src/main/resources/testsecrets.properties
-#    import: file:./src/main/resources/secrets.properties
-kafka:
-  security:
-    protocol: "SSL"
-  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-  ssl:
-    trust-store-location: ${KAFKA_TRUST_STORE_LOCATION}
-    trust-store-password: ${KAFKA_TRUST_STORE_PASSWORD}
-    key-store-location: ${KAFKA_KEY_STORE_LOCATION}
-    key-store-password: ${KAFKA_KEY_STORE_PASSWORD}
-    protocol: TLSv1.2
-  producer:
-    bootstrap-servers: localhost:9093
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    properties:
-      spring.json.type.mapping: generationRequest:com.tdarquier.tfg.request_service.messages.GenerationRequest
-  consumer:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
 server:
   port: 8100
+spring:
+  kafka:
+    security:
+      protocol: "SSL"
+    bootstrap-servers: localhost:9093
+    ssl:
+      protocol: TLSv1.2
+    producer:
+      bootstrap-servers: localhost:9093
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: generationRequest:com.tdarquier.tfg.request_service.messages.GenerationRequest
+    consumer:
+      bootstrap-servers: localhost:9093
 
 logging:
   level:

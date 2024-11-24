@@ -1,29 +1,11 @@
 spring:
   application:
     name: generation-service
-#  config:
-#    import: optional:configserver:http://localhost:8888
   config:
-    import: file:./src/main/resources/testsecrets.properties
-#    import: file:./src/main/resources/secrets.properties
+    import: optional:configserver:http://localhost:8888
   kafka:
-    security:
-      protocol: "SSL"
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-    consumer:
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: '*'
-        spring.json.type.mapping: generationRequest:com.tdarquier.tfg.generation_service.kafka.generation.GenerationRequest
-      group-id: ssl-consumer #serviceGenerationRequestGroup
-      ssl:
-        trust-store-location: ${KAFKA_TRUST_STORE_LOCATION}
-        trust-store-password: ${KAFKA_TRUST_STORE_PASSWORD}
-        key-store-location: ${KAFKA_KEY_STORE_LOCATION}
-        key-store-password: ${KAFKA_KEY_STORE_PASSWORD}
-        protocol: TLSv1.2
-      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-server:
-  port: 8110
+    ssl:
+      trust-store-location: classpath:/ssl/kafka.testclient1.truststore.jks
+      trust-store-password: kafkatest
+      key-store-location: classpath:/ssl/kafka.testclient1.keystore.jks
+      key-store-password: kafkatest

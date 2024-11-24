@@ -1,34 +1,35 @@
-cloud:
-  gateway:
-    discovery:
-      locator:
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      default-filters:
+        - TokenRelay
+      mvc:
+        routes:
+          - id: user-service
+            uri: lb://user-service
+            predicates:
+              - Path=/users/**
+              - Path=/activities/**
+          - id: request-service
+            uri: lb://request-service
+            predicates:
+              - Path=/generation/**
+          - id: init-service
+            uri: lb://init-service
+            predicates:
+              - Path=/init/**
+          - id: code-service
+            uri: lb://code-service
+            predicates:
+              - Path=/code/**
+          - id: download-service
+            uri: lb://download-service
+            predicates:
+              - Path=/download/**
+    openfeign:
+      oauth2:
         enabled: true
-    default-filters:
-      - TokenRelay
-    mvc:
-      routes:
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/users/**
-            - Path=/activities/**
-        - id: request-service
-          uri: lb://request-service
-          predicates:
-            - Path=/generation/**
-        - id: init-service
-          uri: lb://init-service
-          predicates:
-            - Path=/init/**
-        - id: code-service
-          uri: lb://code-service
-          predicates:
-            - Path=/code/**
-        - id: download-service
-          uri: lb://download-service
-          predicates:
-            - Path=/download/**
-  openfeign:
-    oauth2:
-      enabled: true
-      clientRegistrationId: okta
+        clientRegistrationId: okta

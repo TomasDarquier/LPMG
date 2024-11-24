@@ -101,7 +101,7 @@ Read it [_here_](https://blog.tomasdarquier.com/como-estructure-la-arquitectura-
 
 ## 🚀 Getting Started
 Before you begin, ensure you meet the following requirements:
-- Linux or macOS
+- **Linux or macOS**
 - **Java 17+**
 - **Docker**
 
@@ -110,7 +110,7 @@ Before you begin, ensure you meet the following requirements:
    ```shell
    git clone https://github.com/TomasDarquier/LPMG
    ```  
-2. Check the [_Wiki_]() to generate Auth0 credentials 
+2. Check the [_Wiki_](https://github.com/LPMG/wiki/Auth0-Setup) and follow the staps to generate Auth0 credentials 🔐
 3. Start the persistence components:
    ```shell
    cd LPMG/
