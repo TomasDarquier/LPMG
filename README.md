@@ -147,7 +147,7 @@ Before you begin, ensure you meet the following requirements:
 
 3. Start the persistence components:
    ```shell
-   cd LPMG/
+   cd docker/
    docker compose up -d
    ```  
 4. Run the script to start all services in the correct order:
@@ -161,19 +161,3 @@ Before you begin, ensure you meet the following requirements:
    ```
 
 ---
-
-## 🙌 How to Contribute
-
-We welcome contributions! Here's how you can help:
-1. Check the [project board](https://github.com/TomasDarquier/LPMG/projects) for open tasks.
-2. Fork the repository and work on an issue.
-3. Create a pull request with your changes.
-
-### Guidelines
-- Follow the project's coding standards.
-- Document your changes clearly.
-- Test your contributions thoroughly.
-
----
-
-💡 **Have ideas or found an issue?** Open an issue on GitHub or reach out! Let's build this platform together! 🌟
