@@ -110,7 +110,41 @@ Before you begin, ensure you meet the following requirements:
    ```shell
    git clone https://github.com/TomasDarquier/LPMG
    ```  
-2. Check the [_Wiki_](https://github.com/LPMG/wiki/Auth0-Setup) and follow the staps to generate Auth0 credentials 🔐
+2. Follow the steps to generate Auth0 credentials 🔐:
+   - Read the [_official documentation_](https://developer.auth0.com/resources/labs/tools/auth0-cli-basics) to install the Auth0 CLI if you don't have it already.
+   - Open a terminal and run the following command to configure the Auth0 CLI and get an API key for your tenant:
+       ```shell
+       auth0 login
+       ```  
+   - Then, create the Auth0 app with the following command:
+       ```shell
+       auth0 apps create \
+       --name "LPMG Development Enviroment" \
+       --description "Low-Code Web Platform for Microservices Generation" \
+       --type regular \
+       --callbacks http://localhost:8080/login/oauth2/code/okta \
+       --logout-urls http://localhost:8080 \
+       --reveal-secrets
+       ```  
+   - From the repository's main folder, runt the following command to create the application.properties file:
+       ```shell
+      echo "#issuer appears like Domain in auth0 web
+       okta.oauth2.issuer=https://<domain>/
+       okta.oauth2.client-id=<client-id>
+       okta.oauth2.client-secret=<client-secret>
+       okta.oauth2.groupsClaim=https://spring-boot.example.com/roles
+       okta.oauth2.audience=${okta.oauth2.issuer}api/v2" > config-server/src/main/resources/configurations/application.properties
+       ```  
+   - Go to www.auth0.com, log in with your credentials, navigate to Applications, open the application you created, and copy the values for Domain, Client ID, and Client Secret. Use these values to fill in the file created in the previous step. The file should look like this:
+       ```  shell
+      # Invented values, don't try to use them
+       okta.oauth2.issuer=https://dev-example123.us.auth0.com/
+       okta.oauth2.client-id=abc123xyz456
+       okta.oauth2.client-secret=def789ghi012jkl345mno678pqr901stu234
+       okta.oauth2.groupsClaim=https://spring-boot.example.com/roles
+       okta.oauth2.audience=${okta.auth2.issuer}api/v2/
+       ```  
+
 3. Start the persistence components:
    ```shell
    cd LPMG/
