@@ -1,6 +1,5 @@
 package com.tdarquier.tfg.request_service.kafka;
 
-import com.tdarquier.tfg.request_service.authentication.AuthFeignInterceptor;
 import com.tdarquier.tfg.request_service.messages.GenerationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;

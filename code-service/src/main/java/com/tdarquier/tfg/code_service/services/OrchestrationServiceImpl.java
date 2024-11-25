@@ -3,6 +3,7 @@ package com.tdarquier.tfg.code_service.services;
 import com.tdarquier.tfg.code_service.entities.ComponentData;
 import com.tdarquier.tfg.code_service.entities.Connection;
 import com.tdarquier.tfg.code_service.enums.Template;
+import lombok.RequiredArgsConstructor;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.springframework.stereotype.Service;
@@ -15,22 +16,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequiredArgsConstructor
 @Service
-public class OrchestationService {
+public class OrchestrationServiceImpl implements OrchestrationService{
 
-    MinioService minioService;
-    RdfService rdfService;
-    DynamicCodeGenerationService codeGenerationService;
-    ProjectStructureService projectStructureService;
-
-    private static final String PROJECTS_BUCKET = "projects";
-
-    public OrchestationService(MinioService minioService, RdfService rdfService, DynamicCodeGenerationService codeGenerationService, ProjectStructureService projecStructureService) {
-        this.minioService = minioService;
-        this.rdfService = rdfService;
-        this.codeGenerationService = codeGenerationService;
-        this.projectStructureService = projecStructureService;
-    }
+    private final MinioService minioService;
+    private final RdfService rdfService;
+    private final DynamicCodeGenerationService codeGenerationService;
+    private final ProjectStructureService projectStructureService;
 
     public void createArchitectureCode(List<String> poms, String rdfModel, Long userId){
 

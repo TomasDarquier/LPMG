@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectRequest {
-    //private Persistence persistence;
     private String name;
     private String groupId;
     private String artifactId;

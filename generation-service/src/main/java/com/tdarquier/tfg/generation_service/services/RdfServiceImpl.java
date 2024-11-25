@@ -17,7 +17,6 @@ import java.util.concurrent.CompletableFuture;
 public class RdfServiceImpl implements RdfService {
     private final static String BASE_URI= "http://tomasdarquier.com/tfg/";
 
-    //TODO crear y manejar excepcion propia en caso de mal formato de JSON
     @Async
     @Override
     public CompletableFuture<String> toRdf(GenerationRequest generationRequest) throws JsonProcessingException {

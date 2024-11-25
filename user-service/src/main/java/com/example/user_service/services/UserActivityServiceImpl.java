@@ -4,20 +4,18 @@ import com.example.user_service.entities.Activity;
 import com.example.user_service.entities.User;
 import com.example.user_service.entities.UserActivity;
 import com.example.user_service.repositories.UserActivityRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 import static com.example.user_service.entities.Activity.*;
 
+@RequiredArgsConstructor
 @Service
 public class UserActivityServiceImpl implements UserActivityService {
 
-    final UserActivityRepository userActivityRepository;
-
-    public UserActivityServiceImpl(UserActivityRepository userActivityRepository) {
-        this.userActivityRepository = userActivityRepository;
-    }
+    private final UserActivityRepository userActivityRepository;
 
     @Override
     public void registerSignUpActivity(User user) {

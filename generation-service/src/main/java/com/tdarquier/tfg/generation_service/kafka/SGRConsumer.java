@@ -45,7 +45,6 @@ public class SGRConsumer {
                 break;
             }
         }
-
         requestContext.initialize(jwt);
 
         try {

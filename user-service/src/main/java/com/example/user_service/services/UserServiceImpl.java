@@ -5,21 +5,17 @@ import com.example.user_service.entities.User;
 import com.example.user_service.exceptions.UserAlreadyExistsException;
 import com.example.user_service.exceptions.UserNotRegisteredException;
 import com.example.user_service.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-    final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
     //TODO validate user
     @Override

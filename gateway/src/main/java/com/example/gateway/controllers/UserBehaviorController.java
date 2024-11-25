@@ -28,7 +28,6 @@ public class UserBehaviorController {
     // the application DB, or if he already exists, to register only the login activity
     @GetMapping("/access-control")
     public ModelAndView accessControl(@AuthenticationPrincipal OidcUser user) {
-
         String subject = user.getSubject();
 
         UserDto newUser = new UserDto(
@@ -38,9 +37,7 @@ public class UserBehaviorController {
                         user.getFullName()
         );
 
-        //TODO arreglar excepciones de cuando se repite el mail y hay error
         userActivitiesClient.registerAccessActivities(newUser);
-
         return new ModelAndView("redirect:/");
     }
 

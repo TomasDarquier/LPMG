@@ -50,9 +50,6 @@ public class SpringApiClient {
                             return new BufferedReader(new InputStreamReader(zipStream))
                                     .lines()
                                     .collect(Collectors.joining("\n"));
-
-//                            String completePom = addNonInitializrDependencies(initializrPom);
-//                            return completePom;
                         }
                     }
                 }
@@ -63,9 +60,5 @@ public class SpringApiClient {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String addNonInitializrDependencies(String initializrPom) {
-        return null;
     }
 }

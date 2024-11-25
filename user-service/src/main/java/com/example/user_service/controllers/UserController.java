@@ -4,27 +4,19 @@ import com.example.user_service.entities.User;
 import com.example.user_service.services.UserActivityService;
 import com.example.user_service.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    UserService userService;
-    UserActivityService userActivityService;
-
-    @Autowired
-    public UserController(UserService userService, UserActivityService userActivityService) {
-        this.userService = userService;
-        this.userActivityService = userActivityService;
-    }
+    private final UserService userService;
+    private final UserActivityService userActivityService;
 
     @GetMapping("/{id}/name")
     public ResponseEntity<String> getNameById(@PathVariable Long id) {

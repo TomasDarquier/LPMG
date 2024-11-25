@@ -1,224 +1,108 @@
 package com.tdarquier.tfg.code_service.services;
 
 import com.tdarquier.tfg.code_service.entities.Connection;
-import com.tdarquier.tfg.code_service.enums.*;
-import org.apache.jena.rdf.model.RDFNode;
-import org.springframework.stereotype.Service;
-import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.Model;
 import com.tdarquier.tfg.code_service.enums.PersistenceType;
+import com.tdarquier.tfg.code_service.enums.Template;
+import org.apache.jena.rdf.model.Model;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-@Service
-public class RdfService {
+public interface RdfService {
 
-    private static final String BASE_URI = "http://tomasdarquier.com/tfg/";
+    /**
+     * Obtiene el tipo de template de un servicio a partir del nombre del servicio.
+     *
+     * @param serviceName El nombre del servicio
+     * @param model El modelo RDF
+     * @return El template correspondiente o null si no se encuentra
+     */
+    Template getTemplateType(String serviceName, Model model);
 
-    public Template getTemplateType(String serviceName, Model model) {
-        String queryStr = "SELECT ?template WHERE { "
-                + "?service <" + BASE_URI + "hasService> ?serviceDesc . "
-                + "?serviceDesc <" + BASE_URI + "serviceName> \"" + serviceName + "\" . "
-                + "?serviceDesc <" + BASE_URI + "template> ?template . "
-                + "} LIMIT 1";
+    /**
+     * Obtiene los ArtifactId y GroupId de un servicio.
+     *
+     * @param serviceName El nombre del servicio
+     * @param model El modelo RDF
+     * @return Un mapa con el ArtifactId y GroupId
+     */
+    Map<String, String> getArtifactAndGroupIds(String serviceName, Model model);
 
-        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
-            ResultSet results = qExec.execSelect();
-            if (results.hasNext()) {
-                QuerySolution solution = results.nextSolution();
-                String templateValue = solution.getLiteral("template").getString();
+    /**
+     * Verifica si un servicio está involucrado en alguna conexión.
+     *
+     * @param serviceName El nombre del servicio
+     * @param model El modelo RDF
+     * @return true si está involucrado en una conexión, false de lo contrario
+     */
+    boolean isPartOfConnection(String serviceName, Model model);
 
-                for (Template template : Template.values()) {
-                    if (template.name().equalsIgnoreCase(templateValue)) {
-                        return template;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+    /**
+     * Obtiene los nombres de los servicios conectados a un servicio dado.
+     *
+     * @param serviceName El nombre del servicio
+     * @param model El modelo RDF
+     * @return Una lista de nombres de servicios conectados
+     */
+    List<String> getConnectionNames(String serviceName, Model model);
 
-    public Map<String, String> getArtifactAndGroupIds(String serviceName, Model model) {
-        Map<String, String> ids = new HashMap<>();
-        String serviceIdQueryStr = "SELECT ?artifactId ?groupId WHERE { "
-                + "?service <" + BASE_URI + "hasService> ?serviceDesc . "
-                + "?serviceDesc <" + BASE_URI + "serviceName> \"" + serviceName + "\" . "
-                + "?serviceDesc <" + BASE_URI + "artifactId> ?artifactId . "
-                + "?serviceDesc <" + BASE_URI + "groupId> ?groupId . }";
+    /**
+     * Verifica si el servidor de descubrimiento está habilitado en la infraestructura.
+     *
+     * @param model El modelo RDF
+     * @return true si está habilitado, false de lo contrario
+     */
+    boolean isDiscoveryServerEnabled(Model model);
 
-        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(serviceIdQueryStr), model)) {
-            ResultSet results = qExec.execSelect();
-            if (results.hasNext()) {
-                QuerySolution solution = results.nextSolution();
-                ids.put("artifactId", solution.getLiteral("artifactId").getString());
-                ids.put("groupId", solution.getLiteral("groupId").getString());
-            }
-        }
-        return ids;
-    }
+    /**
+     * Verifica si el servidor de configuración está habilitado en la infraestructura.
+     *
+     * @param model El modelo RDF
+     * @return true si está habilitado, false de lo contrario
+     */
+    boolean isConfigServerEnabled(Model model);
 
-    // verifica si un servicio específico es parte de una conexión
-    public boolean isPartOfConnection(String serviceName, Model model) {
-        String queryOne = "ASK WHERE { ?connection <" + BASE_URI + "serviceOne> \"" + serviceName + "\" . }";
-        String queryTwo = "ASK WHERE { ?connection <" + BASE_URI + "serviceTwo> \"" + serviceName + "\" . }";
-        boolean partOfServiceOne = QueryExecutionFactory.create(QueryFactory.create(queryOne), model).execAsk();
-        boolean partOfServiceTwo = QueryExecutionFactory.create(QueryFactory.create(queryTwo), model).execAsk();
-        return partOfServiceOne || partOfServiceTwo;
-    }
+    /**
+     * Obtiene el puerto de un servicio.
+     *
+     * @param model El modelo RDF
+     * @param serviceName El nombre del servicio
+     * @return El puerto del servicio o null si no se encuentra
+     */
+    String getServicePort(Model model, String serviceName);
 
-    public List<String> getConnectionNames(String serviceName, Model model) {
-        List<String> connectionNames = new ArrayList<>();
-        String queryStr = "SELECT ?connectedService WHERE { "
-                + "{ ?connection <" + BASE_URI + "serviceOne> \"" + serviceName + "\" . "
-                + "?connection <" + BASE_URI + "serviceTwo> ?connectedService . } "
-                + "UNION "
-                + "{ ?connection <" + BASE_URI + "serviceTwo> \"" + serviceName + "\" . "
-                + "?connection <" + BASE_URI + "serviceOne> ?connectedService . } "
-                + "}";
+    /**
+     * Verifica si el gateway está habilitado en la infraestructura.
+     *
+     * @param model El modelo RDF
+     * @return true si está habilitado, false de lo contrario
+     */
+    boolean isGatewayEnabled(Model model);
 
-        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
-            ResultSet results = qExec.execSelect();
+    /**
+     * Obtiene el tipo de persistencia de un servicio.
+     *
+     * @param model El modelo RDF
+     * @param serviceName El nombre del servicio
+     * @return El tipo de persistencia o null si no se encuentra
+     */
+    PersistenceType getPersistenceType(Model model, String serviceName);
 
-            while (results.hasNext()) {
-                QuerySolution solution = results.nextSolution();
-                RDFNode connectedServiceNode = solution.get("connectedService");
+    /**
+     * Obtiene las conexiones de un servicio dado, con la información detallada.
+     *
+     * @param name El nombre del servicio
+     * @param model El modelo RDF
+     * @return Una lista de objetos de conexión, o null si no tiene conexiones
+     */
+    List<Connection> getConnections(String name, Model model);
 
-                // Verificamos si connectedService es un recurso o un literal
-                if (connectedServiceNode.isResource()) {
-                    connectionNames.add(connectedServiceNode.asResource().getLocalName());
-                } else if (connectedServiceNode.isLiteral()) {
-                    connectionNames.add(connectedServiceNode.asLiteral().getString());
-                }
-            }
-        }
-
-        return connectionNames;
-    }
-
-
-    public boolean isDiscoveryServerEnabled(Model model) {
-        String queryStr = "ASK WHERE { "
-                + "?project <" + BASE_URI + "hasInfrastructure> ?infrastructure . "
-                + "?infrastructure <" + BASE_URI + "discoveryServerEnabled> \"true\" . }";
-
-        return QueryExecutionFactory.create(QueryFactory.create(queryStr), model).execAsk();
-    }
-
-    public boolean isConfigServerEnabled(Model model) {
-        String queryStr = "ASK WHERE { "
-                + "?project <" + BASE_URI + "hasInfrastructure> ?infrastructure . "
-                + "?infrastructure <" + BASE_URI + "configServerEnabled> \"true\" . }";
-
-        return QueryExecutionFactory.create(QueryFactory.create(queryStr), model).execAsk();
-    }
-    // Obtener el puerto de un servicio
-    public String getServicePort(Model model, String serviceName) {
-        String queryStr = "SELECT ?port WHERE { "
-                + "?service <" + BASE_URI + "serviceName> \"" + serviceName + "\" . "
-                + "?service <" + BASE_URI + "port> ?port ."
-                + "} LIMIT 1";
-
-        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
-            ResultSet results = qExec.execSelect();
-            if (results.hasNext()) {
-                return results.next().get("port").toString();
-            }
-        }
-        return null;
-    }
-
-    public boolean isGatewayEnabled(Model model) {
-        String queryStr = "ASK WHERE { "
-                + "?project <" + BASE_URI + "hasInfrastructure> ?infrastructure . "
-                + "?infrastructure <" + BASE_URI + "gatewayEnabled> \"true\" . }";
-
-        return QueryExecutionFactory.create(QueryFactory.create(queryStr), model).execAsk();
-    }
-
-    public PersistenceType getPersistenceType(Model model, String serviceName) {
-        String queryStr = "SELECT ?persistence WHERE { "
-                + "?service <" + BASE_URI + "serviceName> \"" + serviceName + "\" . "
-                + "?service <" + BASE_URI + "persistenceType> ?persistence ."
-                + "} LIMIT 1";
-
-        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
-            ResultSet results = qExec.execSelect();
-            if (results.hasNext()) {
-                String persistence = results.next().get("persistence").toString();
-                for (PersistenceType type : PersistenceType.values()) {
-                    if (type.name().equalsIgnoreCase(persistence)) {
-                        return type;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    public List<Connection> getConnections(String name, Model model) {
-        List<String> connectionsNames = getConnectionNames(name, model);
-        if(connectionsNames == null || connectionsNames.isEmpty()) {
-            return null;
-        }
-        List<Connection> connections = new ArrayList<>();
-        connectionsNames.forEach(connectionName -> {
-               connections.add(new Connection(
-                       getConnectionType(connectionName, name, model),
-                       getTemplateType(connectionName, model),
-                       Integer.parseInt(getServicePort(model,connectionName)),
-                       getApiPathPrefix(connectionName, model)
-               ));
-        });
-
-        System.out.println("Conexiones pertenecientes a " + name + ": \n\n" + connections);
-        return connections;
-    }
-
-    public String getApiPathPrefix(String name, Model model) {
-        String queryStr = "SELECT ?pathPrefix WHERE { "
-                + "?service <" + BASE_URI + "serviceName> \"" + name + "\" . "
-                + "?service <" + BASE_URI + "pathPrefix> ?pathPrefix . "
-                + "} LIMIT 1";
-
-        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
-            ResultSet results = qExec.execSelect();
-            // Si se encuentran resultados, retornamos el valor de pathPrefix
-            if (results.hasNext()) {
-                QuerySolution solution = results.nextSolution();
-                return solution.getLiteral("pathPrefix").getString();
-            }
-        }
-        // Retornamos null si no se encontró pathPrefix para el servicio dado
-        return null;
-    }
-
-    private ConnectionType getConnectionType(String serviceA, String serviceB, Model model) {
-        String queryStr = "SELECT ?type WHERE { "
-                + "{ ?connection <" + BASE_URI + "serviceOne> \"" + serviceA + "\" . "
-                + "?connection <" + BASE_URI + "serviceTwo> \"" + serviceB + "\" . } "
-                + "UNION "
-                + "{ ?connection <" + BASE_URI + "serviceOne> \"" + serviceB + "\" . "
-                + "?connection <" + BASE_URI + "serviceTwo> \"" + serviceA + "\" . } "
-                + "?connection <" + BASE_URI + "type> ?type . "
-                + "} LIMIT 1";
-
-        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
-            ResultSet results = qExec.execSelect();
-            // Si se encuentra la conexión, obtenemos el tipo de conexión y validamos si coincide con ConnectionType
-            if (results.hasNext()) {
-                QuerySolution solution = results.nextSolution();
-                String typeValue = solution.getLiteral("type").getString();
-
-                // Verificamos si el valor obtenido coincide con alguno de los valores del enum ConnectionType
-                for (ConnectionType type : ConnectionType.values()) {
-                    if (type.name().equalsIgnoreCase(typeValue)) {
-                        return type;
-                    }
-                }
-            }
-        }
-        // Retornamos null si no se encontró el tipo de conexión entre los servicios dados
-        return null;
-    }
-
+    /**
+     * Obtiene el prefijo de la ruta API de un servicio.
+     *
+     * @param name El nombre del servicio
+     * @param model El modelo RDF
+     * @return El prefijo de la ruta API o null si no se encuentra
+     */
+    String getApiPathPrefix(String name, Model model);
 }

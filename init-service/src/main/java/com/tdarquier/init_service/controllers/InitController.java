@@ -1,8 +1,7 @@
 package com.tdarquier.init_service.controllers;
 
-import com.tdarquier.init_service.services.ProjectGenerationService;
+import com.tdarquier.init_service.services.ProjectGenerationServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,12 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InitController {
 
-    ProjectGenerationService projectGenerationService;
-
-    @Autowired
-    public InitController(ProjectGenerationService projectGenerationService) {
-        this.projectGenerationService = projectGenerationService;
-   }
+    private final ProjectGenerationServiceImpl projectGenerationService;
 
     @PostMapping("/poms")
     public List<String> getPoms(@RequestBody String rdf){
