@@ -147,7 +147,7 @@ Before you begin, ensure you meet the following requirements:
 
 3. Start the persistence components:
    ```shell
-   cd LPMG/
+   cd docker/
    docker compose up -d
    ```  
 4. Run the script to start all services in the correct order:
