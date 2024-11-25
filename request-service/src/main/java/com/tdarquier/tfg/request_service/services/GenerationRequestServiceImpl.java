@@ -4,9 +4,6 @@ import com.tdarquier.tfg.request_service.clients.UserActivitiesClient;
 import com.tdarquier.tfg.request_service.clients.UserClient;
 import com.tdarquier.tfg.request_service.kafka.SGRProducer;
 import com.tdarquier.tfg.request_service.messages.GenerationRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +26,7 @@ public class GenerationRequestServiceImpl implements GenerationRequestService {
     public boolean sendGenerationRequest(GenerationRequest generationRequest, String jwt) {
         Long id = generationRequest.userId();
         if(userClient.existsById(id)) {
-            userActivitiesClient.CodeGenerationActivity(id);
+            userActivitiesClient.registerCodeGenerationActivity(id);
             sgrProducer.sendGenerationRequest(generationRequest, jwt);
             return true;
         }

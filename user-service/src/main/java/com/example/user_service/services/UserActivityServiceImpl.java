@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+import static com.example.user_service.entities.Activity.*;
+
 @Service
 public class UserActivityServiceImpl implements UserActivityService {
 
@@ -19,44 +21,32 @@ public class UserActivityServiceImpl implements UserActivityService {
 
     @Override
     public void registerSignUpActivity(User user) {
-        UserActivity userActivity = UserActivity.builder()
-                .activityType(Activity.REGISTER)
-                .createdAt(new Date())
-                .user(user)
-                // por el momento no se registra el ip
-                .ipAddress("1111.1111.1111.1111")
-                .build();
-
-        userActivityRepository.save(userActivity);
+        userActivityRepository.save(createUserActivity(user, REGISTER));
     }
 
     @Override
     public void registerLoginActivity(User user) {
-        UserActivity userActivity = UserActivity.builder()
-                .activityType(Activity.LOGIN)
-                .createdAt(new Date())
-                .user(user)
-                // por el momento no se registra el ip
-                .ipAddress("1111.1111.1111.1111")
-                .build();
-
-        userActivityRepository.save(userActivity);
+        userActivityRepository.save(createUserActivity(user, LOGIN));
     }
 
     @Override
     public void registerCodeGenerationActivity(User user) {
-        UserActivity userActivity = UserActivity.builder()
-                .activityType(Activity.CODE_GENERATION)
-                .createdAt((new Date()))
-                .user(user)
-                .ipAddress("1111.1111.1111.1111")
-                .build();
-
-        userActivityRepository.save(userActivity);
+        userActivityRepository.save(createUserActivity(user, CODE_GENERATION));
     }
 
     @Override
     public void registerDownloadActivity(User user) {
+        userActivityRepository.save(createUserActivity(user, DOWNLOAD));
+    }
 
+    private UserActivity createUserActivity(User user, Activity activity) {
+        return UserActivity.builder()
+                .activityType(activity)
+                .createdAt(new Date())
+                .user(user)
+                // at the moment, the IP is not being registered.
+                // is mandatory the development of a privacy politic to save the IP
+                .ipAddress("1111.1111.1111.1111")
+                .build();
     }
 }

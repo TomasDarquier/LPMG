@@ -1,5 +1,6 @@
-package com.tdarquier.tfg.request_service.clients;
+package com.example.gateway.clients;
 
+import com.example.gateway.dtos.UserDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Component
 public interface UserActivitiesClient {
 
-    @PostMapping("/activities/{id}/generate")
-    ResponseEntity<Void> registerCodeGenerationActivity(@PathVariable("id") Long userId);
+    @PostMapping("/activities/access")
+    void registerAccessActivities(UserDto user);
 }

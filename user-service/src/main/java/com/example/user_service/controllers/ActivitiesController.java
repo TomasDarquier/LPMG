@@ -29,7 +29,7 @@ public class ActivitiesController {
     }
 
     @PostMapping("/access")
-    public ResponseEntity<Void> accessActivities(@Valid @RequestBody UserDto user) {
+    public ResponseEntity<Void> registerAccessActivities(@Valid @RequestBody UserDto user) {
         Optional<User> dbUser = userService.findByEmail(user.email());
         if(dbUser.isEmpty()) {
             User registeredUser = userService.register(user);
@@ -41,7 +41,7 @@ public class ActivitiesController {
     }
 
     @PostMapping("/{id}/generate")
-    public ResponseEntity<Void> CodeGenerationActivity(@PathVariable Long id) {
+    public ResponseEntity<Void> registerCodeGenerationActivity(@PathVariable Long id) {
         Optional<User> dbUser = userService.findById(id);
         if(dbUser.isPresent()) {
             userActivityService.registerCodeGenerationActivity(dbUser.get());
@@ -50,4 +50,13 @@ public class ActivitiesController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @PostMapping("/{id}/download")
+    public ResponseEntity<Void> registerDownloadActivity(@PathVariable Long id) {
+        Optional<User> dbUser = userService.findById(id);
+        if(dbUser.isPresent()) {
+            userActivityService.registerDownloadActivity(dbUser.get());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 }

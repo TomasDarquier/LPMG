@@ -4,3 +4,5 @@ docker/kafka/credentials/production/**
 *.secrets.properties
 .idea
 /.idea/
+blueprints
+/blueprints/

@@ -1,6 +1,6 @@
 package com.example.gateway.controllers;
 
-import com.example.gateway.clients.UserClient;
+import com.example.gateway.clients.UserActivitiesClient;
 import com.example.gateway.dtos.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static com.example.gateway.dtos.OauthProvider.*;
@@ -23,8 +22,10 @@ import static com.example.gateway.dtos.OauthProvider.*;
 @RequiredArgsConstructor
 public class UserBehaviorController {
 
-    private final UserClient userClient;
+    private final UserActivitiesClient userActivitiesClient;
 
+    // Once the user logs in, this method send the info to register their data in
+    // the application DB, or if he already exists, to register only the login activity
     @GetMapping("/access-control")
     public ModelAndView accessControl(@AuthenticationPrincipal OidcUser user) {
 
@@ -38,19 +39,12 @@ public class UserBehaviorController {
         );
 
         //TODO arreglar excepciones de cuando se repite el mail y hay error
-        //
-        //
-        userClient.accessActivities(newUser);
+        userActivitiesClient.registerAccessActivities(newUser);
 
         return new ModelAndView("redirect:/");
     }
 
-    @GetMapping("/")
-    public ModelAndView home(@AuthenticationPrincipal OidcUser user) {
-        //cuando este el front reemplazar esto por una llamada la front
-        return new ModelAndView("home", Collections.singletonMap("claims", user.getClaims()));
-    }
-
+    // This method is to verify manually if your user is an Admin
     @GetMapping("/admin")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String admin(@AuthenticationPrincipal OidcUser user) {

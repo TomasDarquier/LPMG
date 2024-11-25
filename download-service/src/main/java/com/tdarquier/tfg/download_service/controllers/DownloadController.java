@@ -1,8 +1,10 @@
 package com.tdarquier.tfg.download_service.controllers;
 
+import com.tdarquier.tfg.download_service.clients.ActivitiesClient;
 import com.tdarquier.tfg.download_service.dtos.DownloadRowDto;
 import com.tdarquier.tfg.download_service.dtos.ZipFileResponse;
 import com.tdarquier.tfg.download_service.services.MinioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +23,12 @@ public class DownloadController {
     final
     MinioService minioService;
 
-    public DownloadController(MinioService minioService) {
+    final
+    ActivitiesClient activitiesClient;
+
+    public DownloadController(MinioService minioService, ActivitiesClient activitiesClient) {
         this.minioService = minioService;
+        this.activitiesClient = activitiesClient;
     }
 
     @GetMapping("/all/{id}")
@@ -59,7 +65,9 @@ public class DownloadController {
     @GetMapping("/zip/{bucket}")
     public ZipFileResponse downloadZip(@PathVariable String bucket) {
         try {
-            return minioService.getZip(bucket);
+            ZipFileResponse response = minioService.getZip(bucket);
+            activitiesClient.registerDownloadActivity(Long.valueOf(bucket.substring(0,bucket.indexOf('-'))));
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
