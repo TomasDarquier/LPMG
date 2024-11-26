@@ -1,10 +1,9 @@
-package com.example.user_service;
+package com.example.user_service.services;
 
 import com.example.user_service.dtos.UserDto;
 import com.example.user_service.entities.OauthProvider;
 import com.example.user_service.entities.User;
 import com.example.user_service.repositories.UserRepository;
-import com.example.user_service.services.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
