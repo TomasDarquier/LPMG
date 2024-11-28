@@ -56,12 +56,13 @@ services:
         - spring.kafka.bootstrap-servers=kafka:9093
         - spring.kafka.producer.bootstrap-servers=kafka:9093
         - spring.kafka.consumer.bootstrap-servers=kafka:9093
-        - spring.kafka.ssl.trust-store-location=file:/etc/kafka/secrets/certs/kafka.testclient2.truststore.jks
-        - spring.kafka.ssl.key-store-location=file:/etc/kafka/secrets/certs/kafka.testclient2.keystore.jks
-
+        - spring.kafka.ssl.trust-store-location=file:/etc/kafka/secrets/certs/kafka.client1.truststore.jks
+        - spring.kafka.ssl.key-store-location=file:/etc/kafka/secrets/certs/kafka.client1.keystore.jks
+        - spring.kafka.ssl.key-store-password=kafkaproduction
+        - spring.kafka.ssl.trust-store-password=kafkaproduction
       volumes:
-        - ./request-service/src/main/resources/ssl/kafka.testclient2.keystore.jks:/etc/kafka/secrets/certs/kafka.testclient2.keystore.jks
-        - ./request-service/src/main/resources/ssl/kafka.testclient2.truststore.jks:/etc/kafka/secrets/certs/kafka.testclient2.truststore.jks
+        - ./docker/kafka/certs/production/kafka.client1.keystore.jks:/etc/kafka/secrets/certs/kafka.client1.keystore.jks
+        - ./docker/kafka/certs/production/kafka.client1.truststore.jks:/etc/kafka/secrets/certs/kafka.client1.truststore.jks
 
       networks:
         - microservices-network
@@ -75,6 +76,13 @@ services:
         - spring.config.import=optional:configserver:http://config:8888
         - spring.kafka.bootstrap-servers=kafka:9093
         - spring.kafka.consumer.bootstrap-servers=kafka:9093
+        - spring.kafka.ssl.trust-store-location=file:/etc/kafka/secrets/certs/kafka.client2.truststore.jks
+        - spring.kafka.ssl.key-store-location=file:/etc/kafka/secrets/certs/kafka.client2.keystore.jks
+        - spring.kafka.ssl.key-store-password=kafkaproduction
+        - spring.kafka.ssl.trust-store-password=kafkaproduction
+      volumes:
+        - ./docker/kafka/certs/production/kafka.client2.keystore.jks:/etc/kafka/secrets/certs/kafka.client2.keystore.jks
+        - ./docker/kafka/certs/production/kafka.client2.truststore.jks:/etc/kafka/secrets/certs/kafka.client2.truststore.jks
       networks:
         - microservices-network
 
@@ -95,6 +103,7 @@ services:
       environment:
         - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
         - spring.config.import=optional:configserver:http://config:8888
+        - MINIO_URL=http://minio:9000
       networks:
         - microservices-network
       
@@ -105,6 +114,7 @@ services:
       environment:
         - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
         - spring.config.import=optional:configserver:http://config:8888
+        - MINIO_URL=http://minio:9000
       networks:
         - microservices-network
 
@@ -147,17 +157,20 @@ services:
         KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
         KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,SSL://localhost:9093 #ubicacion del broker
+      #KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,SSL://localhost:9093 #ubicacion del broker
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,SSL://kafka:9093 #ubicacion del broker
         KAFKA_SSL_CLIENT_AUTH: 'required'
-        KAFKA_SSL_KEYSTORE_FILENAME: '/certs/kafka.testbroker.keystore.jks'
+      #KAFKA_SSL_KEYSTORE_FILENAME: '/certs/kafka.testbroker.keystore.jks'
+        KAFKA_SSL_KEYSTORE_FILENAME: '/certs/kafka.broker.keystore.jks'
         KAFKA_SSL_KEYSTORE_CREDENTIALS: pass
         KAFKA_SSL_KEY_CREDENTIALS: pass
-        KAFKA_SSL_TRUSTSTORE_FILENAME: '/certs/kafka.testbroker.truststore.jks'
+      #KAFKA_SSL_TRUSTSTORE_FILENAME: '/certs/kafka.testbroker.truststore.jks'
+        KAFKA_SSL_TRUSTSTORE_FILENAME: '/certs/kafka.broker.truststore.jks'
         KAFKA_SSL_TRUSTSTORE_CREDENTIALS: pass
       volumes:
-        - ./docker/kafka/certs/test/kafka.testbroker.keystore.jks:/etc/kafka/secrets/certs/kafka.testbroker.keystore.jks
-        - ./docker/kafka/certs/test/kafka.testbroker.truststore.jks:/etc/kafka/secrets/certs/kafka.testbroker.truststore.jks
-        - ./docker/kafka/credentials/test/pass:/etc/kafka/secrets/pass
+        - ./docker/kafka/certs/production/kafka.broker.keystore.jks:/etc/kafka/secrets/certs/kafka.broker.keystore.jks
+        - ./docker/kafka/certs/production/kafka.broker.truststore.jks:/etc/kafka/secrets/certs/kafka.broker.truststore.jks
+        - ./docker/kafka/credentials/production/pass:/etc/kafka/secrets/pass
       networks:
         - microservices-network
   

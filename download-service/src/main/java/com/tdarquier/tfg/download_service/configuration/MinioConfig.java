@@ -12,11 +12,13 @@ public class MinioConfig {
     private String USERNAME;
     @Value("${MINIO_PASSWORD}")
     private String PASSWORD;
+    @Value("${MINIO_URL}")
+    private String URL;
 
     @Bean
     public MinioClient minioClient() {
         return MinioClient.builder()
-                .endpoint("http://localhost:9000")
+                .endpoint(URL)
                 .credentials(USERNAME, PASSWORD)
                 .build();
     }
