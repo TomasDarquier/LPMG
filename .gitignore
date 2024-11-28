@@ -1,7 +1,9 @@
 user-service/src/main/resources/application.yml
-docker/kafka/certs/production/**
-docker/kafka/credentials/production/**
+# Al ser una aplicacion de muestra, no se encuentran escondidos certificados
+#docker/kafka/certs/production/**
+#docker/kafka/credentials/production/**
 *.secrets.properties
 .idea
 /.idea/
 blueprints/**
+/blueprints/

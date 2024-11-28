@@ -99,7 +99,7 @@ Read it [_here_](https://blog.tomasdarquier.com/como-estructure-la-arquitectura-
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started 
 Before you begin, ensure you meet the following requirements:
 - **Linux or macOS**
 - **Java 17+**
@@ -144,6 +144,14 @@ Before you begin, ensure you meet the following requirements:
        okta.oauth2.groupsClaim=https://spring-boot.example.com/roles
        okta.oauth2.audience=${okta.auth2.issuer}api/v2/
        ```  
+#### Start from Docker
+
+3. Start the system from the root folder:
+   ```shell
+   docker compose up -d --build
+   ```  
+
+#### Start directly from the code 
 
 3. Start the persistence components:
    ```shell
