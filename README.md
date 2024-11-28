@@ -150,6 +150,7 @@ Before you begin, ensure you meet the following requirements:
    ```shell
    docker compose up -d --build
    ```  
+4. Go to localhost:8080 and test the app! (If you experiment any problem, probably you need to wait a few seconds to let the discovery server discover all the services) 
 
 #### Start directly from the code 
 
@@ -162,7 +163,9 @@ Before you begin, ensure you meet the following requirements:
    ```shell
    ./start_services.sh
    ```  
-5. To stop the services, run the shutdown script and stop Docker Compose:
+5. Go to localhost:8080 and test the app! (If you experiment any problem, probably you need to wait a few seconds to let the discovery server discover all the services) 
+
+6. To stop the services, run the shutdown script and stop Docker Compose:
    ```shell
    ./kill_services.sh
    docker compose down
