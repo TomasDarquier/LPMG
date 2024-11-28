@@ -52,5 +52,4 @@ public class UserBehaviorController {
         return "Hello, Admin!<br/><br/>User: " + user.getFullName() + "!<br/><br/>Authorities: " + authorities;
     }
 
-
 }

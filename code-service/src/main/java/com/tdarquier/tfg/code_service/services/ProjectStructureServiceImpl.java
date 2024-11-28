@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@Component
 public class ProjectStructureServiceImpl implements ProjectStructureService{
 
     final
@@ -26,12 +25,15 @@ public class ProjectStructureServiceImpl implements ProjectStructureService{
     private final String mavenWrapperFile;
     private final String mavenWrapperCMDFile;
 
+
+
     public ProjectStructureServiceImpl(RdfServiceImpl rdfService, MinioServiceImpl minioService) {
         this.rdfService = rdfService;
         this.minioService = minioService;
 
         try {
-            gitIgnoreFile = readFileFromResources(".gitignore");
+      // gitignore en vez de .gitignore porque sino no se agrega el archivo al jar
+            gitIgnoreFile = readFileFromResources("gitignore");
             gitAttributesFile = readFileFromResources(".gitattributes");
             mavenWrapperFile = readFileFromResources("mvnw");
             mavenWrapperCMDFile = readFileFromResources("mvnw.cmd");

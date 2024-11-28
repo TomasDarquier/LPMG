@@ -3,10 +3,11 @@ package com.tdarquier.tfg.code_service.services;
 import com.tdarquier.tfg.code_service.entities.ComponentData;
 import com.tdarquier.tfg.code_service.entities.Connection;
 import com.tdarquier.tfg.code_service.enums.Template;
-import lombok.RequiredArgsConstructor;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Service
 public class OrchestrationServiceImpl implements OrchestrationService{
 
