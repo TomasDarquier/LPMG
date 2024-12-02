@@ -1,0 +1,19 @@
+spring:
+  kafka:
+    security:
+      protocol: "SSL"
+    bootstrap-servers: localhost:9093
+    ssl:
+      protocol: TLSv1.2
+    producer:
+      bootstrap-servers: localhost:9093
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: generationRequest:com.tdarquier.tfg.request_service.messages.GenerationRequest
+    consumer:
+      bootstrap-servers: localhost:9093
+
+logging:
+  level:
+    org.springframework.security.web: DEBUG

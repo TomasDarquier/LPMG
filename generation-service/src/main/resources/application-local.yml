@@ -1,0 +1,7 @@
+spring:
+  kafka:
+    ssl:
+      trust-store-location: classpath:/ssl/kafka.testclient1.truststore.jks
+      trust-store-password: kafkatest
+      key-store-location: classpath:/ssl/kafka.testclient1.keystore.jks
+      key-store-password: kafkatest

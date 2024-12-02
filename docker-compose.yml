@@ -12,8 +12,8 @@ services:
         context: ./discovery-service
         dockerfile: Dockerfile
       environment:
-        - eureka.instance.hostname=discovery
-        - spring.config.import=optional:configserver:http://config:8888
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       networks:
         - microservices-network
 
@@ -22,8 +22,8 @@ services:
         context: ./gateway
         dockerfile: Dockerfile
       environment:
-        - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
-        - spring.config.import=optional:configserver:http://config:8888
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       ports:
         - "8080:8080"
       networks:
@@ -34,9 +34,8 @@ services:
         context: ./user-service
         dockerfile: Dockerfile
       environment:
-        - spring.datasource.url=jdbc:postgresql://usersdb:5432/usersdb
-        - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
-        - spring.config.import=optional:configserver:http://config:8888
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       networks:
         - microservices-network
 
@@ -45,19 +44,11 @@ services:
         context: ./request-service
         dockerfile: Dockerfile
       environment:
-        - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
-        - spring.config.import=optional:configserver:http://config:8888
-        - spring.kafka.bootstrap-servers=kafka:9093
-        - spring.kafka.producer.bootstrap-servers=kafka:9093
-        - spring.kafka.consumer.bootstrap-servers=kafka:9093
-        - spring.kafka.ssl.trust-store-location=file:/etc/kafka/secrets/certs/kafka.client1.truststore.jks
-        - spring.kafka.ssl.key-store-location=file:/etc/kafka/secrets/certs/kafka.client1.keystore.jks
-        - spring.kafka.ssl.key-store-password=kafkaproduction
-        - spring.kafka.ssl.trust-store-password=kafkaproduction
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       volumes:
         - ./docker/kafka/certs/production/kafka.client1.keystore.jks:/etc/kafka/secrets/certs/kafka.client1.keystore.jks
         - ./docker/kafka/certs/production/kafka.client1.truststore.jks:/etc/kafka/secrets/certs/kafka.client1.truststore.jks
-
       networks:
         - microservices-network
 
@@ -66,14 +57,8 @@ services:
         context: ./generation-service
         dockerfile: Dockerfile
       environment:
-        - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
-        - spring.config.import=optional:configserver:http://config:8888
-        - spring.kafka.bootstrap-servers=kafka:9093
-        - spring.kafka.consumer.bootstrap-servers=kafka:9093
-        - spring.kafka.ssl.trust-store-location=file:/etc/kafka/secrets/certs/kafka.client2.truststore.jks
-        - spring.kafka.ssl.key-store-location=file:/etc/kafka/secrets/certs/kafka.client2.keystore.jks
-        - spring.kafka.ssl.key-store-password=kafkaproduction
-        - spring.kafka.ssl.trust-store-password=kafkaproduction
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       volumes:
         - ./docker/kafka/certs/production/kafka.client2.keystore.jks:/etc/kafka/secrets/certs/kafka.client2.keystore.jks
         - ./docker/kafka/certs/production/kafka.client2.truststore.jks:/etc/kafka/secrets/certs/kafka.client2.truststore.jks
@@ -85,8 +70,8 @@ services:
         context: ./init-service
         dockerfile: Dockerfile
       environment:
-        - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
-        - spring.config.import=optional:configserver:http://config:8888
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       networks:
         - microservices-network
 
@@ -95,9 +80,8 @@ services:
         context: ./code-service
         dockerfile: Dockerfile
       environment:
-        - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
-        - spring.config.import=optional:configserver:http://config:8888
-        - MINIO_URL=http://minio:9000
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       networks:
         - microservices-network
       
@@ -106,9 +90,8 @@ services:
         context: ./download-service
         dockerfile: Dockerfile
       environment:
-        - eureka.client.service-url.defaultZone=http://discovery:8761/eureka/
-        - spring.config.import=optional:configserver:http://config:8888
-        - MINIO_URL=http://minio:9000
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
       networks:
         - microservices-network
 
@@ -151,14 +134,11 @@ services:
         KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
         KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      #KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,SSL://localhost:9093 #ubicacion del broker
         KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,SSL://kafka:9093 #ubicacion del broker
         KAFKA_SSL_CLIENT_AUTH: 'required'
-      #KAFKA_SSL_KEYSTORE_FILENAME: '/certs/kafka.testbroker.keystore.jks'
         KAFKA_SSL_KEYSTORE_FILENAME: '/certs/kafka.broker.keystore.jks'
         KAFKA_SSL_KEYSTORE_CREDENTIALS: pass
         KAFKA_SSL_KEY_CREDENTIALS: pass
-      #KAFKA_SSL_TRUSTSTORE_FILENAME: '/certs/kafka.testbroker.truststore.jks'
         KAFKA_SSL_TRUSTSTORE_FILENAME: '/certs/kafka.broker.truststore.jks'
         KAFKA_SSL_TRUSTSTORE_CREDENTIALS: pass
       volumes:
@@ -177,16 +157,9 @@ services:
         MINIO_ROOT_USER: tfgusername
         MINIO_ROOT_PASSWORD: tfgpassword
         MINIO_DEFAULT_BUCKETS: projects
-      #    volumes:
-      #      - /minio:/bitnami/minio/data
       networks:
         - microservices-network
 
 networks:
   microservices-network:
     driver: bridge
-
-volumes:
-  pgdata:
-  minio_data:
-    driver: local
