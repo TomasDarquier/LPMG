@@ -10,6 +10,15 @@ LPMG is a platform designed to create a **preconfigured foundation of services**
 When working on small microservices projects, we often waste time creating the same components over and over: users, notifications, configuring clients, setting up Spring Cloud services... With LPMG, you can skip all that repetitive work and focus on what truly matters—your business logic!
 
 ---
+# Project Overview
+
+⚠️ **Important Notice** ⚠️
+
+This project is a **portfolio demonstration** designed to showcase the integration of various methodologies, such as Kafka with SSL, service-to-service communication via JWT, and user authentication using OAuth2. For simplicity and to facilitate testing, **all credentials are exposed** in the codebase, **except for the Auth0 credentials**, which remain private for security reasons. These credentials are **only for demonstration purposes** and should **not be used in a production environment**.
+
+💡 **Why credentials are exposed**: Since this is not a production application, the focus is on demonstrating the system’s functionality, including how services communicate and how security mechanisms like SSL can be incorporated. These credentials are provided purely for testing and understanding the project’s behavior.
+
+---
 
 ## 🌟 How It Works
 <p align="center">
@@ -150,7 +159,12 @@ Before you begin, ensure you meet the following requirements:
    ```shell
    docker compose up -d --build
    ```  
-4. Go to localhost:8080 and test the app! (If you experiment any problem, probably you need to wait a few seconds to let the discovery server discover all the services) 
+4. Go to [localhost:8080](http://localhost:8080) and test the app! (If you experiment any problem, probably you need to wait a few seconds to let the discovery server discover all the services) 
+
+5. To stop the services, stop Docker Compose from root folder:
+   ```shell
+   docker compose down
+   ```
 
 #### Start directly from the code 
 
@@ -159,11 +173,14 @@ Before you begin, ensure you meet the following requirements:
    cd docker/
    docker compose up -d
    ```  
+
 4. Run the script to start all services in the correct order:
    ```shell
    ./start_services.sh
    ```  
-5. Go to localhost:8080 and test the app! (If you experiment any problem, probably you need to wait a few seconds to let the discovery server discover all the services) 
+   (If you start the services manually from the console, dont forget to use the 'local' profile in all services, except config-server, do not use any profile there)
+
+5. Go to [localhost:8080](http://localhost:8080) and test the app! (If you experiment any problem, probably you need to wait a few seconds to let the discovery server discover all the services) 
 
 6. To stop the services, run the shutdown script and stop Docker Compose:
    ```shell
