@@ -1,6 +1,7 @@
 package com.tdarquier.init_service.clients;
 
 import com.tdarquier.init_service.entities.ProjectRequest;
+import com.tdarquier.init_service.services.RedisService;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -20,19 +21,19 @@ public class SpringApiClient {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    public String generatePom(ProjectRequest projectRequest) {
-        String url = "https://start.spring.io/starter.zip" +
-                "?type=maven-project" +  // Solicita el proyecto completo
-                "&language=java" +
-                "&bootVersion=3.3.5" +
-                "&groupId=" + projectRequest.getGroupId() +
-                "&artifactId=" + projectRequest.getArtifactId() +
-                "&name=" + projectRequest.getName() +
-                "&description=Generated+POM" +
-                "&packageName=" + projectRequest.getGroupId() + "." + projectRequest.getArtifactId() +
-                "&dependencies=" + projectRequest.getDependencies();
+    private final RedisService redisService;
 
-        System.out.println(url + "\n");
+    public SpringApiClient(RedisService redisService) {
+        this.redisService = redisService;
+    }
+
+    public String generatePom(ProjectRequest projectRequest) {
+        String url = generateUrl(projectRequest);
+
+        // si ya se hizo el request previamente se utiliza el contenido guardado en redis
+        if (redisService.get(String.valueOf(url.hashCode())) != null) {
+            return redisService.get(String.valueOf(url.hashCode()));
+        }
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -47,9 +48,16 @@ public class SpringApiClient {
                     while ((entry = zipStream.getNextEntry()) != null) {
                         if ("pom.xml".equals(entry.getName())) {
                             // Convertir el contenido del pom.xml a String
-                            return new BufferedReader(new InputStreamReader(zipStream))
+                            String pom = new BufferedReader(new InputStreamReader(zipStream))
                                     .lines()
                                     .collect(Collectors.joining("\n"));
+
+                            redisService.set(
+                                    String.valueOf(url.hashCode()),
+                                    pom
+                            );
+
+                            return pom;
                         }
                     }
                 }
@@ -60,5 +68,19 @@ public class SpringApiClient {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String generateUrl(ProjectRequest projectRequest) {
+        return "https://start.spring.io/starter.zip" +
+                "?type=maven-project" +  // Solicita el proyecto completo
+                "&language=java" +
+                "&bootVersion=3.3.5" +
+                "&groupId=" + projectRequest.getGroupId() +
+                "&artifactId=" + projectRequest.getArtifactId() +
+                "&name=" + projectRequest.getName() +
+                "&description=Generated+POM" +
+                "&packageName=" + projectRequest.getGroupId() + "." + projectRequest.getArtifactId() +
+                "&dependencies=" + projectRequest.getDependencies();
+
     }
 }

@@ -62,8 +62,13 @@ services:
       MINIO_ROOT_USER: tfgusername
       MINIO_ROOT_PASSWORD: tfgpassword
       MINIO_DEFAULT_BUCKETS: projects
-#    volumes:
-#      - /minio:/bitnami/minio/data
+    networks:
+      - microservices-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
     networks:
       - microservices-network
 
