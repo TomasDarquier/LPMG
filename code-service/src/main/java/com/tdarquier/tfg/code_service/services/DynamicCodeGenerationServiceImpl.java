@@ -130,6 +130,8 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
         // se transforma el contenido generado de la plantilla en string
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
+
+        System.out.println(writer.toString());
         return writer.toString();
     }
 

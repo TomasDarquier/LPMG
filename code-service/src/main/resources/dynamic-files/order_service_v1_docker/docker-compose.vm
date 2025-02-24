@@ -1,4 +1,5 @@
 #set ($postgresql = "POSTGRESQL")
+#set ($mysql= "MYSQL")
 services:
   db:
 #if($persistence == $postgresql)
@@ -14,8 +15,7 @@ services:
      - tfg-default-network
 #end
 
-## TODO implement
-#if($persistence.method.equals("MYSQL"))
+#if($persistence == $mysql)
     image: ${persistence}
     container_name: order_service_${persistence}_${name}
     environment:

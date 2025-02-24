@@ -236,9 +236,9 @@ class Canvas {
             name: component.name.toLowerCase(),
             artifactId: `${component.type}-service`,
             port: (8080 + this.components.size - 1).toString(),
+            endpointPrefix: '/api/v1',
             persistence: 'PostgreSQL',
             communication: 'REST',
-            endpointPrefix: '/api/v1'
         });
 
         this.makeComponentDraggable(elem);
@@ -362,6 +362,8 @@ class Canvas {
             const artifactIdInput = modal.querySelector('#artifactId');
             const portInput = modal.querySelector('#port');
             const endpointPrefixInput = modal.querySelector('#endpointPrefix');
+            const persistenceInput = modal.querySelector('#persistence');
+            const communicationInput = modal.querySelector('#communication');
 
             const nameError = modal.querySelector('#name-error');
             const artifactIdError = modal.querySelector('#artifactId-error');
@@ -378,6 +380,8 @@ class Canvas {
                 config.artifactId = artifactIdInput.value.trim();
                 config.port = parseInt(portInput.value.trim());
                 config.endpointPrefix = endpointPrefixInput.value.trim();
+                config.persistence = persistenceInput.value.trim();
+                config.communication = communicationInput.value.trim();
 
                 modal.remove();
                 overlay.remove();
