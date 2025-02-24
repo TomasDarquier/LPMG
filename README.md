@@ -135,14 +135,9 @@ Before you begin, ensure you meet the following requirements:
        --logout-urls http://localhost:8080 \
        --reveal-secrets
        ```  
-   - From the repository's main folder, runt the following command to create the application.properties file:
+   - From the repository's main folder, run the following command to create the application.properties file:
        ```shell
-      echo "#issuer appears like Domain in auth0 web
-       okta.oauth2.issuer=https://<domain>/
-       okta.oauth2.client-id=<client-id>
-       okta.oauth2.client-secret=<client-secret>
-       okta.oauth2.groupsClaim=https://spring-boot.example.com/roles
-       okta.oauth2.audience=${okta.oauth2.issuer}api/v2" > config-server/src/main/resources/configurations/application.properties
+      printf "#issuer appears like Domain in auth0 web\nokta.oauth2.issuer=https://<domain>/\nokta.oauth2.client-id=<client-id>\nokta.oauth2.client-secret=<client-secret>\nokta.oauth2.groupsClaim=https://spring-boot.example.com/roles\nokta.oauth2.audience=\${okta.oauth2.issuer}api/v2\n" > config-server/src/main/resources/configurations/application.properties
        ```  
    - Go to www.auth0.com, log in with your credentials, navigate to Applications, open the application you created, and copy the values for Domain, Client ID, and Client Secret. Use these values to fill in the file created in the previous step. The file should look like this:
        ```  shell
