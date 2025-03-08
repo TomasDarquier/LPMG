@@ -8,9 +8,13 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -29,7 +33,9 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
     }
 
     public void generateServiceCode(ComponentData componentData,String bucket){
+        System.out.println("GENERANDO JAVA CODE");
         List<MinioFile> files = generateJavaCode(componentData, bucket);
+        System.out.println("FILES JAVA: " + files);
 
         files.addAll(generateProperties(componentData, bucket));
 
@@ -67,17 +73,15 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
     private List<MinioFile> generateJavaCode(ComponentData componentData, String bucket) {
         List<MinioFile> generatedFiles = new ArrayList<>();
         String templateFolder = componentData.getTemplate().toString().toLowerCase();
-        String filesList;
+        //List<String> filesToGenerate = Arrays.stream(filesList.split("\n")).toList();
+        List<String> filesToGenerate = null;
         try {
-            filesList = readFileFromResources(templateFolder);
+            filesToGenerate = listFilesFromFolder(templateFolder);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(filesList == null || filesList.isEmpty()){
-            return new ArrayList<>();
-        }
-        //lista de todos los archivos pertenecientes a la plantilla del servicio
-        List<String> filesToGenerate = Arrays.stream(filesList.split("\n")).toList();
+        System.out.println("FILES TO GENERATE!!");
+        System.out.println(filesToGenerate);
 
         //generar cada archivo
         filesToGenerate.forEach(file -> {
@@ -205,10 +209,26 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
         return template.toString().toLowerCase().startsWith("gateway_service");
     }
 
+    // it's impossible to list files from a folder if the application is running on
+    // a .jar, so we read the files directly from a volume in the docker container
+    public static List<String> listFilesFromFolder(String templateFolder) throws IOException {
+        Path folderPath = Paths.get("/app/dynamic-files/" + templateFolder);
+
+        if (!Files.exists(folderPath) || !Files.isDirectory(folderPath)) {
+            System.out.println("DIRECTORY NOT FOUND");
+            return List.of();
+        }
+
+        return Files.list(folderPath)
+                .map(path -> path.getFileName().toString())
+                .collect(Collectors.toList());
+    }
+
     //codigo duplicado, deberia crear un recurso global
     private String readFileFromResources(String fileName) throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/dynamic-files/" + fileName);
         if (inputStream == null) {
+            System.out.println("INPUT STREAM NULL");
             return null;
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {

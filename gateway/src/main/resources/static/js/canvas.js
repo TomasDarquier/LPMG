@@ -278,7 +278,10 @@ class Canvas {
         document.body.appendChild(overlay);
 
         const showCache = config.name === 'carrito';
-        const showRelationalDb = config.name === 'usuarios' || config.name === 'productos' || config.name === 'ordenes';
+        const showRelationalDb = config.name === 'usuarios'
+            || config.name === 'productos'
+            || config.name === 'ordenes'
+            || config.name === 'envios';
         const showNoRelationalDb = false;
 
         const modal = document.createElement('div');
