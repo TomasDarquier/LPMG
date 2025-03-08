@@ -1,13 +1,19 @@
+#set ($postgresql = "POSTGRESQL")
+#set ($mysql= "MYSQL")
 spring.application.name=${name}
 #if($isConfSvEnabled)
 spring.config.import=optional:configserver:http://localhost:8888
 #else
 server.port=${port}
-
-#db settings
-spring.datasource.url=jdbc:postgresql://localhost:${dbPort}/products
+    #if($persistence == $postgresql)
+    spring.datasource.url=jdbc:postgresql://localhost:${dbPort}/products
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    #end
+    #if($persistence == $mysql)
+    spring.datasource.url=jdbc:mysql://localhost:${dbPort}/products
+    spring.jpa.properties.hibernate.dialect= org.hibernate.dialect.MySQL5Dialect
+    #end
 spring.datasource.username=changeUsername
 spring.datasource.password=changePassword
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 #end

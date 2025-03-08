@@ -1,0 +1,45 @@
+package ${package}.services;
+
+import ${package}.entities.Shipment;
+import ${package}.repositories.ShipmentRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ShipmentServiceImpl implements ShipmentService {
+
+    private final ShipmentRepository repository;
+
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository) {
+        this.repository = shipmentRepository;
+    }
+
+    @Override
+    public List<Shipment> getAllShipments() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Shipment getShipmentById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Shipment createShipment(Shipment shipment) {
+        return repository.save(shipment);
+    }
+
+    @Override
+    public Shipment updateShipment(Shipment shipment) {
+        if (repository.existsById(shipment.getId())) {
+            return repository.save(shipment);
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteShipment(Long id) {
+        repository.deleteById(id);
+    }
+}

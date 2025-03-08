@@ -1,0 +1,13 @@
+package ${package}.services;
+
+import ${package}.entities.Shipment;
+
+import java.util.List;
+
+public interface ShipmentService {
+    List<Shipment> getAllShipments();
+    Shipment getShipmentById(Long id);
+    Shipment createShipment(Shipment shipment);
+    Shipment updateShipment(Shipment shipment);
+    void deleteShipment(Long id);
+}

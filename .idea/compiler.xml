@@ -23,6 +23,7 @@
         <module name="order-service" />
         <module name="gateway" />
         <module name="config-server (1) (com.tdarquier.test)" />
+        <module name="shipping-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -48,6 +49,7 @@
       <module name="order-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
       <module name="request-service" options="-parameters" />
+      <module name="shipping-service" options="-parameters" />
       <module name="user-management-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>

@@ -1,0 +1,8 @@
+package ${package}.enums;
+
+public enum Status {
+    IN_DEPOSIT,
+    SHIPPED,
+    DELIVERED,
+    RETURNED
+}

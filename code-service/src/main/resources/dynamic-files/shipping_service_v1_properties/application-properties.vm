@@ -6,11 +6,11 @@ spring.config.import=optional:configserver:http://localhost:8888
 #else
 server.port=${port}
     #if($persistence == $postgresql)
-spring.datasource.url=jdbc:postgresql://localhost:${dbPort}/orders
+spring.datasource.url=jdbc:postgresql://localhost:${dbPort}/shipping
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     #end
     #if($persistence == $mysql)
-spring.datasource.url=jdbc:mysql://localhost:${dbPort}/orders
+spring.datasource.url=jdbc:mysql://localhost:${dbPort}/shipping
 spring.jpa.properties.hibernate.dialect= org.hibernate.dialect.MySQL5Dialect
     #end
 spring.datasource.username=changeUsername

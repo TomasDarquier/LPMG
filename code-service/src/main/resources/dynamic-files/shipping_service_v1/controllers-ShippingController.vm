@@ -1,0 +1,43 @@
+package ${package}.controllers;
+
+import ${package}.entities.Shipment;
+import ${package}services.ShipmentService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/shipments")
+public class ShippingController {
+
+    private final ShipmentService service;
+
+    public ShippingController(ShipmentService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<Shipment> getAllShipments() {
+        return service.getAllShipments();
+    }
+
+    @GetMapping("/{id}")
+    public Shipment getShipmentById(@PathVariable Long id) {
+        return service.getShipmentById(id);
+    }
+
+    @PostMapping
+    public Shipment createShipment(@RequestBody Shipment shipment) {
+        return service.createShipment(shipment);
+    }
+
+    @PutMapping
+    public Shipment updateShipment(@RequestBody Shipment shipment) {
+        return service.updateShipment(shipment);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteShipment(@PathVariable Long id) {
+        service.deleteShipment(id);
+    }
+}
