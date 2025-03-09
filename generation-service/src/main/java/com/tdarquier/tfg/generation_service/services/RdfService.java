@@ -1,7 +1,7 @@
 package com.tdarquier.tfg.generation_service.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.tdarquier.tfg.generation_service.kafka.generation.GenerationRequest;
+import com.tdarquier.tfg.generation_service.messages.GenerationRequest;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.concurrent.CompletableFuture;

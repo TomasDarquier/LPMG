@@ -1,0 +1,29 @@
+#set($found = false)
+#set($connectionApiPath = "")
+#set($connectionPort = "")
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("USER_SERVICE"))
+        #set($found = true)
+        #set($connectionApiPath = $connection.apiPath)
+        #set($connectionPort = $connection.port)
+        #break
+    #end
+#end
+#if($found)
+package ${package}.clients;
+
+import ${package}.dtos.UserDto;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@FeignClient(url = "http://localhost:${connectionPort}")
+@Component
+public interface UserClient {
+
+    @GetMapping("${connectionApiPath}/dto/{userId}")
+    UserDto getUserDto(@PathVariable String userId);
+
+}
+#end

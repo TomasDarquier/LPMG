@@ -15,6 +15,6 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: '*'
-        spring.json.type.mapping: generationRequest:com.tdarquier.tfg.generation_service.kafka.generation.GenerationRequest
+        spring.json.type.mapping: generationRequest:com.tdarquier.tfg.generation_service.messages.GenerationRequest, generationStatus:com.tdarquier.tfg.generation_service.messages.GenerationStatus
       group-id: ssl-consumer #serviceGenerationRequestGroup
       bootstrap-servers: kafka:9093

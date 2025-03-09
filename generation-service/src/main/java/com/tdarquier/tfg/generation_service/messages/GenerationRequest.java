@@ -1,4 +1,4 @@
-package com.tdarquier.tfg.generation_service.kafka.generation;
+package com.tdarquier.tfg.generation_service.messages;
 
 public record GenerationRequest(
         Long userId,

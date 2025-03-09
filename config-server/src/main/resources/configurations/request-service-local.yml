@@ -10,7 +10,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.type.mapping: generationRequest:com.tdarquier.tfg.request_service.messages.GenerationRequest
+        spring.json.type.mapping: generationRequest:com.tdarquier.tfg.request_service.messages.GenerationRequest, generationStatus:com.tdarquier.tfg.request_service.messages.GenerationStatus
     consumer:
       bootstrap-servers: localhost:9093
 

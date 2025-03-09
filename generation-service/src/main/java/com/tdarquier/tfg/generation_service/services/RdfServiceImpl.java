@@ -3,7 +3,7 @@ package com.tdarquier.tfg.generation_service.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tdarquier.tfg.generation_service.kafka.generation.GenerationRequest;
+import com.tdarquier.tfg.generation_service.messages.GenerationRequest;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;

@@ -73,7 +73,6 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
     private List<MinioFile> generateJavaCode(ComponentData componentData, String bucket) {
         List<MinioFile> generatedFiles = new ArrayList<>();
         String templateFolder = componentData.getTemplate().toString().toLowerCase();
-        //List<String> filesToGenerate = Arrays.stream(filesList.split("\n")).toList();
         List<String> filesToGenerate = null;
         try {
             filesToGenerate = listFilesFromFolder(templateFolder);
