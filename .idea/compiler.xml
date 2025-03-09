@@ -25,6 +25,15 @@
         <module name="config-server (1) (com.tdarquier.test)" />
         <module name="shipping-service" />
       </profile>
+      <profile name="Annotation profile for notification-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="notification-service" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="forntend-service" target="17" />
@@ -46,6 +55,7 @@
       <module name="gateway" options="-parameters" />
       <module name="generation-service" options="-parameters" />
       <module name="init-service" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
       <module name="request-service" options="-parameters" />
