@@ -1,3 +1,4 @@
+import canvas from "./canvas.js";
 document.addEventListener('DOMContentLoaded', () => {
     const components = document.querySelectorAll('.component');
     const canvasElement = document.getElementById('canvas');

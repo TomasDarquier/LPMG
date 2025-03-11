@@ -95,6 +95,21 @@ services:
       networks:
         - microservices-network
 
+    notification-service:
+      build:
+        context: ./notification-service
+        dockerfile: Dockerfile
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+        - CONFIG_SERVER_URL=http://config:8888
+      ports:
+        - "8150:8150"
+      volumes:
+        - ./docker/kafka/certs/production/kafka.client3.keystore.jks:/etc/kafka/secrets/certs/kafka.client3.keystore.jks
+        - ./docker/kafka/certs/production/kafka.client3.truststore.jks:/etc/kafka/secrets/certs/kafka.client3.truststore.jks
+      networks:
+        - microservices-network
+
     usersdb:
       image: postgres:13
       container_name: usersdb

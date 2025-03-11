@@ -1,3 +1,6 @@
+const SockJS = window.SockJS;
+const { Client } = window.StompJs;
+
 class Canvas {
     constructor() {
         this.canvas = document.getElementById('canvas');
@@ -22,14 +25,14 @@ class Canvas {
             envios: 'SHIPPING_SERVICE_V1',
             ordenes: 'ORDER_SERVICE_V1'
         };
-     this.compatibilityMap = {
-        usuarios: ['carrito', 'productos', 'notificaciones', 'ordenes', 'envios'],
-        carrito: ['usuarios', 'productos', 'notificaciones', 'ordenes'],
-        ordenes: ['usuarios', 'notificaciones', 'envios', 'carrito'],
-        productos: ['notificaciones', 'carrito', 'ordenes', 'usuarios'],
-        envios: ['usuarios', 'notificaciones', 'ordenes'],
-        notificaciones: ['usuarios', 'carrito', 'ordenes', 'productos', 'envios']
-    };
+        this.compatibilityMap = {
+            usuarios: ['carrito', 'productos', 'notificaciones', 'ordenes', 'envios'],
+            carrito: ['usuarios', 'productos', 'notificaciones', 'ordenes'],
+            ordenes: ['usuarios', 'notificaciones', 'envios', 'carrito'],
+            productos: ['notificaciones', 'carrito', 'ordenes', 'usuarios'],
+            envios: ['usuarios', 'notificaciones', 'ordenes'],
+            notificaciones: ['usuarios', 'carrito', 'ordenes', 'productos', 'envios']
+        };
 
         this.initializeEventListeners();
         this.addGlobalConfigButton();
@@ -181,6 +184,7 @@ class Canvas {
             if (response.ok) {
                 messageElem.textContent = 'Código generado exitosamente. Descargalo desde tu Perfil.';
                 messageElem.classList.add('success');
+                this.subscribeToWebSocket(modelId);
             } else {
                 throw new Error('Error al enviar la configuración');
             }
@@ -202,6 +206,28 @@ class Canvas {
             });
         }, 3000);
     }
+
+    subscribeToWebSocket(userId) {
+        //const socket = new SockJS("http://notification-service:8150/ws");
+        const socket = new SockJS("http://localhost:8150/ws");
+        const stompClient = new Client({
+            webSocketFactory: () => socket,
+            reconnectDelay: 5000, // Reintenta si se desconecta
+        });
+
+        stompClient.onConnect = () => {
+            console.log("Conectado al WebSocket");
+
+            //stompClient.subscribe(`/topic/generation-status/${userId}`, (message) => {
+            stompClient.subscribe(`/topic/generation-status/1`, (message) => {
+                const notification = JSON.parse(message.body);
+                console.log("📩 Notificación recibida:", notification);
+            });
+        };
+
+        stompClient.activate();
+    }
+
     addComponent(component) {
         const existingComponent = Array.from(this.components.values())
             .find(comp => comp.elem.getAttribute('data-type') === component.type);
@@ -662,3 +688,4 @@ class Canvas {
     }
 }
 const canvas = new Canvas();
+export default canvas;

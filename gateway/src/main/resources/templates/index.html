@@ -65,9 +65,12 @@ _csrftoken=${_csrf.token}">
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@latest/bundles/stomp.umd.min.js"></script>
+
 <script th:src="@{/js/logout.js}"></script>
 <script th:src="@{/js/toggles.js}"></script>
-<script th:src="@{/js/canvas.js}"></script>
-<script th:src="@{/js/dragDrop.js}"></script>
+<script type="module" th:src="@{/js/canvas.js}"></script>
+<script type="module" th:src="@{/js/dragDrop.js}"></script>
 </body>
 </html>
