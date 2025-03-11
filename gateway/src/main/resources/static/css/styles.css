@@ -428,5 +428,86 @@ nav button {
     color: red;
     margin-top: 5px;
 }
+/* Fondo oscurecido */
+#process-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none;
+}
+
+/* Cuadro de progreso centrado */
+.process-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 400px;
+    z-index: 1000;
+    display: none;
+}
+
+/* Barra de progreso */
+.process-bar-wrapper {
+    width: 100%;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 15px;
+    height: 15px;
+}
+
+.process-bar {
+    height: 100%;
+    width: 0%;
+    background: #4caf50;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Mensajes flotantes */
+.msg-popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.msg-popup.error {
+    background: #e74c3c;
+}
+
+/* Botón "OK" */
+.process-ok-btn {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #4caf50;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block; /* Asegura que el botón ocupa todo el ancho disponible */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.process-ok-btn:hover {
+    background: #388e3c;
+}
+
 
 

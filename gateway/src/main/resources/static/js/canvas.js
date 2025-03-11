@@ -166,8 +166,10 @@ class Canvas {
     }
 
     async sendJsonToServer(json, modelId) {
+        this.subscribeToWebSocket(modelId);
         const csrfToken = document.body.getAttribute('_csrftoken');
         console.log(json);
+
         try {
             const response = await fetch(`/submit/${modelId}`, {
                 method: 'POST',
@@ -178,41 +180,20 @@ class Canvas {
                 body: JSON.stringify(json)
             });
 
-            const messageElem = document.createElement('div');
-            messageElem.className = 'notification';
+            if (!response.ok) throw new Error('Error al enviar la configuración');
 
-            if (response.ok) {
-                messageElem.textContent = 'Código generado exitosamente. Descargalo desde tu Perfil.';
-                messageElem.classList.add('success');
-                this.subscribeToWebSocket(modelId);
-            } else {
-                throw new Error('Error al enviar la configuración');
-            }
-
-            document.body.appendChild(messageElem);
+            this.showProcessStatus("Generando arquitectura...", 0);
         } catch (error) {
             console.error('Error:', error);
-
-            const messageElem = document.createElement('div');
-            messageElem.className = 'notification error';
-            messageElem.textContent = 'Error al generar el código.';
-            document.body.appendChild(messageElem);
+            this.displayMessage('Error al generar el código.', 'error');
         }
-
-        setTimeout(() => {
-            const notifications = document.querySelectorAll('.notification');
-            notifications.forEach((notification) => {
-                notification.remove();
-            });
-        }, 3000);
     }
 
     subscribeToWebSocket(userId) {
-        //const socket = new SockJS("http://notification-service:8150/ws");
         const socket = new SockJS("http://localhost:8150/ws");
         const stompClient = new Client({
             webSocketFactory: () => socket,
-            reconnectDelay: 5000, // Reintenta si se desconecta
+            reconnectDelay: 5000,
         });
 
         stompClient.onConnect = () => {
@@ -221,11 +202,165 @@ class Canvas {
             stompClient.subscribe(`/topic/generation-status/${userId}`, (message) => {
                 const notification = JSON.parse(message.body);
                 console.log("📩 Notificación recibida:", notification);
+
+                // Actualizar la barra de progreso según el mensaje recibido
+                this.updateProcessProgress(notification.status, notification.progress);
             });
         };
 
         stompClient.activate();
     }
+
+    showProcessStatus(message, progress) {
+        let overlay = document.getElementById("process-overlay");
+        let processBox = document.getElementById("process-status-box");
+
+        if (!overlay) {
+            overlay = document.createElement("div");
+            overlay.id = "process-overlay";
+            document.body.appendChild(overlay);
+        }
+
+        if (!processBox) {
+            processBox = document.createElement("div");
+            processBox.id = "process-status-box";
+            processBox.className = "process-container";
+            processBox.innerHTML = `
+            <p id="process-message">${message}</p>
+            <div class="process-bar-wrapper">
+                <div id="process-bar" class="process-bar"></div>
+            </div>
+            <button id="process-ok-btn" class="process-ok-btn" style="display: none;">OK</button>
+        `;
+            document.body.appendChild(processBox);
+
+            document.getElementById("process-ok-btn").addEventListener("click", () => {
+                overlay.remove();
+                processBox.remove();
+            });
+        }
+
+        overlay.style.display = "block";
+        processBox.style.display = "block";
+
+        this.updateProcessProgress(message, progress);
+    }
+
+    updateProcessProgress(message, progress) {
+        const messageElem = document.getElementById("process-message");
+        const progressBar = document.getElementById("process-bar");
+        const okButton = document.getElementById("process-ok-btn");
+        const overlay = document.getElementById("process-overlay");
+
+        if (messageElem && progressBar) {
+            messageElem.textContent = message;
+            progressBar.style.width = `${(progress / 4) * 100}%`;
+
+            if (progress === 4) {
+                messageElem.textContent = "✅ Arquitectura generada con éxito.";
+                okButton.style.display = "block";
+            }
+        }
+    }
+
+    displayMessage(message, type = 'success') {
+        const msgBox = document.createElement('div');
+        msgBox.className = `msg-popup ${type}`;
+        msgBox.textContent = message;
+        document.body.appendChild(msgBox);
+
+        setTimeout(() => msgBox.remove(), 3000);
+    }
+
+
+    // async sendJsonToServer(json, modelId) {
+    //     this.subscribeToWebSocket(modelId);
+    //     const csrfToken = document.body.getAttribute('_csrftoken');
+    //     console.log(json);
+    //
+    //     try {
+    //         const response = await fetch(`/submit/${modelId}`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRF-TOKEN': csrfToken
+    //             },
+    //             body: JSON.stringify(json)
+    //         });
+    //
+    //         if (!response.ok) throw new Error('Error al enviar la configuración');
+    //
+    //         this.showProcessStatus("Generando arquitectura...", 0);
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //         this.displayMessage('Error al generar el código.', 'error');
+    //     }
+    // }
+    //
+    // subscribeToWebSocket(userId) {
+    //     const socket = new SockJS("http://localhost:8150/ws");
+    //     const stompClient = new Client({
+    //         webSocketFactory: () => socket,
+    //         reconnectDelay: 5000,
+    //     });
+    //
+    //     stompClient.onConnect = () => {
+    //         console.log("Conectado al WebSocket, userId: " + userId);
+    //
+    //         stompClient.subscribe(`/topic/generation-status/${userId}`, (message) => {
+    //             const notification = JSON.parse(message.body);
+    //             console.log("📩 Notificación recibida:", notification);
+    //
+    //             // Actualizar la barra de progreso según el mensaje recibido
+    //             this.updateProcessProgress(notification.status, notification.progress);
+    //         });
+    //     };
+    //
+    //     stompClient.activate();
+    // }
+    //
+    // showProcessStatus(message, progress) {
+    //     let processBox = document.getElementById("process-status-box");
+    //
+    //     if (!processBox) {
+    //         processBox = document.createElement("div");
+    //         processBox.id = "process-status-box";
+    //         processBox.className = "process-container";
+    //         processBox.innerHTML = `
+    //         <p id="process-message">${message}</p>
+    //         <div class="process-bar-wrapper">
+    //             <div id="process-bar" class="process-bar"></div>
+    //         </div>
+    //     `;
+    //         document.body.appendChild(processBox);
+    //     }
+    //
+    //     this.updateProcessProgress(message, progress);
+    // }
+    //
+    // updateProcessProgress(message, progress) {
+    //     const messageElem = document.getElementById("process-message");
+    //     const progressBar = document.getElementById("process-bar");
+    //
+    //     if (messageElem && progressBar) {
+    //         messageElem.textContent = message;
+    //         progressBar.style.width = `${(progress / 4) * 100}%`;
+    //
+    //         if (progress === 4) {
+    //             messageElem.textContent = "✅ Arquitectura generada con éxito.";
+    //             setTimeout(() => processBox.remove(), 3000);
+    //         }
+    //     }
+    // }
+    //
+    // displayMessage(message, type = 'success') {
+    //     const msgBox = document.createElement('div');
+    //     msgBox.className = `msg-popup ${type}`;
+    //     msgBox.textContent = message;
+    //     document.body.appendChild(msgBox);
+    //
+    //     setTimeout(() => msgBox.remove(), 3000);
+    // }
 
     addComponent(component) {
         const existingComponent = Array.from(this.components.values())
