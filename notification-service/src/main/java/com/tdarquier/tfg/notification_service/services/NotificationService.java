@@ -17,6 +17,7 @@ public class NotificationService {
 
     @KafkaListener(topics = "services-generation-status-topic")
     public void consumeGenerationStatus(ConsumerRecord<String, GenerationStatus> record) {
+        System.out.println("\n\n\n\n\n\nReceived record: " + record.value());
         GenerationStatus status = record.value();
         template.convertAndSend("/topic/generation-status/" + status.userId(), status);
     }

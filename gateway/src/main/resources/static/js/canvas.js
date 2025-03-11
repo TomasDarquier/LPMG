@@ -216,10 +216,9 @@ class Canvas {
         });
 
         stompClient.onConnect = () => {
-            console.log("Conectado al WebSocket");
+            console.log("Conectado al WebSocket, userId: " + userId);
 
-            //stompClient.subscribe(`/topic/generation-status/${userId}`, (message) => {
-            stompClient.subscribe(`/topic/generation-status/1`, (message) => {
+            stompClient.subscribe(`/topic/generation-status/${userId}`, (message) => {
                 const notification = JSON.parse(message.body);
                 console.log("📩 Notificación recibida:", notification);
             });
