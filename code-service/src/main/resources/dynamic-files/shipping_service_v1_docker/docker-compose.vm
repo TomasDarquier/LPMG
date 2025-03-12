@@ -4,11 +4,11 @@ services:
   db:
 #if($persistence == $postgresql)
     image: postgres:13
-    container_name: user_service_${persistence}_${name}
+    container_name: shipping_service_${persistence}_${name}
     environment:
       POSTGRES_USER: changeUsername
       POSTGRES_PASSWORD: changePassword
-      POSTGRES_DB: users
+      POSTGRES_DB: shipping
     ports:
       - "${dbPort}:5432"
     networks:
@@ -18,11 +18,11 @@ services:
 ## TODO implement
 #if($persistence == $mysql)
     image: ${persistence}
-    container_name: user_service_${persistence}_${name}
+    container_name: shipping_service_${persistence}_${name}
     environment:
       POSTGRES_USER: changeUsername
       POSTGRES_PASSWORD: changePassword
-      POSTGRES_DB: users
+      POSTGRES_DB: shipping
     ports:
       - "${dbPort}:5432"
     networks:

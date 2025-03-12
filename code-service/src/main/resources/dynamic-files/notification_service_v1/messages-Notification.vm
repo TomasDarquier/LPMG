@@ -1,0 +1,7 @@
+package ${package}.messages;
+
+public record Notification(
+    Long id,
+    String content
+) {
+}

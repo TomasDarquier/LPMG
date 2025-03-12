@@ -272,96 +272,6 @@ class Canvas {
         setTimeout(() => msgBox.remove(), 3000);
     }
 
-
-    // async sendJsonToServer(json, modelId) {
-    //     this.subscribeToWebSocket(modelId);
-    //     const csrfToken = document.body.getAttribute('_csrftoken');
-    //     console.log(json);
-    //
-    //     try {
-    //         const response = await fetch(`/submit/${modelId}`, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'X-CSRF-TOKEN': csrfToken
-    //             },
-    //             body: JSON.stringify(json)
-    //         });
-    //
-    //         if (!response.ok) throw new Error('Error al enviar la configuración');
-    //
-    //         this.showProcessStatus("Generando arquitectura...", 0);
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //         this.displayMessage('Error al generar el código.', 'error');
-    //     }
-    // }
-    //
-    // subscribeToWebSocket(userId) {
-    //     const socket = new SockJS("http://localhost:8150/ws");
-    //     const stompClient = new Client({
-    //         webSocketFactory: () => socket,
-    //         reconnectDelay: 5000,
-    //     });
-    //
-    //     stompClient.onConnect = () => {
-    //         console.log("Conectado al WebSocket, userId: " + userId);
-    //
-    //         stompClient.subscribe(`/topic/generation-status/${userId}`, (message) => {
-    //             const notification = JSON.parse(message.body);
-    //             console.log("📩 Notificación recibida:", notification);
-    //
-    //             // Actualizar la barra de progreso según el mensaje recibido
-    //             this.updateProcessProgress(notification.status, notification.progress);
-    //         });
-    //     };
-    //
-    //     stompClient.activate();
-    // }
-    //
-    // showProcessStatus(message, progress) {
-    //     let processBox = document.getElementById("process-status-box");
-    //
-    //     if (!processBox) {
-    //         processBox = document.createElement("div");
-    //         processBox.id = "process-status-box";
-    //         processBox.className = "process-container";
-    //         processBox.innerHTML = `
-    //         <p id="process-message">${message}</p>
-    //         <div class="process-bar-wrapper">
-    //             <div id="process-bar" class="process-bar"></div>
-    //         </div>
-    //     `;
-    //         document.body.appendChild(processBox);
-    //     }
-    //
-    //     this.updateProcessProgress(message, progress);
-    // }
-    //
-    // updateProcessProgress(message, progress) {
-    //     const messageElem = document.getElementById("process-message");
-    //     const progressBar = document.getElementById("process-bar");
-    //
-    //     if (messageElem && progressBar) {
-    //         messageElem.textContent = message;
-    //         progressBar.style.width = `${(progress / 4) * 100}%`;
-    //
-    //         if (progress === 4) {
-    //             messageElem.textContent = "✅ Arquitectura generada con éxito.";
-    //             setTimeout(() => processBox.remove(), 3000);
-    //         }
-    //     }
-    // }
-    //
-    // displayMessage(message, type = 'success') {
-    //     const msgBox = document.createElement('div');
-    //     msgBox.className = `msg-popup ${type}`;
-    //     msgBox.textContent = message;
-    //     document.body.appendChild(msgBox);
-    //
-    //     setTimeout(() => msgBox.remove(), 3000);
-    // }
-
     addComponent(component) {
         const existingComponent = Array.from(this.components.values())
             .find(comp => comp.elem.getAttribute('data-type') === component.type);
@@ -438,6 +348,7 @@ class Canvas {
         document.body.appendChild(overlay);
 
         const showCache = config.name === 'carrito';
+        const showQueue= config.name === 'notificaciones';
         const showRelationalDb = config.name === 'usuarios'
             || config.name === 'productos'
             || config.name === 'ordenes'
@@ -475,6 +386,9 @@ class Canvas {
                 ` : ''}
                 ${showCache ? `
                     <option value="Redis" ${config.persistence === 'Redis' ? 'selected' : ''}>Redis</option>
+                ` : ''}
+                ${showQueue? `
+                    <option value="Apache Kafka" ${config.persistence === 'Kafka' ? 'selected' : ''}>PostgreSQL</option>
                 ` : ''}
             </select>
         </div>

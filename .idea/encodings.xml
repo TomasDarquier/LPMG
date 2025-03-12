@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/blueprints/cart-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/blueprints/config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/blueprints/notifiaction-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/blueprints/order-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/blueprints/product-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/blueprints/shipping-service/src/main/java" charset="UTF-8" />

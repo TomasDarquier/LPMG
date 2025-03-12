@@ -1,7 +1,7 @@
 package ${package}.controllers;
 
 import ${package}.entities.Shipment;
-import ${package}services.ShipmentService;
+import ${package}.services.ShipmentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

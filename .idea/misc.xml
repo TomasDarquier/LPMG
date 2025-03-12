@@ -22,6 +22,7 @@
         <option value="$PROJECT_DIR$/config-server/pom.xml" />
         <option value="$PROJECT_DIR$/blueprints/shipping-service/pom.xml" />
         <option value="$PROJECT_DIR$/notification-service/pom.xml" />
+        <option value="$PROJECT_DIR$/blueprints/notifiaction-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
