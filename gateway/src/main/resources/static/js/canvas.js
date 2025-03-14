@@ -29,7 +29,7 @@ class Canvas {
             usuarios: ['carrito', 'productos', 'notificaciones', 'ordenes', 'envios'],
             carrito: ['usuarios', 'productos', 'notificaciones', 'ordenes'],
             ordenes: ['usuarios', 'notificaciones', 'envios', 'carrito'],
-            productos: ['notificaciones', 'carrito', 'ordenes', 'usuarios'],
+            productos: ['notificaciones', 'carrito', 'usuarios'],
             envios: ['usuarios', 'notificaciones', 'ordenes'],
             notificaciones: ['usuarios', 'carrito', 'ordenes', 'productos', 'envios']
         };
