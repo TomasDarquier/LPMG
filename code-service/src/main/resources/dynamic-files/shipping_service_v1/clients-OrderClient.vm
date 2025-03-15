@@ -1,0 +1,38 @@
+#set($found = false)
+#set($connectionApiPath = "")
+#set($connectionPort = "")
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("USER_SERVICE"))
+        #set($found = true)
+        #set($connectionApiPath = $connection.apiPath)
+        #set($connectionPort = $connection.port)
+        #break
+    #end
+#end
+#if($found)
+package ${package}.clients;
+
+import ${package}.entities.Order;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@FeignClient(url = "http://localhost:${connectionPort}")
+public interface OrderClient {
+
+    @GetMapping("")
+    List<Order> getOrders();
+
+    @GetMapping("${connectionApiPath}/{orderId}")
+    Order getOrder(@PathVariable("orderId") long orderId);
+
+    @PostMapping("${connectionApiPath}")
+    Order createOrder(@RequestBody Order order);
+
+    @PutMapping("${connectionApiPath}")
+    Order updateOrder(@RequestBody Order order);
+
+    @DeleteMapping("${connectionApiPath}/{orderId}")
+    void deleteOrder(@PathVariable("orderId") long orderId);
+}
+#end

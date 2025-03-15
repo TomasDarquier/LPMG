@@ -1,0 +1,17 @@
+#set($found = false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("ORDER_SERVICE"))
+        #set($found = true)
+        #break
+    #end
+#end
+#if($found)
+package ${package}.enums;
+
+public enum Category {
+    BREAKFAST,
+    LAUNCH,
+    DINNER,
+    TAKEAWAY
+}
+#end

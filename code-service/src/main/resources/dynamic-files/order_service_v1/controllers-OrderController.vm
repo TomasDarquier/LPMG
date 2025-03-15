@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${apiPath}")
-public class OrderController {
+kublic class OrderController {
 
     private final OrderService orderService;
 
@@ -41,7 +41,7 @@ public class OrderController {
 
     @PostMapping("/from/cart")
     public Order createOrderFromCartItems(@RequestBody List<CartItem> items, @RequestParam String orderName, @RequestParam String category){
-        AtomicReference<Float> total = new AtomicReference<>((float) 0);
+r       AtomicReference<Float> total = new AtomicReference<>((float) 0);
         items.forEach(item -> {
             ProductDto product = productClient.getProductDtoById(item.getProductId());
             total.set((float) (product.price() * item.getQuantity()));
