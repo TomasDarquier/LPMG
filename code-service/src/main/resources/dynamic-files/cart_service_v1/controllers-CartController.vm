@@ -13,9 +13,10 @@ package ${package}.controllers;
 
 import ${package}.entities.CartItem;
 import ${package}.services.CartService;
+import ${package}.dtos.ProductDto;
 import org.springframework.web.bind.annotation.*;
 #if($found)
-import com.tdarquier.test.cart_service.clients.ProductClient;
+import ${package}.clients.ProductClient;
 import java.util.concurrent.atomic.AtomicReference;
 #end
 import java.util.List;
@@ -40,7 +41,7 @@ public class CartController {
     public Double getTotal(@PathVariable Long userId) {
         AtomicReference<Double> total = new AtomicReference<>(0.0);
         cartService.getAllItems(userId).forEach( cartItem -> {
-            ProductDto dto = productClient.getProductDtoById(cartItem.getProductId());
+            ProductDto dto = productClient.getProductDtoById(cartItem.getProductId()).getBody();
             total.set(total.get() + (dto.price() * cartItem.getQuantity()));
         });
         return total.get();

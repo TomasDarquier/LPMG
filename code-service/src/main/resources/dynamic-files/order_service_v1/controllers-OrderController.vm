@@ -25,11 +25,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${apiPath}")
-kublic class OrderController {
+public class OrderController {
 
     private final OrderService orderService;
 
-    public OrderController(OrderService orderService #if($cartService && $productService),ProductClient productClient) #end{
+    public OrderController(OrderService orderService) #if($cartService && $productService),ProductClient productClient) #end{
         this.orderService = orderService;
 #if($cartService && $productService)
         this.productClient = productClient;

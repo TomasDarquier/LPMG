@@ -75,16 +75,41 @@ public class RdfServiceImpl implements RdfService {
                         connection.get("serviceOne").asText().replaceAll("\\s+", "_") +
                         "_to_" + connection.get("serviceTwo").asText().replaceAll("\\s+", "_");
 
+                System.out.println("\n\n\n CONEXION! \n\n\n" + connectionUri + "\n\n\n");
+
                 Resource connectionResource = model.createResource(connectionUri)
                         .addProperty(model.createProperty(BASE_URI, "serviceOne"), connection.get("serviceOne").asText())
                         .addProperty(model.createProperty(BASE_URI, "serviceTwo"), connection.get("serviceTwo").asText())
                         .addProperty(model.createProperty(BASE_URI, "protocol"), connection.get("protocol").asText())
                         .addProperty(model.createProperty(BASE_URI, "connectionType"), connection.get("type").asText());
-
                 projectResource.addProperty(model.createProperty(BASE_URI, "hasConnection"), connectionResource);
             }
         }
     }
+//    private void processConnections(JsonNode connectionsNode, Resource projectResource, Model model) {
+//    if (connectionsNode != null && connectionsNode.isArray()) {
+//        for (JsonNode connection : connectionsNode) {
+//            String serviceOneName = connection.get("serviceOne").asText().replaceAll("\\s+", "_");
+//            String serviceTwoName = connection.get("serviceTwo").asText().replaceAll("\\s+", "_");
+//
+//            // Recuperar recursos de servicios existentes
+//            Resource serviceOneResource = model.createResource(BASE_URI + "service/" + serviceOneName);
+//            Resource serviceTwoResource = model.createResource(BASE_URI + "service/" + serviceTwoName);
+//
+//            String connectionUri = BASE_URI + "connection/" + serviceOneName + "_to_" + serviceTwoName;
+//
+//            Resource connectionResource = model.createResource(connectionUri)
+//                    .addProperty(model.createProperty(BASE_URI, "protocol"), connection.get("protocol").asText())
+//                    .addProperty(model.createProperty(BASE_URI, "connectionType"), connection.get("type").asText())
+//                    // En lugar de solo agregar el nombre, referenciamos los recursos de los servicios
+//                    .addProperty(model.createProperty(BASE_URI, "serviceOne"), serviceOneResource)
+//                    .addProperty(model.createProperty(BASE_URI, "serviceTwo"), serviceTwoResource);
+//
+//            projectResource.addProperty(model.createProperty(BASE_URI, "hasConnection"), connectionResource);
+//        }
+//    }
+//}
+
 
     private void processInfrastructure(JsonNode infrastructureNode, Resource projectResource, Model model) {
         if (infrastructureNode != null) {

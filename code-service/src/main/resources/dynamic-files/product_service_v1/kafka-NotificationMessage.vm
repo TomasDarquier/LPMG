@@ -1,0 +1,17 @@
+#set($found = false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("NOTIFICATION_SERVICE"))
+        #set($found = true)
+        #break
+    #end
+#end
+#if($found)
+package ${package}.kafka;
+
+import java.util.Date;
+
+public record NotificationMessage(
+    String message,
+    Date timestamp
+){}
+#end

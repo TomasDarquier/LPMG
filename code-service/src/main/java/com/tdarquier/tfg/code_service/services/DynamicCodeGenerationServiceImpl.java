@@ -134,7 +134,7 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
 
-        System.out.println(writer.toString());
+        //System.out.println(writer.toString());
         return writer.toString();
     }
 

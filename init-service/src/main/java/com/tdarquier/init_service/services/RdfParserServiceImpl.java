@@ -77,6 +77,9 @@ public class RdfParserServiceImpl implements RdfParserService{
         StringBuilder builder = new StringBuilder();
         if(isPartOfConnection(serviceName, model)){
             builder.append("cloud-feign,");
+            if(isAnyConnectedServiceNotificationService(serviceName, model)){
+                builder.append("kafka,");
+            }
         }
         if(isDiscoveryServerEnabled(model)){
             builder.append("cloud-eureka,");
@@ -140,6 +143,39 @@ public class RdfParserServiceImpl implements RdfParserService{
                 builder.toString(),
                 Template.DISCOVERY_SERVICE_V1);
     }
+
+    public List<String> getConnectedServices(String serviceName, Model model) {
+        List<String> connectedServices = new ArrayList<>();
+        String queryStr = "SELECT ?otherService WHERE { "
+                + "{ ?connection <" + BASE_URI + "serviceOne> \"" + serviceName + "\" ; "
+                + "              <" + BASE_URI + "serviceTwo> ?otherService . } "
+                + " UNION "
+                + "{ ?connection <" + BASE_URI + "serviceTwo> \"" + serviceName + "\" ; "
+                + "              <" + BASE_URI + "serviceOne> ?otherService . } "
+                + "}";
+
+        try (QueryExecution qe = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
+            ResultSet rs = qe.execSelect();
+            while (rs.hasNext()) {
+                String connectedService = rs.next().get("otherService").toString();
+                connectedServices.add(connectedService);
+            }
+        }
+        return connectedServices;
+    }
+
+    public boolean isAnyConnectedServiceNotificationService(String serviceName, Model model) {
+        List<String> connectedServices = getConnectedServices(serviceName, model);
+        for (String connectedService : connectedServices) {
+            Template template = getTemplateType(connectedService, model);
+            if (template == Template.NOTIFICATION_SERVICE_V1) {
+                return true; // Si uno de los servicios conectados es de tipo Notification Service
+            }
+        }
+        return false; // Ninguno de los servicios conectados es Notification Service
+    }
+
+
 
     private ProjectRequest createGateway(Model model) {
         StringBuilder builder = new StringBuilder("cloud-gateway,");

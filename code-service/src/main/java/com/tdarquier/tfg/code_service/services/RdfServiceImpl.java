@@ -90,6 +90,7 @@ public class RdfServiceImpl implements RdfService{
                 }
             }
         }
+        System.out.println("CONNECTION NAMES!!!!\n\n\n" + connectionNames + "\n\n");
 
         return connectionNames;
     }

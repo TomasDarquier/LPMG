@@ -1,0 +1,33 @@
+#set($found = false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("NOTIFICATION_SERVICE"))
+        #set($found = true)
+        #break
+    #end
+#end
+#if($found)
+package ${package}.kafka;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class NotificationProducer{
+
+    private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
+
+    public void sendNotificationMessage(NotificationMessage notificationMessage){
+    Message<NotificationMessage> message = MessageBuilder
+        .withPayload(notificationMessage)
+        .setHeader(KafkaHeaders.TOPIC, "product-notification-topic")
+        .build();
+
+    kafkaTemplate.send(message);
+    }
+}
+#end

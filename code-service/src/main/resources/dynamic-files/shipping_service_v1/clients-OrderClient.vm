@@ -2,7 +2,7 @@
 #set($connectionApiPath = "")
 #set($connectionPort = "")
 #foreach($connection in $connections)
-    #if($connection.connectedTo.name().startsWith("USER_SERVICE"))
+    #if($connection.connectedTo.name().startsWith("ORDER_SERVICE"))
         #set($found = true)
         #set($connectionApiPath = $connection.apiPath)
         #set($connectionPort = $connection.port)
