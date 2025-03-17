@@ -101,10 +101,22 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
             ));
         });
 
+        if(componentData.getIsGraphQLEnabled() && componentData.getTemplate() != Template.NOTIFICATION_SERVICE_V1){
+            generatedFiles.add(generateGraphqlSchema(componentData, bucket));
+        }
         //TODO testFile
         generatedFiles.add(generateTestFile(componentData,bucket));
 
         return generatedFiles;
+    }
+
+    private MinioFile generateGraphqlSchema(ComponentData componentData, String bucket) {
+        String templateFolder = componentData.getTemplate().toString().toLowerCase() + "_graphql";
+        return new MinioFile(
+                componentData.getPaths().get("resources") + "/graphql/schema.graphqls",
+                bucket,
+                generateFile(templateFolder + "/schema-graphqls.vm", componentData)
+        );
     }
 
     private MinioFile generateTestFile(ComponentData componentData, String bucket) {
@@ -127,6 +139,8 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
         if(!isUtilService(componentData.getTemplate())){
             context.put("persistence",componentData.getPersistenceType().toString());
         }
+        context.put("isGraphQLEnabled",componentData.getIsGraphQLEnabled());
+        context.put("isRESTEnabled",componentData.getIsRESTEnabled());
 
         var template = velocityEngine.getTemplate(fullPath);
 

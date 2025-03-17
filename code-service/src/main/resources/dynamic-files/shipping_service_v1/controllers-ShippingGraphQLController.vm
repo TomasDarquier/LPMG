@@ -1,0 +1,67 @@
+#if($isGraphQLEnabled)
+package ${package}.controllers;
+
+import ${package}.entities.Shipment;
+import ${package}.enums.Status;
+import ${package}.services.ShipmentService;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
+
+import java.util.List;
+
+@Controller
+public class ShippingGraphQLController {
+
+    private final ShipmentService shipmentService;
+
+    public ShipmentGraphQLController(ShipmentService shipmentService) {
+        this.shipmentService = shipmentService;
+    }
+
+    @QueryMapping
+    public List<Shipment> getAllShipments() {
+        return shipmentService.getAllShipments();
+    }
+
+    @QueryMapping
+    public Shipment getShipmentById(@Argument Long id) {
+        return shipmentService.getShipmentById(id);
+    }
+
+    @MutationMapping
+            public Shipment createShipment(
+            @Argument String orderNumber,
+            @Argument String shipmentNumber,
+            @Argument String destination,
+            @Argument Status status) {
+
+        Shipment shipment = new Shipment();
+        shipment.setOrderNumber(orderNumber);
+        shipment.setShipmentNumber(shipmentNumber);
+        shipment.setDestination(destination);
+        shipment.setStatus(status);
+
+        return shipmentService.createShipment(shipment);
+    }
+
+    @MutationMapping
+    public Shipment updateShipment(
+            @Argument Long id,
+            @Argument String orderNumber,
+            @Argument String shipmentNumber,
+            @Argument String destination,
+            @Argument Status status) {
+
+    Shipment shipment = new Shipment(id, orderNumber, shipmentNumber, destination, status);
+        return shipmentService.updateShipment(shipment);
+    }
+
+    @MutationMapping
+    public boolean deleteShipment(@Argument Long id) {
+        shipmentService.deleteShipment(id);
+        return true;
+    }
+}
+#end

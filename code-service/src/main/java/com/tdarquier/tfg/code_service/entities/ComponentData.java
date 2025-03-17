@@ -25,5 +25,7 @@ public class ComponentData {
         private Boolean isConfigServerEnabled;
         private Boolean isGatewayEnabled;
         private PersistenceType persistenceType;
+        private Boolean isGraphQLEnabled;
+        private Boolean isRESTEnabled;
 
 }

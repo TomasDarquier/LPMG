@@ -1,0 +1,25 @@
+type Shipment {
+id: ID!
+orderNumber: String!
+shipmentNumber: String!
+destination: String!
+status: Status!
+}
+
+enum Status {
+IN_DEPOSIT,
+SHIPPED,
+DELIVERED,
+RETURNED
+}
+
+type Query {
+getAllShipments: [Shipment!]!
+getShipmentById(id: ID!): Shipment
+}
+
+type Mutation {
+createShipment(orderNumber: String!, shipmentNumber: String!, destination: String!, status: Status!): Shipment!
+updateShipment(id: ID!, orderNumber: String!, shipmentNumber: String!, destination: String!, status: Status!): Shipment!
+deleteShipment(id: ID!): Boolean!
+}

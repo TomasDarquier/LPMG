@@ -354,6 +354,7 @@ class Canvas {
             || config.name === 'ordenes'
             || config.name === 'envios';
         const showNoRelationalDb = false;
+        const showGraphQL = config.name !== 'notificaciones';
 
         const modal = document.createElement('div');
         modal.className = 'config-modal';
@@ -388,7 +389,7 @@ class Canvas {
                     <option value="Redis" ${config.persistence === 'Redis' ? 'selected' : ''}>Redis</option>
                 ` : ''}
                 ${showQueue? `
-                    <option value="Apache Kafka" ${config.persistence === 'Kafka' ? 'selected' : ''}>PostgreSQL</option>
+                    <option value="Apache Kafka" ${config.persistence === 'Kafka' ? 'selected' : ''}>Kafka</option>
                 ` : ''}
             </select>
         </div>
@@ -396,7 +397,9 @@ class Canvas {
             <label for="communication">Comunicación</label>
             <select id="communication">
                 <option value="REST" ${config.communication === 'REST' ? 'selected' : ''}>REST</option>
+                ${showGraphQL? `
                 <option value="GraphQL" ${config.communication === 'GraphQL' ? 'selected' : ''}>GraphQL</option>
+                ` : ''}
             </select>
         </div>
         <div class="form-group">

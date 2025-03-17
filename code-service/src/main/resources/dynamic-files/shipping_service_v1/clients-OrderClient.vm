@@ -17,7 +17,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@FeignClient(url = "http://localhost:${connectionPort}")
+@FeignClient(name = "orders", url = "http://localhost:${connectionPort}")
 public interface OrderClient {
 
     @GetMapping("")

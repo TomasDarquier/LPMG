@@ -1,6 +1,7 @@
 #set ($postgresql = "POSTGRESQL")
 #set ($mysql= "MYSQL")
 spring.application.name=${name}
+#spring.graphql.graphiql.enabled=true
 #if($isConfSvEnabled)
 spring.config.import=optional:configserver:http://localhost:8888
 #else

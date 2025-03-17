@@ -198,17 +198,19 @@ public class RdfServiceImpl implements RdfService{
                 + "UNION "
                 + "{ ?connection <" + BASE_URI + "serviceOne> \"" + serviceB + "\" . "
                 + "?connection <" + BASE_URI + "serviceTwo> \"" + serviceA + "\" . } "
-                + "?connection <" + BASE_URI + "type> ?type . "
+                + "?connection <" + BASE_URI + "connectionType> ?type . "  // FIX: Se corrigió el nombre de la propiedad
                 + "} LIMIT 1";
+
+        System.out.println("Ejecutando consulta SPARQL:\n" + queryStr);  // Debug
 
         try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
             ResultSet results = qExec.execSelect();
-            // Si se encuentra la conexión, obtenemos el tipo de conexión y validamos si coincide con ConnectionType
             if (results.hasNext()) {
                 QuerySolution solution = results.nextSolution();
                 String typeValue = solution.getLiteral("type").getString();
 
-                // Verificamos si el valor obtenido coincide con alguno de los valores del enum ConnectionType
+                System.out.println("Valor obtenido: " + typeValue);  // Debug
+
                 for (ConnectionType type : ConnectionType.values()) {
                     if (type.name().equalsIgnoreCase(typeValue)) {
                         return type;
@@ -217,6 +219,54 @@ public class RdfServiceImpl implements RdfService{
             }
         }
         return null;
+    }
+
+     public boolean usesGraphQL(String serviceName, Model model) {
+        String queryString = """
+            PREFIX j0: <http://tomasdarquier.com/tfg/>
+            SELECT ?connectionType WHERE {
+                ?connection j0:connectionType ?connectionType ;
+                            j0:serviceOne ?serviceOne ;
+                            j0:serviceTwo ?serviceTwo .
+                FILTER(?serviceOne = "%s" || ?serviceTwo = "%s")
+            }
+        """.formatted(serviceName, serviceName);
+
+        try (QueryExecution qe = QueryExecutionFactory.create(QueryFactory.create(queryString), model)) {
+            ResultSet results = qe.execSelect();
+            while (results.hasNext()) {
+                QuerySolution solution = results.next();
+                String connectionType = solution.getLiteral("connectionType").getString();
+                if ("GraphQL".equalsIgnoreCase(connectionType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean usesREST(String serviceName, Model model) {
+        String queryString = """
+            PREFIX j0: <http://tomasdarquier.com/tfg/>
+            SELECT ?connectionType WHERE {
+                ?connection j0:connectionType ?connectionType ;
+                            j0:serviceOne ?serviceOne ;
+                            j0:serviceTwo ?serviceTwo .
+                FILTER(?serviceOne = "%s" || ?serviceTwo = "%s")
+            }
+        """.formatted(serviceName, serviceName);
+
+        try (QueryExecution qe = QueryExecutionFactory.create(QueryFactory.create(queryString), model)) {
+            ResultSet results = qe.execSelect();
+            while (results.hasNext()) {
+                QuerySolution solution = results.next();
+                String connectionType = solution.getLiteral("connectionType").getString();
+                if ("REST".equalsIgnoreCase(connectionType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

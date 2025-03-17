@@ -1,0 +1,49 @@
+#set($found = false)
+#set($connectionApiPath = "")
+#set($connectionPort = "")
+#set($graphql=false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("USER_SERVICE") && $connection.type.name().startsWith("GRAPHQL"))
+        #set($found = true)
+        #set($connectionApiPath = $connection.apiPath)
+        #set($connectionPort = $connection.port)
+        #set($graphql = true)
+        #break
+    #end
+#end
+#if($found)
+#if($graphql)
+package ${package}.clients;
+
+import ${package}.dtos.UserDto;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
+
+@Service
+public class UserGraphQLClient{
+
+    private final RestTemplate restTemplate;
+    private final String graphqlEndpoint = "http://localhost:http://localhost:${connectionPort}/graphql";
+
+    public UserGraphQLClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+
+    public Map<String, UserDto> getUserById(Long userId) {
+    String query = "{ \"query\": \"query { getUserById(id: " + userId + ") { id username email } }\" }";
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<String> request = new HttpEntity<>(query, headers);
+        return restTemplate.postForObject(graphqlEndpoint, request, Map.class);
+    }
+}
+#end
+#end

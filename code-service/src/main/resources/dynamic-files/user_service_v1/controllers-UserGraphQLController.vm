@@ -1,0 +1,89 @@
+#if($isGraphQLEnabled)
+package ${package}.controllers;
+
+import ${package}.entities.User;
+import ${package}.Gender;
+import ${package}.enums.Status;
+import ${package}.services.UserService;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
+
+import java.util.Optional;
+
+@Controller
+public class UserGraphQLController {
+
+    private final UserService userService;
+
+    public UserGraphQLController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @QueryMapping
+    public User getUserById(@Argument Long id) {
+        return userService.getUserById(id);
+    }
+
+    @MutationMapping
+    public User createUser(
+        @Argument String username,
+        @Argument String email,
+        @Argument String password,
+        @Argument String firstName,
+        @Argument String lastName,
+        @Argument String dateOfBirth,
+        @Argument String gender) {
+
+    User user = User.builder()
+        .username(username)
+        .email(email)
+        .passwordHash(password)  // Aquí se guarda la contraseña
+        .firstName(firstName)
+        .lastName(lastName)
+        .dateOfBirth(java.sql.Date.valueOf(dateOfBirth))
+        .gender(Gender.valueOf(gender.toUpperCase()))
+        .status(Status.ACTIVE)
+        .build();
+    return userService.createUser(user);
+    }
+
+    @MutationMapping
+    public User updateUser(
+            @Argument Long id,
+            @Argument Optional<String> username,
+            @Argument Optional<String> email,
+            @Argument Optional<String> password,
+            @Argument Optional<String> firstName,
+            @Argument Optional<String> lastName,
+            @Argument Optional<String> dateOfBirth,
+            @Argument Optional<String> gender,
+            @Argument Optional<String> profilePictureUrl,
+            @Argument Optional<String> phoneNumber,
+            @Argument Optional<String> bio,
+            @Argument Optional<String> status) {
+
+        User user = userService.getUserById(id);
+        username.ifPresent(user::setUsername);
+        email.ifPresent(user::setEmail);
+        password.ifPresent(user::setPasswordHash);
+        firstName.ifPresent(user::setFirstName);
+        lastName.ifPresent(user::setLastName);
+        dateOfBirth.ifPresent(dob -> user.setDateOfBirth(java.sql.Date.valueOf(dob)));
+        gender.ifPresent(g -> user.setGender(Gender.valueOf(g.toUpperCase())));
+        profilePictureUrl.ifPresent(user::setProfilePictureUrl);
+        phoneNumber.ifPresent(user::setPhoneNumber);
+        bio.ifPresent(user::setBio);
+        status.ifPresent(s -> user.setStatus(Status.valueOf(s.toUpperCase())));
+
+        return userService.updateUser(user);
+    }
+
+    @MutationMapping
+    public String deleteUser(@Argument Long id) {
+        userService.deleteUser(userService.getUserById(id));
+        return "User deleted successfully";
+    }
+}
+#end

@@ -88,6 +88,8 @@ public class OrchestrationServiceImpl implements OrchestrationService{
                         null,
                         isConfigServerEnabled,
                         isGatewayEnabled,
+                        null,
+                        null,
                         null
                 );
             }else{
@@ -103,7 +105,9 @@ public class OrchestrationServiceImpl implements OrchestrationService{
                         rdfService.getApiPathPrefix(name,model),
                         isConfigServerEnabled,
                         isGatewayEnabled,
-                        rdfService.getPersistenceType(model, name)
+                        rdfService.getPersistenceType(model, name),
+                        rdfService.usesGraphQL(name,model),
+                        rdfService.usesREST(name,model)
                 );
             }
 

@@ -105,4 +105,7 @@ public interface RdfService {
      * @return El prefijo de la ruta API o null si no se encuentra
      */
     String getApiPathPrefix(String name, Model model);
+
+    boolean usesGraphQL(String serviceName, Model model);
+    boolean usesREST(String serviceName, Model model);
 }

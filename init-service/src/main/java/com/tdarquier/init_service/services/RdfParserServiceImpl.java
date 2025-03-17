@@ -87,6 +87,12 @@ public class RdfParserServiceImpl implements RdfParserService{
         if(isConfigServerEnabled(model)){
             builder.append("cloud-config-client,");
         }
+        // TODO
+        // tambien hacer si usa rest para agregar las dependencias
+        // que no esten x default
+        if(usesGraphQL(serviceName, model)){
+            builder.append("graphql,");
+        }
         builder.append(getPersistenceDependency(serviceName,model));
         return builder.toString();
     }
@@ -273,6 +279,30 @@ public Map<String, String> getArtifactAndGroupIds(String serviceName, Model mode
                 + "?infrastructure <" + BASE_URI + "configServerEnabled> \"true\" . }";
 
         return QueryExecutionFactory.create(QueryFactory.create(queryStr), model).execAsk();
+    }
+
+    public static boolean usesGraphQL(String serviceName, Model model) {
+        String queryString = """
+            PREFIX j0: <http://tomasdarquier.com/tfg/>
+            SELECT ?connectionType WHERE {
+                ?connection j0:connectionType ?connectionType ;
+                            j0:serviceOne ?serviceOne ;
+                            j0:serviceTwo ?serviceTwo .
+                FILTER(?serviceOne = "%s" || ?serviceTwo = "%s")
+            }
+        """.formatted(serviceName, serviceName);
+
+        try (QueryExecution qe = QueryExecutionFactory.create(QueryFactory.create(queryString), model)) {
+            ResultSet results = qe.execSelect();
+            while (results.hasNext()) {
+                QuerySolution solution = results.next();
+                String connectionType = solution.getLiteral("connectionType").getString();
+                if ("GraphQL".equalsIgnoreCase(connectionType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
