@@ -2,7 +2,7 @@
 package ${package}.controllers;
 
 import ${package}.entities.User;
-import ${package}.Gender;
+import ${package}.enums.Gender;
 import ${package}.enums.Status;
 import ${package}.services.UserService;
 import org.springframework.graphql.data.method.annotation.Argument;

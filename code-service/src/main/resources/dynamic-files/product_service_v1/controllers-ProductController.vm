@@ -16,10 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-#if($cartService || $orderService)
-import java.util.Optional;
-import ${package}.dtos.ProductDto;
-#end
 
 @RestController
 @RequestMapping("${apiPath}")
@@ -30,18 +26,6 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
-#if($cartService || $orderService)
-    @GetMapping("/dto/{id}")
-    public ResponseEntity<ProductDto> getProductDtoById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProduct(id);
-        return product.map(value -> ResponseEntity.ok().body(new ProductDto(
-            value.getId(),
-            value.getName(),
-            value.getPrice()
-        ))).orElseGet(() -> ResponseEntity.notFound().build());
-        }
-#end
 
     @GetMapping
     public List<Product> getAllProducts() {

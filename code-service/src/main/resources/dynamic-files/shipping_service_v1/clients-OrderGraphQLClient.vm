@@ -1,0 +1,58 @@
+#set($found = false)
+#set($connectionApiPath = "")
+#set($connectionPort = "")
+#set($graphql=false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("ORDER_SERVICE") && $connection.type.name().startsWith("GRAPHQL"))
+        #set($found = true)
+        #set($connectionApiPath = $connection.apiPath)
+        #set($connectionPort = $connection.port)
+        #set($graphql = true)
+        #break
+    #end
+#end
+#if($found)
+#if($graphql)
+package ${package}.clients;
+
+import ${package}.entities.Order;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import java.util.Arrays;
+import java.util.List;
+
+@Service
+public class OrderClient {
+
+    private final RestTemplate restTemplate;
+    private static final String BASE_URL = "http://localhost:${connectionPort}/graphql";
+
+    public OrderClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public List<Order> getOrders() {
+    ResponseEntity<Order[]> response = restTemplate.getForEntity(BASE_URL, Order[].class);
+        return Arrays.asList(response.getBody());
+    }
+
+    public Order getOrder(Long orderId) {
+        return restTemplate.getForObject(BASE_URL + "/" + orderId, Order.class);
+    }
+
+    public Order createOrder(Order order) {
+        return restTemplate.postForObject(BASE_URL, order, Order.class);
+    }
+
+    public Order updateOrder(Order order) {
+        restTemplate.put(BASE_URL, order);
+        return getOrder(order.getId());
+    }
+
+    public void deleteOrder(Long orderId) {
+        restTemplate.delete(BASE_URL + "/" + orderId);
+    }
+}
+#end
+#end

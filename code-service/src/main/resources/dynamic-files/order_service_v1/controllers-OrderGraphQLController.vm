@@ -1,0 +1,64 @@
+#if($isGraphQLEnabled)
+package ${package}.controllers;
+
+import ${package}.entities.Order;
+import ${package}.enums.Category;
+import ${package}.services.OrderService;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
+
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+public class OrderGraphQLController {
+
+    private final OrderService orderService;
+
+    public OrderGraphQLController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @QueryMapping
+    public List<Order> getOrders() {
+        return orderService.getOrders();
+    }
+
+    @QueryMapping
+    public Order getOrder(@Argument Long orderId) {
+        Optional<Order> order = Optional.ofNullable(orderService.getOrder(orderId));
+        return order.orElse(null);
+    }
+
+    @MutationMapping
+    public Order createOrder(
+            @Argument Category orderCategory,
+            @Argument String orderName,
+            @Argument float orderPrice,
+            @Argument float orderAmount) {
+
+        Order order = new Order(null, orderCategory, orderName, orderPrice, orderAmount);
+        return orderService.createOrder(order);
+    }
+
+    @MutationMapping
+    public Order updateOrder(
+            @Argument Long id,
+            @Argument Category orderCategory,
+            @Argument String orderName,
+            @Argument float orderPrice,
+            @Argument float orderAmount) {
+
+        Order updatedOrder = new Order(id, orderCategory, orderName, orderPrice, orderAmount);
+        return orderService.updateOrder(updatedOrder);
+    }
+
+    @MutationMapping
+    public boolean deleteOrder(@Argument Long orderId) {
+        orderService.deleteOrder(orderId);
+        return true;
+    }
+}
+#end

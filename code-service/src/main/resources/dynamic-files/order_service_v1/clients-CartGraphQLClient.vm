@@ -1,0 +1,57 @@
+#set($found = false)
+#set($connectionApiPath = "")
+#set($connectionPort = "")
+#set($graphql=false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("CART_SERVICE") && $connection.type.name().startsWith("GRAPHQL"))
+        #set($found = true)
+        #set($connectionApiPath = $connection.apiPath)
+        #set($connectionPort = $connection.port)
+        #set($graphql = true)
+        #break
+    #end
+#end
+#if($found)
+#if($graphql)
+package ${package}.clients;
+
+import ${package}.entities.CartItem;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import java.util.Arrays;
+import java.util.List;
+
+@Service
+public class CartGraphQLClient {
+
+    private final RestTemplate restTemplate;
+    private static final String BASE_URL = "http://localhost:${connectionPort}/graphql";
+
+    public CartClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public void addItem(Long userId, Long productId, int quantity) {
+        String url = BASE_URL + "/" + userId + "/add?productId=" + productId + "&quantity=" + quantity;
+        restTemplate.postForObject(url, null, Void.class);
+    }
+
+    public List<CartItem> getAllItems(Long userId) {
+        String url = BASE_URL + "/" + userId + "/items";
+        ResponseEntity<CartItem[]> response = restTemplate.getForEntity(url, CartItem[].class);
+        return Arrays.asList(response.getBody());
+    }
+
+    public void removeItem(Long userId, Long productId) {
+        String url = BASE_URL + "/" + userId + "/remove?productId=" + productId;
+        restTemplate.delete(url);
+    }
+
+    public void clearCart(Long userId) {
+        String url = BASE_URL + "/" + userId + "/clear";
+        restTemplate.delete(url);
+    }
+}
+#end
+#end

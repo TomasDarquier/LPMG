@@ -1,0 +1,25 @@
+enum Category {
+    BREAKFAST
+    LAUNCH
+    DINNER
+    TAKEAWAY
+}
+
+type Order {
+    id: ID!
+    orderCategory: Category!
+    orderName: String!
+    orderPrice: Float!
+    orderAmount: Float!
+}
+
+type Query {
+    getOrders: [Order!]!
+    getOrder(orderId: ID!): Order
+}
+
+type Mutation {
+    createOrder(orderCategory: Category!, orderName: String!, orderPrice: Float!, orderAmount: Float!): Order!
+    updateOrder(id: ID!, orderCategory: Category!, orderName: String!, orderPrice: Float!, orderAmount: Float!): Order!
+    deleteOrder(orderId: ID!): Boolean!
+}

@@ -1,0 +1,63 @@
+#if($isGraphQLEnabled)
+package ${package}.controllers;
+
+import ${package}.entities.Product;
+import ${package}.services.ProductService;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
+
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+public class ProductGraphQLController {
+
+    private final ProductService productService;
+
+    public ProductGraphQLController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @QueryMapping
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
+    }
+
+    @QueryMapping
+    public Product getProductById(@Argument Long id) {
+        Optional<Product> product = productService.getProduct(id);
+        return product.orElse(null);
+    }
+
+    @MutationMapping
+    public Product createProduct(
+            @Argument String name,
+            @Argument String description,
+            @Argument Double price,
+            @Argument Integer stock) {
+
+        Product product = new Product(null, name, description, price, stock);
+        return productService.createProduct(product);
+    }
+
+    @MutationMapping
+    public Product updateProduct(
+            @Argument Long id,
+            @Argument String name,
+            @Argument String description,
+            @Argument Double price,
+            @Argument Integer stock) {
+
+        Product updatedProduct = new Product(id, name, description, price, stock);
+        return productService.updateProduct(id, updatedProduct);
+    }
+
+    @MutationMapping
+    public boolean deleteProduct(@Argument Long id) {
+        productService.deleteProduct(id);
+        return true;
+    }
+}
+#end
