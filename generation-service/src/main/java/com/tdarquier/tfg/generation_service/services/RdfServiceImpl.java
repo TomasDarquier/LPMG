@@ -32,8 +32,7 @@ public class RdfServiceImpl implements RdfService {
 
         // Escribir el RDF en formato XML
         String rdf = writeRdfToXml(model);
-        System.out.println(rdf);
-        System.out.println(generationRequest.userId());
+        //System.out.println(generationRequest.userId());
 
         return CompletableFuture.completedFuture(rdf);
     }

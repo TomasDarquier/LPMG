@@ -28,7 +28,7 @@ public class CartGraphQLClient {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "http://localhost:${connectionPort}/graphql";
 
-    public CartClient(RestTemplate restTemplate) {
+    public CartGraphQLClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

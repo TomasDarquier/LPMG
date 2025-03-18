@@ -1,0 +1,60 @@
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import ${package}.entities.User;
+import ${package}.services.UserService;
+import ${package}.controllers.UserController;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.Date;
+
+class UserServiceTests {
+
+    @Mock
+    private UserService userService;
+
+    @InjectMocks
+    private UserController userController;
+
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        user = new User(1L, "testUser", "test@example.com", "hashedPass", "Test", "User", new Date(), null, null, null, null, new Date(), new Date(), null);
+    }
+
+    @Test
+    void testGetUserById() {
+        when(userService.getUserById(1L)).thenReturn(user);
+        User result = userController.getUserById("1");
+        assertNotNull(result);
+        assertEquals("testUser", result.getUsername());
+    }
+
+    @Test
+    void testCreateUser() {
+        when(userService.createUser(any(User.class))).thenReturn(user);
+        User result = userController.createUser(user);
+        assertNotNull(result);
+        assertEquals("testUser", result.getUsername());
+    }
+
+    @Test
+    void testUpdateUser() {
+        when(userService.updateUser(any(User.class))).thenReturn(user);
+        User result = userController.updateUser(user);
+        assertNotNull(result);
+        assertEquals("testUser", result.getUsername());
+    }
+
+    @Test
+    void testDeleteUser() {
+        doNothing().when(userService).deleteUser(any(User.class));
+        assertDoesNotThrow(() -> userController.deleteUser(user));
+    }
+}

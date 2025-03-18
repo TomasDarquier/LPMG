@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getComponentIcon(type) {
         const icons = {
+            productos: '📚',
             usuarios: '👤',
             carrito: '🛒',
             notificaciones: '🔔',
-            catalogo: '📚',
             envios: '🚢',
             ordenes: '📋'
         };

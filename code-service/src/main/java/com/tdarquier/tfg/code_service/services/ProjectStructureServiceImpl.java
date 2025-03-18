@@ -53,7 +53,7 @@ public class ProjectStructureServiceImpl implements ProjectStructureService{
         String servicePath = formattedArtifact + "/";
         String codePath = servicePath + "src/main/java/" + formattedGroup + "/" + artifactForFiles + "/";
         String resourcesPath = servicePath + "src/main/resources/";
-        String testPath = servicePath + "src/test/java/" + formattedGroup + "/" + artifactForFiles + "/";
+        String testPath = servicePath + "src/test/java/";
         String groupIdFormattedToPackage = groupId.replaceAll(" ", "_") + "." + artifactForFiles;
 
         paths.put("service", servicePath);

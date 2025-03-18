@@ -1,0 +1,67 @@
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import ${package}.entities.CartItem;
+import ${package}.services.CartService;
+import ${package}.controllers.CartController;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.Arrays;
+import java.util.List;
+
+class CartServiceTests {
+
+    @Mock
+    private CartService cartService;
+
+    @InjectMocks
+    private CartController cartController;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testAddItem() {
+        doNothing().when(cartService).addItem(1L, 101L, 2);
+        assertDoesNotThrow(() -> cartController.addItem(1L, 101L, 2));
+    }
+
+    @Test
+    void testGetAllItems() {
+#set($found = false)
+#foreach($connection in $connections)
+    #if($connection.connectedTo.name().startsWith("USER_SERVICE"))
+        #set($found = true)
+        #break
+    #end
+#end
+#if($found)
+    List<CartItem> items = Arrays.asList(new CartItem(101L, 2, 1L));
+#else
+    List<CartItem> items = Arrays.asList(new CartItem(101L, 2));
+#end
+        when(cartService.getAllItems(1L)).thenReturn(items);
+
+        List<CartItem> result = cartController.getAllItems(1L);
+        assertEquals(1, result.size());
+        assertEquals(101L, result.get(0).getProductId());
+    }
+
+    @Test
+    void testRemoveItem() {
+        doNothing().when(cartService).removeItem(1L, 101L);
+        assertDoesNotThrow(() -> cartController.removeItem(1L, 101L));
+    }
+
+    @Test
+    void testClearCart() {
+        doNothing().when(cartService).clearCart(1L);
+        assertDoesNotThrow(() -> cartController.clearCart(1L));
+    }
+}

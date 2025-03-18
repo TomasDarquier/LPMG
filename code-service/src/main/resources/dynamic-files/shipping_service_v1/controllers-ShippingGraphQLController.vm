@@ -16,7 +16,7 @@ public class ShippingGraphQLController {
 
     private final ShipmentService shipmentService;
 
-    public ShipmentGraphQLController(ShipmentService shipmentService) {
+    public ShippingGraphQLController(ShipmentService shipmentService) {
         this.shipmentService = shipmentService;
     }
 

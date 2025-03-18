@@ -101,10 +101,10 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
             ));
         });
 
-        if(componentData.getIsGraphQLEnabled() && componentData.getTemplate() != Template.NOTIFICATION_SERVICE_V1){
+        if(componentData.getTemplate() != Template.NOTIFICATION_SERVICE_V1 && componentData.getIsGraphQLEnabled()){
             generatedFiles.add(generateGraphqlSchema(componentData, bucket));
         }
-        //TODO testFile
+
         generatedFiles.add(generateTestFile(componentData,bucket));
 
         return generatedFiles;
@@ -120,7 +120,12 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
     }
 
     private MinioFile generateTestFile(ComponentData componentData, String bucket) {
-        return null;
+        String templateFolder = componentData.getTemplate().toString().toLowerCase() + "_tests";
+        return new MinioFile(
+                componentData.getPaths().get("test") + "Tests.java",
+                bucket,
+                generateFile(templateFolder + "/Tests.vm", componentData)
+        );
     }
 
     private String generateFile(String templatePath, ComponentData componentData) {
@@ -141,6 +146,7 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
         }
         context.put("isGraphQLEnabled",componentData.getIsGraphQLEnabled());
         context.put("isRESTEnabled",componentData.getIsRESTEnabled());
+        context.put("isJwtEnabled",componentData.getIsJwtEnabled());
 
         var template = velocityEngine.getTemplate(fullPath);
 

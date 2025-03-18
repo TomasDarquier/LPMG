@@ -89,9 +89,9 @@ public class OrchestrationServiceImpl implements OrchestrationService{
                         isConfigServerEnabled,
                         isGatewayEnabled,
                         null,
-                        null,
-                        null,
-                        null
+                        false,
+                        false,
+                        false
                 );
             }else{
                 List<Connection> connections = rdfService.isPartOfConnection(name,model) ?

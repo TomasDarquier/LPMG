@@ -1,0 +1,36 @@
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import ${package}.messages.Notification;
+import ${package}.services.NotificationService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+
+class NotificationServiceTests {
+
+    @Mock
+    private SimpMessagingTemplate template;
+
+    @InjectMocks
+    private NotificationService notificationService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testConsumeNotification() {
+    ConsumerRecord<String, Notification> record = mock(ConsumerRecord.class);
+        Notification notification = new Notification(1L, "Test message");
+        when(record.value()).thenReturn(notification);
+
+        assertDoesNotThrow(() -> notificationService.consumeNotification(record));
+        verify(template, times(1)).convertAndSend("/topic/notification/1", notification);
+    }
+}

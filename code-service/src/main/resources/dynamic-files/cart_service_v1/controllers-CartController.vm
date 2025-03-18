@@ -13,7 +13,6 @@ package ${package}.controllers;
 
 import ${package}.entities.CartItem;
 import ${package}.services.CartService;
-import ${package}.dtos.ProductDto;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

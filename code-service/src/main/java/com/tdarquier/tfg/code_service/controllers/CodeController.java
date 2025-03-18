@@ -20,7 +20,6 @@ public class CodeController {
     @PostMapping("/generate-code/{id}")
     ResponseEntity<Void> generateCode(@RequestBody CodeGenerationDTO dto, @PathVariable String id){
         orchestationService.createArchitectureCode(dto.projectPoms(),dto.projectRDF(), Long.valueOf(id));
-        System.out.println(dto.projectRDF());
         return ResponseEntity.ok().build();
     }
 

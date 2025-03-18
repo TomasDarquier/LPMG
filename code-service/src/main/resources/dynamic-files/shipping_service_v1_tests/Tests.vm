@@ -1,0 +1,72 @@
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import ${package}.entities.Shipment;
+import ${package}.services.ShipmentService;
+import ${package}.controllers.ShippingController;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.Arrays;
+import java.util.List;
+
+class ShippingServiceTests {
+
+    @Mock
+    private ShipmentService shipmentService;
+
+    @InjectMocks
+    private ShippingController shippingController;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testGetAllShipments() {
+        List<Shipment> shipments = Arrays.asList(new Shipment(1L, "ORD123", "SHP123", "New York", null));
+        when(shipmentService.getAllShipments()).thenReturn(shipments);
+
+        List<Shipment> result = shippingController.getAllShipments();
+        assertEquals(1, result.size());
+        assertEquals("ORD123", result.get(0).getOrderNumber());
+    }
+
+    @Test
+    void testGetShipmentById() {
+        Shipment shipment = new Shipment(1L, "ORD123", "SHP123", "New York", null);
+        when(shipmentService.getShipmentById(1L)).thenReturn(shipment);
+
+        Shipment result = shippingController.getShipmentById(1L);
+        assertEquals("ORD123", result.getOrderNumber());
+    }
+
+    @Test
+    void testCreateShipment() {
+        Shipment shipment = new Shipment(1L, "ORD123", "SHP123", "New York", null);
+        when(shipmentService.createShipment(shipment)).thenReturn(shipment);
+
+        Shipment result = shippingController.createShipment(shipment);
+        assertEquals("ORD123", result.getOrderNumber());
+    }
+
+    @Test
+    void testUpdateShipment() {
+        Shipment shipment = new Shipment(1L, "ORD123", "SHP123", "Los Angeles", null);
+        when(shipmentService.updateShipment(any(Shipment.class))).thenReturn(shipment);
+
+        Shipment result = shippingController.updateShipment(shipment);
+        assertEquals("Los Angeles", result.getDestination());
+    }
+
+    @Test
+    void testDeleteShipment() {
+        doNothing().when(shipmentService).deleteShipment(1L);
+
+        assertDoesNotThrow(() -> shippingController.deleteShipment(1L));
+    }
+}

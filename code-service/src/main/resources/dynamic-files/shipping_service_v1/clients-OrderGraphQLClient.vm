@@ -23,14 +23,15 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class OrderClient {
+public class OrderGraphQLClient {
 
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "http://localhost:${connectionPort}/graphql";
 
-    public OrderClient(RestTemplate restTemplate) {
+    public OrderGraphQLClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
 
     public List<Order> getOrders() {
     ResponseEntity<Order[]> response = restTemplate.getForEntity(BASE_URL, Order[].class);
@@ -47,7 +48,7 @@ public class OrderClient {
 
     public Order updateOrder(Order order) {
         restTemplate.put(BASE_URL, order);
-        return getOrder(order.getId());
+        return getOrder(null);
     }
 
     public void deleteOrder(Long orderId) {

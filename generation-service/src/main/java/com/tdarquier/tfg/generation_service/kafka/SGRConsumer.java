@@ -63,7 +63,7 @@ public class SGRConsumer {
 
             //Enviar RDF a  init-service
             List<String> poms = initClient.getPoms(projectRDF);
-            poms.forEach(System.out::println);
+            //poms.forEach(System.out::println);
 
 
             sgsProducer.sendGenerationStatus(new GenerationStatus(
