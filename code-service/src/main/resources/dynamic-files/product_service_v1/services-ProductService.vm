@@ -5,10 +5,53 @@ import ${package}.entities.Product;
 import java.util.List;
 import java.util.Optional;
 
+/**
+* Interfaz que define los servicios para la gestión de productos.
+* Los servicios permiten la creación, obtención, actualización y eliminación de productos en el sistema.
+*/
 public interface ProductService {
+
+
+/**
+* Obtiene una lista de todos los productos.
+*
+* @return Una lista con todos los productos registrados en el sistema.
+*/
     List<Product> getAllProducts();
+
+/**
+* Obtiene un producto por su ID.
+*
+* @param id El ID del producto.
+* @return Un objeto `Optional` que contiene el producto correspondiente al ID proporcionado,
+*         o `Optional.empty()` si no se encuentra el producto.
+*/
     Optional<Product> getProduct(long id);
+
+/**
+* Crea un nuevo producto en el sistema.
+*
+* @param product El objeto que contiene los detalles del producto a crear.
+* @return El producto creado y almacenado en la base de datos.
+*/
     Product createProduct(Product product);
+
+
+/**
+* Actualiza un producto existente en el sistema.
+* Si el producto con el ID especificado existe, se actualizan sus detalles con los valores proporcionados.
+*
+* @param id El ID del producto a actualizar.
+* @param productDetails El objeto que contiene los nuevos detalles del producto.
+* @return El producto actualizado.
+* @throws RuntimeException Si el producto con el ID especificado no existe.
+*/
     Product updateProduct(Long id, Product productDetails);
+
+/**
+* Elimina un producto del sistema por su ID.
+*
+* @param id El ID del producto a eliminar.
+*/
     void deleteProduct(Long id);
 }

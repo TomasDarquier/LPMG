@@ -4,9 +4,47 @@ import ${package}.entities.CartItem;
 
 import java.util.List;
 
+
+/**
+* Interfaz que define los servicios para la gestión del carrito de compras.
+* Los servicios permiten agregar, eliminar y consultar productos en el carrito de un usuario,
+* así como limpiar el carrito por completo.
+*/
 public interface CartService {
+
+/**
+* Agrega un producto al carrito del usuario. Si el producto ya existe en el carrito,
+* se actualiza la cantidad, de lo contrario, se agrega un nuevo producto.
+*
+* @param userId El ID del usuario al que se le agregará el producto.
+* @param productId El ID del producto a agregar.
+* @param quantity La cantidad del producto a agregar.
+*/
     public void addItem(Long userId, Long productId, int quantity);
+
+
+/**
+* Elimina un producto del carrito del usuario.
+*
+* @param userId El ID del usuario del cual se eliminará el producto.
+* @param productId El ID del producto a eliminar.
+*/
     public void removeItem(Long userId, Long productId);
+
+
+/**
+* Elimina todos los productos del carrito de un usuario.
+*
+* @param userId El ID del usuario cuyo carrito será vaciado.
+*/
     public void clearCart(Long userId);
+
+
+/**
+* Obtiene todos los productos del carrito de un usuario.
+*
+* @param userId El ID del usuario cuyo carrito de compras se desea consultar.
+* @return Una lista de todos los productos en el carrito del usuario.
+*/
     public List<CartItem> getAllItems(Long userId);
 }

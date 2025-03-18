@@ -2,10 +2,51 @@ package ${package}.services;
 
 import ${package}.entities.User;
 
+/**
+* Interfaz que define los servicios para la gestión de usuarios.
+* Los servicios permiten la creación, obtención, actualización y eliminación de usuarios en el sistema.
+*/
 public interface UserService{
 
+/**
+* Obtiene un usuario por su ID.
+*
+* @param id El ID del usuario.
+* @return El usuario correspondiente al ID proporcionado.
+* @throws NoSuchElementException Si no se encuentra un usuario con el ID proporcionado.
+*/
     User getUserById(Long id);
+
+/**
+* Crea un nuevo usuario en el sistema.
+* Este método valida que el correo y el nombre de usuario no estén registrados previamente.
+* Además, asegura que la contraseña esté presente y la hashea antes de almacenarla.
+*
+* @param user El objeto que contiene los detalles del usuario a crear.
+* @return El usuario creado y almacenado en la base de datos.
+* @throws UserAlreadyExistsException Si el correo o el nombre de usuario ya están registrados.
+* @throws InvalidUserException Si la contraseña está vacía o no es válida.
+*/
     User createUser(User user);
+
+/**
+* Actualiza un usuario existente en el sistema.
+* Este método valida la existencia del usuario y verifica que la contraseña sea correcta antes de proceder con la actualización.
+*
+* @param userModified El objeto con los datos modificados del usuario.
+* @return El usuario actualizado.
+* @throws InvalidUserException Si la contraseña no es proporcionada o no es válida.
+* @throws UserNotRegisteredException Si el usuario no está registrado en la base de datos.
+*/
     User updateUser(User userModified);
+
+
+/**
+* Elimina un usuario del sistema.
+* Se validan tanto la existencia del usuario como la validez de la contraseña antes de proceder con la eliminación.
+*
+* @param user El usuario que se desea eliminar.
+* @throws UserNotRegisteredException Si el usuario no está registrado o la contraseña no es válida.
+*/
     void deleteUser(User user);
 }

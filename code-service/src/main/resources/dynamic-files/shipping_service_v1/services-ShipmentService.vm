@@ -4,10 +4,49 @@ import ${package}.entities.Shipment;
 
 import java.util.List;
 
+/**
+* Interfaz que define los servicios para la gestión de envíos.
+* Los servicios permiten la creación, obtención, actualización y eliminación de envíos en el sistema.
+*/
 public interface ShipmentService {
+
+/**
+* Obtiene una lista de todos los envíos.
+*
+* @return Una lista con todos los envíos registrados en el sistema.
+*/
     List<Shipment> getAllShipments();
+
+/**
+* Obtiene un envío por su ID.
+*
+* @param id El ID del envío.
+* @return El objeto `Shipment` correspondiente al ID proporcionado,
+*         o `null` si no se encuentra el envío.
+*/
     Shipment getShipmentById(Long id);
+
+/**
+* Crea un nuevo envío en el sistema.
+*
+* @param shipment El objeto que contiene los detalles del envío a crear.
+* @return El envío creado y almacenado en la base de datos.
+*/
     Shipment createShipment(Shipment shipment);
+
+/**
+* Actualiza un envío existente en el sistema.
+* Si el envío con el ID proporcionado existe, se actualizan sus detalles.
+*
+* @param shipment El objeto que contiene los nuevos detalles del envío a actualizar.
+* @return El envío actualizado, o `null` si no existe un envío con el ID proporcionado.
+*/
     Shipment updateShipment(Shipment shipment);
+
+/**
+* Elimina un envío del sistema por su ID.
+*
+* @param id El ID del envío a eliminar.
+*/
     void deleteShipment(Long id);
 }

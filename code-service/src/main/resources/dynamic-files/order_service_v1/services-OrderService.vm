@@ -4,10 +4,50 @@ import ${package}.entities.Order;
 
 import java.util.List;
 
+/**
+* Interfaz que define los servicios para la gestión de órdenes.
+* Los servicios permiten la creación, obtención, actualización y eliminación de órdenes en el sistema.
+*/
 public interface OrderService {
+
+/**
+* Obtiene una lista de todas las órdenes.
+*
+* @return Una lista con todas las órdenes registradas en el sistema.
+*/
     List<Order> getOrders();
+
+/**
+* Obtiene una orden por su ID.
+*
+* @param orderId El ID de la orden.
+* @return El objeto `Order` correspondiente al ID proporcionado,
+*         o `null` si no se encuentra la orden.
+*/
     Order getOrder(long orderId);
+
+
+/**
+* Crea una nueva orden en el sistema.
+*
+* @param order El objeto que contiene los detalles de la orden a crear.
+* @return La orden creada y almacenada en la base de datos.
+*/
     Order createOrder(Order order);
+
+
+/**
+* Actualiza una orden existente en el sistema.
+*
+* @param order El objeto que contiene los nuevos detalles de la orden a actualizar.
+* @return La orden actualizada.
+*/
     Order updateOrder(Order order);
+
+/**
+* Elimina una orden del sistema por su ID.
+*
+* @param orderId El ID de la orden a eliminar.
+*/
     void deleteOrder(long orderId);
 }
