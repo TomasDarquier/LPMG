@@ -155,6 +155,13 @@
                 <div id="usuarios-composicion" class="subsection">
                     <h3>Composición</h3>
                     <p>El componente de usuarios gestiona las distintas acciones realizables sobre de los usuarios en el sistema. En su version vanilla ofrece funcionalidades CRUD basicas con notoria capacidad de validacion de datos y resistencia a errores.</p>
+                    <ul>
+                        <li><strong>GET .../dto/{userId}</strong> → Obtiene información resumida del usuario.</li>
+                        <li><strong>GET .../{userId}</strong> → Retorna el usuario completo según su ID.</li>
+                        <li><strong>POST .../</strong> → Crea un nuevo usuario.</li>
+                        <li><strong>PUT .../</strong> → Actualiza los datos de un usuario existente.</li>
+                        <li><strong>DELETE .../</strong> → Elimina un usuario (requiere validación de contraseña).</li>
+                    </ul>
                 </div>
                 <div id="usuarios-persistencia" class="subsection">
                     <h3>Persistencia</h3>
@@ -179,6 +186,12 @@
                 <div id="carrito-composicion" class="subsection">
                     <h3>Composición</h3>
                     <p>Gestiona el carrito de compras temporal de cada usuario. Implementa funcionalidades de agregar/eliminar productos, actualizar cantidades y calcular totales en tiempo real.</p>
+                    <ul>
+                        <li><strong>POST .../{userId}/add</strong> → Agrega un producto al carrito.</li>
+                        <li><strong>GET .../{userId}/items</strong> → Obtiene los productos en el carrito.</li>
+                        <li><strong>DELETE .../{userId}/remove</strong> → Elimina un producto del carrito.</li>
+                        <li><strong>DELETE .../{userId}/clear</strong> → Vacía el carrito.</li>
+                    </ul>
                 </div>
                 <div id="carrito-persistencia" class="subsection">
                 <div class="subsection">
@@ -204,6 +217,13 @@
                 <div class="subsection">
                     <h3>Composición</h3>
                     <p>Maneja el ciclo de vida completo de las órdenes, desde su creación hasta su finalización, mediante una potente gestion de estados. Se trata de un componente clave en la mayoria de arquitecturas con fines de lucro.</p>
+                    <ul>
+                        <li><strong>GET .../</strong> → Obtiene todas las órdenes.</li>
+                        <li><strong>GET .../{id}</strong> → Retorna una orden según su ID.</li>
+                        <li><strong>POST .../</strong> → Crea una nueva orden.</li>
+                        <li><strong>PUT .../</strong> → Actualiza una orden existente.</li>
+                        <li><strong>DELETE .../{id}</strong> → Elimina una orden.</li>
+                    </ul>
                 </div>
                 <div id="ordenes-persistencia" class="subsection">
                 <div class="subsection">
@@ -230,6 +250,13 @@
                 <div class="subsection">
                    <h3>Composición</h3>
                    <p>Maneja la persistencia, actualizacion y operaciones CRUD de los productos y sus precios y caracteristicas. Se trata de un componente estrictamente necesario para la gran mayoria de procesos.</p>
+                    <ul>
+                        <li><strong>GET .../</strong> → Obtiene todos los productos.</li>
+                        <li><strong>GET .../{id}</strong> → Retorna un producto según su ID.</li>
+                        <li><strong>POST .../</strong> → Crea un nuevo producto.</li>
+                        <li><strong>PUT .../{id}</strong> → Actualiza un producto existente.</li>
+                        <li><strong>DELETE .../{id}</strong> → Elimina un producto.</li>
+                    </ul>
                 </div>
                 <div id="productos-persistencia" class="subsection">
                 <div class="subsection">
@@ -256,6 +283,13 @@
                 <div class="subsection">
                     <h3>Composición</h3>
                     <p>Gestiona la logística de envíos, fundamentando su funcionamiento en la administracion de estados de los mismos y las acciones consecuentes a realizar en conjunto con componentes externos.</p>
+                    <ul>
+                        <li><strong>GET .../</strong> → Obtiene todos los envíos.</li>
+                        <li><strong>GET .../{id}</strong> → Retorna un envío según su ID.</li>
+                        <li><strong>POST .../</strong> → Crea un nuevo envío.</li>
+                        <li><strong>PUT .../</strong> → Actualiza un envío existente.</li>
+                        <li><strong>DELETE .../{id}</strong> → Elimina un envío.</li>
+                    </ul>
                 </div>
                 <div id="envios-persistencia" class="subsection">
                 <div class="subsection">
@@ -283,13 +317,15 @@
                 <div class="subsection">
                     <h3>Composición</h3>
                     <p>Sistema centralizado de notificaciones con soporte destacable en canales de email. Posee una estructura generica con alta adaptabilidad para multiples casos de uso</p>
+                    <p>
+                      El microservicio está configurado para escuchar eventos de WebSocket a través de la ruta /ws, utilizando el protocolo STOMP. Cuando una notificación es consumida, se envía a todos los suscriptores en el canal /topic/notification/{id}, donde {id} corresponde al ID único de la notificación. Esto asegura que los clientes reciban las actualizaciones en tiempo real de manera eficiente, permitiendo una experiencia interactiva y fluida.
+                    </p>
                 </div>
                 <div id="notificaciones-persistencia" class="subsection">
                 <div class="subsection">
                     <h3>Persistencia</h3>
-                    <p>Implementa RabbitMQ o ApacheKafka para la gestión de colas de mensajes.</p>
+                    <p>Implementa ApacheKafka para la gestión de colas de mensajes.</p>
                     <div class="tech-icon">
-                        <img src="/images/rabbitmq-icon.png" alt="RabbitMQ">
                         <img src="/images/kafka-icon.png" alt="ApacheKafka">
                     </div>
                 </div>
