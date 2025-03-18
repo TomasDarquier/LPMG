@@ -108,4 +108,5 @@ public interface RdfService {
 
     boolean usesGraphQL(String serviceName, Model model);
     boolean usesREST(String serviceName, Model model);
+    String getSecurityType(Model model);
 }

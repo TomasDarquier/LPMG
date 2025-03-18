@@ -269,4 +269,17 @@ public class RdfServiceImpl implements RdfService{
         return false;
     }
 
+    public String getSecurityType(Model model) {
+        String queryStr = "SELECT ?securityType WHERE { "
+                + "?project <" + BASE_URI + "hasSecurity> ?security . "
+                + "?security <" + BASE_URI + "securityType> ?securityType . }";
+
+        try (QueryExecution qExec = QueryExecutionFactory.create(QueryFactory.create(queryStr), model)) {
+            ResultSet results = qExec.execSelect();
+            if (results.hasNext()) {
+                return results.nextSolution().getLiteral("securityType").getString();
+            }
+        }
+        return "none";
+    }
 }

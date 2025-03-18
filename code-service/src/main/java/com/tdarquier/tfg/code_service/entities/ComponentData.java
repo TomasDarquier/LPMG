@@ -27,5 +27,6 @@ public class ComponentData {
         private PersistenceType persistenceType;
         private Boolean isGraphQLEnabled;
         private Boolean isRESTEnabled;
+        private Boolean isJwtEnabled;
 
 }

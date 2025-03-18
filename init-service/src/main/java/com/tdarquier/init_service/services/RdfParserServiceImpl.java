@@ -93,6 +93,9 @@ public class RdfParserServiceImpl implements RdfParserService{
         if(usesGraphQL(serviceName, model)){
             builder.append("graphql,");
         }
+        if(getSecurityType(model).equalsIgnoreCase("JWT")){
+            builder.append("security,");
+        }
         builder.append(getPersistenceDependency(serviceName,model));
         return builder.toString();
     }

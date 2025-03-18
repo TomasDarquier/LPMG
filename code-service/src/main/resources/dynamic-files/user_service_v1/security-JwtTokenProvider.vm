@@ -1,0 +1,11 @@
+#if(${isJwtEnabled})
+package ${package}.security;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+public interface JwtTokenProvider {
+    String extractToken(HttpServletRequest request);
+    boolean validateToken(String token);
+    String getUsernameFromToken(String token);
+}
+#end

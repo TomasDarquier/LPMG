@@ -1,0 +1,24 @@
+#if(${isJwtEnabled})
+package ${package}.security;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Component;
+
+@Component
+public class DefaultJwtTokenProvider implements JwtTokenProvider {
+    @Override
+    public String extractToken(HttpServletRequest request) {
+        return null; // No extrae tokens por defecto
+    }
+
+    @Override
+    public boolean validateToken(String token) {
+        return false; // No valida ningún token por defecto
+    }
+
+    @Override
+    public String getUsernameFromToken(String token) {
+        return null; // No devuelve usuario por defecto
+    }
+}
+#end

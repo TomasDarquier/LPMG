@@ -90,6 +90,7 @@ public class OrchestrationServiceImpl implements OrchestrationService{
                         isGatewayEnabled,
                         null,
                         null,
+                        null,
                         null
                 );
             }else{
@@ -107,7 +108,8 @@ public class OrchestrationServiceImpl implements OrchestrationService{
                         isGatewayEnabled,
                         rdfService.getPersistenceType(model, name),
                         rdfService.usesGraphQL(name,model),
-                        rdfService.usesREST(name,model)
+                        rdfService.usesREST(name,model),
+                        rdfService.getSecurityType(model).equalsIgnoreCase("JWT")
                 );
             }
 
