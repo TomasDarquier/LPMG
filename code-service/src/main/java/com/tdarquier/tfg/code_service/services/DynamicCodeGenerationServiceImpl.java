@@ -107,7 +107,27 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
 
         generatedFiles.add(generateTestFile(componentData,bucket));
 
+        generatedFiles.add(generateTODOfile(componentData,bucket));
         return generatedFiles;
+    }
+
+    private MinioFile generateTODOfile(ComponentData componentData, String bucket) {
+        String todo= generateFile("TODO.vm", componentData);
+        String pathsFile;
+        // obtener el archivo si ya existe y leerlo
+
+        byte[] file = minioService.getObject(new MinioFile("TODO.md",bucket,null));
+        if(file != null){
+            pathsFile = new String(file,UTF_8).concat("\n" + todo);
+        }else {
+            pathsFile = "\nTODO:\n\n" + todo;
+        }
+        return(new MinioFile(
+                "TODO.txt",
+                bucket,
+                pathsFile
+        ));
+
     }
 
     private MinioFile generateGraphqlSchema(ComponentData componentData, String bucket) {
@@ -147,6 +167,7 @@ public class DynamicCodeGenerationServiceImpl implements DynamicCodeGenerationSe
         context.put("isGraphQLEnabled",componentData.getIsGraphQLEnabled());
         context.put("isRESTEnabled",componentData.getIsRESTEnabled());
         context.put("isJwtEnabled",componentData.getIsJwtEnabled());
+        context.put("template",componentData.getTemplate());
 
         var template = velocityEngine.getTemplate(fullPath);
 

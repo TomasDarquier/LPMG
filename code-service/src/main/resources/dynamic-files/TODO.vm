@@ -1,0 +1,67 @@
+#if($template.name().startsWith("USER_SERVICE"))
+    ${name} TODO:
+
+- **Verificar y agregar, de ser necesario, roles dentro de la clase** `enums/Roles.java`.
+- **Verificar y agregar, de ser necesario, status dentro de la clase** `enums/Status.java`.
+- El **password** del usuario que se registra es almacenado utilizando un **salt** de **BCrypt**. En caso de querer modificar la lógica, verifica el método `hashPassword` dentro de **services/UserServiceImpl.java**.
+- Se recomienda **brindar especificidad** a los mensajes de error.
+- **Modificar credenciales de la base de datos.**
+#if($isGraphQLEnabled)
+- Este servicio también se comunica vía **GraphQL**. Si así lo deseas, puedes descomentar el atributo dentro del `application.properties`:
+`#spring.graphql.graphiql.enabled=true`
+#end
+
+#end
+#if($template.name().startsWith("NOTIFICATION_SERVICE"))
+    ${name} TODO:
+
+- El endpoint del **WebSocket** es `/ws`, se recomienda cambiarlo por uno específico al caso de uso.
+- El acceso al **WebSocket** está permitido para todos los orígenes. Por favor, no olvides especificar los orígenes esperados antes de desplegar tu aplicación.
+- El broker **Kafka**, presente en el archivo **Docker**, no se encuentra asegurado. Se recomienda bloquear el acceso a orígenes desconocidos.
+
+#end
+#if($template.name().startsWith("PRODUCT_SERVICE"))
+    ${name} TODO:
+
+- Por cuestiones de practicidad, se encuentra habilitada la opción `spring.jpa.hibernate.ddl-auto=update`. Se recomienda deshabilitarla para un despliegue en producción.
+- Se recomienda **brindar especificidad** a los mensajes de error.
+- **Modificar credenciales de la base de datos.**
+#if($isGraphQLEnabled)
+- Este servicio también se comunica vía **GraphQL**. Si así lo deseas, puedes descomentar el atributo dentro del `application.properties`:
+`#spring.graphql.graphiql.enabled=true`
+#end
+#end
+
+#if($template.name().startsWith("CART_SERVICE"))
+    ${name} TODO:
+
+- El componente **Redis**, presente en el archivo **Docker**, no se encuentra asegurado. No olvides bloquear su acceso a orígenes desconocidos.
+- El **KeyPrefix** fue establecido de forma genérica como `cart:`. Si deseas modificarlo, solo cambia el atributo `CART_KEY_PREFIX` en **services/CartServiceImpl.java**.
+#if($isGraphQLEnabled)
+- Este servicio también se comunica vía **GraphQL**. Si así lo deseas, puedes descomentar el atributo dentro del `application.properties`:
+`#spring.graphql.graphiql.enabled=true`
+#end
+
+#end
+#if($template.name().startsWith("ORDER_SERVICE"))
+    ${name} TODO:
+
+- Para ejemplificar, el **enum** `Category.java` presenta atributos referidos a tipos de comida. No olvides adecuarlo a tu lógica de negocios.
+- **Modificar credenciales de la base de datos.**
+#if($isGraphQLEnabled)
+- Este servicio también se comunica vía **GraphQL**. Si así lo deseas, puedes descomentar el atributo dentro del `application.properties`:
+`#spring.graphql.graphiql.enabled=true`
+#end
+
+#end
+#if($template.name().startsWith("SHIPPING_SERVICE"))
+    ${name} TODO:
+
+- **Modificar credenciales de la base de datos.**
+- Se recomienda modificar los atributos presentes en la clase **Status.java**. Se tratan de valores de ejemplo y muy probablemente no se adecuen a tu lógica de negocios.
+#if($isGraphQLEnabled)
+- Este servicio también se comunica vía **GraphQL**. Si así lo deseas, puedes descomentar el atributo dentro del `application.properties`:
+`#spring.graphql.graphiql.enabled=true`
+#end
+
+#end
