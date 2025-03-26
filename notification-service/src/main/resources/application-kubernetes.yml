@@ -1,0 +1,7 @@
+spring:
+  kafka:
+    ssl:
+      trust-store-location: file:/etc/kafka/secrets/certs/kafka.client3.truststore.jks
+      trust-store-password: kafkaproduction
+      key-store-location: file:/etc/kafka/secrets/certs/kafka.client3.keystore.jks
+      key-store-password: kafkaproduction

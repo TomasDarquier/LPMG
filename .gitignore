@@ -7,3 +7,5 @@ user-service/src/main/resources/application.yml
 /.idea/
 blueprints/**
 /blueprints/
+/docker/kafka/certs/production/ca/**
+/docker/kafka/certs/test/ca/**

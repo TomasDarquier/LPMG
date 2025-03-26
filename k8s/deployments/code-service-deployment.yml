@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: code-service
+  template:
+    metadata:
+      labels:
+        app: code-service
+    spec:
+      containers:
+        - name: code-service
+          image: tomasdarquier/code-service:latest
+          ports:
+            - containerPort: 8130
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"
+            - name: CONFIG_SERVER_URL
+              value: "http://config:8888"

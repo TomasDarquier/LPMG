@@ -5,6 +5,8 @@ WORKDIR /app
 
 COPY wait-for-it.sh /usr/bin/wait-for-it.sh
 COPY target/generation-service-0.0.1-SNAPSHOT.jar app.jar
+COPY ./certs/production/kafka.client2.keystore.jks /etc/kafka/secrets/certs/kafka.client2.keystore.jks
+COPY ./certs/production/kafka.client2.truststore.jks /etc/kafka/secrets/certs/kafka.client2.truststore.jks
 
 RUN apk add --no-cache bash && chmod +x /usr/bin/wait-for-it.sh
 

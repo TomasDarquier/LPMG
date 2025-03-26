@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: download-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: download-service
+  template:
+    metadata:
+      labels:
+        app: download-service
+    spec:
+      containers:
+        - name: download-service
+          image: tomasdarquier/download-service:latest
+          ports:
+            - containerPort: 8140
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"
+            - name: CONFIG_SERVER_URL
+              value: "http://config:8888"

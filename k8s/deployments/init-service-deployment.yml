@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: init-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: init-service
+  template:
+    metadata:
+      labels:
+        app: init-service
+    spec:
+      containers:
+        - name: init-service
+          image: tomasdarquier/init-servicee:latest
+          ports:
+            - containerPort: 8120
+          env:
+#            - name: REDIS_URL
+#              value: "tcp://10.109.30.75:6379"
+#            - name: REDIS_PORT
+#              value: "6379"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"
+            - name: CONFIG_SERVER_URL
+              value: "http://config:8888"
+

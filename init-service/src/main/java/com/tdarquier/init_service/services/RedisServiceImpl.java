@@ -8,7 +8,7 @@ import redis.clients.jedis.JedisPooled;
 @Service
 public class RedisServiceImpl implements RedisService {
 
-    final
+    @Autowired
     JedisPooled jedis;
 
     public RedisServiceImpl(JedisPooled jedis) {

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: usersdb
+spec:
+  serviceName: usersdb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usersdb
+  template:
+    metadata:
+      labels:
+        app: usersdb
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13
+          env:
+            - name: POSTGRES_DB
+              value: "usersdb"
+            - name: POSTGRES_USER
+              value: "tfgusername"
+            - name: POSTGRES_PASSWORD
+              value: "tfgpassword"
+          ports:
+            - containerPort: 5432
+              name: usersdb
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc  # Monta el volumen persistente

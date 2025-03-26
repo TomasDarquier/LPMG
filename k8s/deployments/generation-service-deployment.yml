@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generation-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: generation-service
+  template:
+    metadata:
+      labels:
+        app: generation-service
+    spec:
+      containers:
+        - name: generation-service
+          image: tomasdarquier/generation-service:latest
+          ports:
+            - containerPort: 8110
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kubernetes"
+            - name: CONFIG_SERVER_URL
+              value: "http://config:8888"
+          volumeMounts:
+            - name: kafka-ssl-generation-service-vol
+              mountPath: "/etc/kafka/secrets/certs"
+      volumes:
+        - name: kafka-ssl-generation-service-vol
+          secret:
+            secretName: kafka-ssl-certificates-generation-service
